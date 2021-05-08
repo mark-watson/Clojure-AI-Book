@@ -30,21 +30,57 @@ After looking an interactive session using the example program for this chapter 
 To keep this example simple we handle just four entity types:
 
 - People
-- Companies
-- Cities
-- Countries
+- Organizations
+- Places
  
- The entity detection library that we use from an earlier chapter also supports the following entity types that we don't use here:
-
-- Broadcast Networks
-- Music Groups
-- Political Parties
-- Trade Unions
-- Universities
-
 In addition to finding detailed information for people, companies, cities, and countries we will also search for relationships between person entities and company entities. This search process consists of generating a series of SPARQL queries and calling the DBPedia SPARQL endpoint.
 
 As we look at the KGN implementation I will point out where and how you can easily add support for more entity types and in the wrap-up I will suggest further projects that you might want to try implementing with this example.
+
+Before we design and write the code, I want to show you the final output for an example:
+
+```
+(kgn {:People ["Bill Gates" "Steve Jobs" "Melinda Gates"]
+      :Organization ["Microsoft"]
+      :Place        ["California"]})
+```
+
+The output (with some text shortened) is:
+
+```
+{:entity-summaries
+ (("Bill Gates"
+   "http://dbpedia.org/resource/Bill_Gates"
+   "William Henry Gates III (born October 28, 1955) is an American business magnate, software developer, investor, and philanthropist. He is best known as the co-founder of Microsoft Corporation. During his career...")
+  ("Steve Jobs"
+   "http://dbpedia.org/resource/Steve_Jobs"
+   "Steven Paul Jobs (; February 24, 1955 – October 5, 2011) was an American business magnate, industrial designer, investor, and media proprietor. He was the chairman, chief executive officer (CEO), and co-founder of Apple Inc., the chairman and majority shareholder of Pixar...")
+  ("Melinda Gates"
+   "http://dbpedia.org/resource/Melinda_Gates"
+   "Melinda Ann Gates (née French; August 15, 1964) is an American philanthropist and a former general manager at Microsoft. In 2000, she co-founded the Bill & Melinda Gates Foundation with her husband Bill Gates...")
+  ("Microsoft"
+   "http://dbpedia.org/resource/Microsoft"
+   "Microsoft Corporation () is an American multinational technology company with headquarters in Redmond, Washington. It develops, manufactures, licenses, supports, and sells computer software...")
+  ("California"
+   "http://dbpedia.org/resource/California"
+   "California is a state in the Pacific Region of the United States. With 39.5 million residents across ...")),
+ :discovered-relationships
+ ((["<http://dbpedia.org/resource/Bill_Gates>"
+    "<http://dbpedia.org/property/spouse>"
+    "<http://dbpedia.org/resource/Melinda_Gates>"]
+   ["<http://dbpedia.org/resource/Melinda_Gates>"
+    "<http://dbpedia.org/property/spouse>"
+    "<http://dbpedia.org/resource/Bill_Gates>"])
+  (["<http://dbpedia.org/resource/Bill_Gates>"
+    "<http://dbpedia.org/ontology/knownFor>"
+    "<http://dbpedia.org/resource/Microsoft>"]
+   ["<http://dbpedia.org/resource/Microsoft>"
+    "<http://dbpedia.org/property/founders>"
+    "<http://dbpedia.org/resource/Bill_Gates>"])
+  (["<http://dbpedia.org/resource/Steve_Jobs>"
+    "<http://dbpedia.org/ontology/birthPlace>"
+    "<http://dbpedia.org/resource/California>"]))}
+```
 
 ## General Design of KGN with Example Output
 

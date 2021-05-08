@@ -13,5 +13,6 @@ ner_dbpedia.md
 semantic_web.md
 kgc.md
 kgn.md
+kgnui.md
 conclusion.md
 
