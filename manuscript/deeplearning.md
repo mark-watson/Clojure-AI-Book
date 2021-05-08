@@ -1,5 +1,35 @@
 # Deep Learning Using Deeplearning4j {#dl4j}
 
+**** Output from working program:
+
+desired output: [ 0.0 1.0 ] predicted output: [ 0.9190528392791748 0.08094711601734161 ]
+desired output: [ 0.0 1.0 ] predicted output: [ 0.1611069291830063 0.8388931155204773 ]
+desired output: [ 0.0 1.0 ] predicted output: [ 0.8919857740402222 0.10801422595977783 ]
+desired output: [ 0.0 1.0 ] predicted output: [ 0.39187026023864746 0.6081297397613525 ]
+desired output: [ 1.0 0.0 ] predicted output: [ 0.9096783399581909 0.0903216302394867 ]
+desired output: [ 0.0 1.0 ] predicted output: [ 0.16118188202381134 0.8388181328773499 ]
+desired output: [ 0.0 1.0 ] predicted output: [ 0.16080746054649353 0.8391925096511841 ]
+desired output: [ 1.0 0.0 ] predicted output: [ 0.9626588225364685 0.037341125309467316 ]
+desired output: [ 1.0 0.0 ] predicted output: [ 0.9486544728279114 0.0513455793261528 ]
+desired output: [ 1.0 0.0 ] predicted output: [ 0.9500410556793213 0.049958884716033936 ]
+desired output: [ 0.0 1.0 ] predicted output: [ 0.2084718942642212 0.7915281057357788 ]
+desired output: [ 1.0 0.0 ] predicted output: [ 0.9437053203582764 0.056294724345207214 ]
+desired output: [ 1.0 0.0 ] predicted output: [ 0.923240065574646 0.0767599493265152 ]
+desired output: [ 0.0 1.0 ] predicted output: [ 0.1608075350522995 0.8391924500465393 ]
+desired output: [ 1.0 0.0 ] predicted output: [ 0.9437053203582764 0.056294724345207214 ]
+desired output: [ 0.0 1.0 ] predicted output: [ 0.1608218550682068 0.839178204536438 ]
+desired output: [ 1.0 0.0 ] predicted output: [ 0.9644739627838135 0.035526029765605927 ]
+desired output: [ 0.0 1.0 ] predicted output: [ 0.16767118871212006 0.8323288559913635 ]
+desired output: [ 0.0 1.0 ] predicted output: [ 0.16595454514026642 0.83404541015625 ]
+desired output: [ 0.0 1.0 ] predicted output: [ 0.16195398569107056 0.8380460739135742 ]
+desired output: [ 0.0 1.0 ] predicted output: [ 0.16079670190811157 0.8392032980918884 ]
+desired output: [ 1.0 0.0 ] predicted output: [ 0.9521188735961914 0.04788118228316307 ]
+desired output: [ 1.0 0.0 ] predicted output: [ 0.9397813081741333 0.060218747705221176 ]
+desired output: [ 1.0 0.0 ] predicted output: [ 0.923240065574646 0.0767599493265152 ]
+desired output: [ 0.0 1.0 ] predicted output: [ 0.5361587405204773 0.4638412892818451 ]
+desired output: [ 1.0 0.0 ] predicted output: [ 0.9625630378723145 0.03743692487478256 ]
+
+
 One limitation of back propagation neural networks seen in the last chapter is that they are limited to the number of neuron layers that can be efficiently trained. If you experimented with the sample back propagation code then you may have noticed that it took longer to train a network with two hidden layers compared to the training time for a network with only one hidden layer. There are also problems like vanishing gradients (the backpropagated errors that are used to update connection weights) that occur in architectures with many layers. Deep learning uses computational improvements to mitigate the vanishing gradient problem like using ReLu activation functions rather than the more traditional Sigmoid function, and networks called "skip connections" networks where some layers are initially turned off with connections skipping to the next active layer. After some initial training the skipped layers are activated and become part of the model (as in ResNet50, mentioned in the section [Roadmap for the DL4J Model Zoo](#zoo) at the end of this chapter).
 
 Digging deeper into the problem of vanishing gradients, the problem with back propagation networks is that as error gradients are back propagated through the network toward the input layer, the gradients get smaller and smaller. The effect is that it can take a lot of time to train back propagation networks with many hidden layers. Even worse, the small backpropagated errors get so small that they cause numerical underflows.
