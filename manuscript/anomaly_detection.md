@@ -36,7 +36,7 @@ where {$$}x_i{/$$} are the samples and we can calculate the squared variance as:
 \sigma^2 = \frac{\displaystyle\sum_{i=1}^{m}(x_i - \mu)^2} {m}
 {/$$}
 
-We calculate the parameters of {$$}\mu{/$$} and {$$} \sigma ^2{/$$} for each feature. A bell shaped distribution in two dimensions is easy to visualize as is an inverted bowl shape in three dimentions. What if we have many features? Well, the math works and don't worry about not being able to picture it in your mind.
+We calculate the parameters of {$$}\mu{/$$} and {$$} \sigma ^2{/$$} for each feature. A bell shaped distribution in two dimensions is easy to visualize as is an inverted bowl shape in three dimensions. What if we have many features? Well, the math works and don't worry about not being able to picture it in your mind.
  
 
 ## AnomalyDetection Utility Class
@@ -282,79 +282,87 @@ Once the training data and the values of {$$}\mu{/$$} (the varible **mu** in the
 
 The example in this section loads the University of Wisconsin data and uses the class **AnomalyDetection** developed in the last section to find anomalies, which for this example will be input vectors that represented malignancy in the original data.
 
+The Wisconsin data has 9 input features and one target output. Optionally the example program can use Incenter to plot the distribution of input variables. For of these plots are shown here:
+![Distributions for 4 of the 9 input features](images/anomaly_detection.md:wisconsin_plots.png)
 
-{lang="java",linenos=on}
+
+{lang="Clojure",linenos=on}
 ~~~~~~~~
-package com.markwatson.anomaly_detection;
+(ns anomaly-detection-clj.core
+  (:gen-class)
+  (:require clojure.pprint)
+  (:require (incanter core stats charts))
+  (:require [clojure.data.csv :as csv])
+  (:require [clojure.java.io :as io])
+  (:require [clojure.data.csv :as csv]))
 
-import java.io.*;
-import org.apache.commons.io.FileUtils;
+(import (com.markwatson.anomaly_detection AnomalyDetection))
 
-/**
- * Train a deep belief network on the University of Wisconsin Cancer Data Set.
- */
-public class WisconsinAnomalyDetection {
+(def GENERATE_PLOTS true)
 
-  private static boolean PRINT_HISTOGRAMS = true;
+(defn print-histogram [title values-2d index-to-display]
+  (println "** plotting:" title)
+  (let [column (for [row values-2d]
+                 (nth row index-to-display))]
+    (incanter.core/view (incanter.charts/histogram column :title title))))
 
-  public static void main(String[] args) throws Exception {
+(defn data->gausian
+  "separate labeled output, and then make the data look more like a Gausian (bell curve shaped) distribution"
+  [vector-of-numbers-as-strings]
+  (let [v (map read-string vector-of-numbers-as-strings)
+        training-data0 (map
+                         (fn [x] (Math/log (+ (* 0.1 x) 1.2)))
+                         (butlast v))
+        target-output (* 0.5 (- (last v) 2))                ; make target output be [0,1] instead of [2,4]
+        vmin (apply min training-data0)
+        vmax (apply max training-data0)
+        training-data (map
+                        (fn [x] (/
+                                  (- x vmin)
+                                  (+ 0.0001 (- vmax vmin))))
+                        training-data0)]
+    (concat training-data [target-output])))
 
-    String [] lines =
-      FileUtils.readFileToString(
-         new File("data/cleaned_wisconsin_cancer_data.csv")).split("\n");
-    double [][] training_data = new double[lines.length][];
-    int line_count = 0;
-    for (String line : lines) {
-      String [] sarr = line.split(",");
-      double [] xs = new double[10];
-      for (int i=0; i<10; i++) xs[i] = Double.parseDouble(sarr[i]);
-      for (int i=0; i<9; i++) xs[i] *= 0.1;
-      xs[9] = (xs[9] - 2) * 0.5; // make target output be [0,1] instead of [2,4]
-      training_data[line_count++] = xs;
-    }
-
-    if (PRINT_HISTOGRAMS) {
-      PrintHistogram.historam("Clump Thickness", training_data, 0, 0.0, 1.0, 10);
-      PrintHistogram.historam("Uniformity of Cell Size", training_data,
-                              1, 0.0, 1.0, 10);
-      PrintHistogram.historam("Uniformity of Cell Shape", training_data,
-                              2, 0.0, 1.0, 10);
-      PrintHistogram.historam("Marginal Adhesion", training_data,
-                              3, 0.0, 1.0, 10);
-      PrintHistogram.historam("Single Epithelial Cell Size", training_data,
-                              4, 0.0, 1.0, 10);
-      PrintHistogram.historam("Bare Nuclei", training_data, 5, 0.0, 1.0, 10);
-      PrintHistogram.historam("Bland Chromatin", training_data, 6, 0.0, 1.0, 10);
-      PrintHistogram.historam("Normal Nucleoli", training_data, 7, 0.0, 1.0, 10);
-      PrintHistogram.historam("Mitoses", training_data, 8, 0.0, 1.0, 10);
-    }
-    
-    AnomalyDetection detector = new AnomalyDetection(10, line_count - 1,
-                                                     training_data);
-
-    // the train method will print training results like
-    // precision, recall, and F1:
-    detector.train();
-
-    // get best model parameters:
-    double best_epsilon = detector.bestEpsilon();
-    double [] mean_values = detector.muValues();
-    double [] sigma_squared = detector.sigmaSquared();
-
-    // to use this model, us the method AnomalyDetection.isAnamoly(double []):
-
-    double [] test_malignant = new double[] {0.5,1,1,0.8,0.5,0.5,0.7,1,0.1};
-    double [] test_benign = new double[] {0.5,0.4,0.5,0.1,0.8,0.1,0.3,0.6,0.1};
-    boolean malignant_result = detector.isAnamoly(test_malignant);
-    boolean benign_result = detector.isAnamoly(test_benign);
-    System.out.println("\n\nUsing the trained model:");
-    System.out.println("malignant result = " + malignant_result +
-                       ", benign result = " + benign_result);
-  }
-}
+(defn testAD []
+  (let [ad (AnomalyDetection.)
+        cdata
+        (map
+          data->gausian
+          (with-open [reader (io/reader "data/cleaned_wisconsin_cancer_data.csv")]
+            (doall
+              (csv/read-csv reader))))]
+    (if GENERATE_PLOTS
+      (do
+        (print-histogram "Clump Thickness" cdata 0)
+        (print-histogram "Uniformity of Cell Size" cdata 1)
+        (print-histogram "Uniformity of Cell Shape" cdata 2)
+        (print-histogram "Marginal Adhesion" cdata 3)
+        (print-histogram "Single Epithelial Cell Size" cdata 4)
+        (print-histogram "Bare Nuclei" cdata 5)
+        (print-histogram "Bland Chromatin" cdata 6)
+        (print-histogram "Normal Nucleoli" cdata 7)
+        (print-histogram "Mitoses" cdata 8)))
+    ;; get best model parameters:
+    (let [java-cdata (into-array (map double-array cdata))
+          detector (new AnomalyDetection 10 (- (count cdata) 1) java-cdata)]
+      (. detector train)
+      (let [test_malignant (double-array [0.5 1 1 0.8 0.5 0.5 0.7 1 0.1])
+            test_benign (double-array [0.5 0.4 0.5 0.1 0.8 0.1 0.3 0.6 0.1])
+            malignant_result (. detector isAnamoly test_malignant)
+            benign_result (. detector isAnamoly test_benign)]
+        (if malignant_result
+          (println "malignant_result true")
+          (println "malignant_result false"))
+        (if benign_result
+          (println "benign_result true")
+          (println "benign_result false"))))))
+          
+(defn -main
+  [& _]
+  (testAD))
 ~~~~~~~~
 
-Data used by an anomaly detecton model should have (roughly) a Gaussian (bell curve shape) distribution. What form does the cancer data have? Unfortunately, each of the data features seems to either have a greater density at the lower range of feature values or large density at the extremes of the data feature ranges. This will cause our model to not perform as well as we would like. Here are the inputs displayed as five-bin histograms:
+Data used by an anomaly detection model should have (roughly) a Gaussian (bell curve shape) distribution. What form does the cancer data have? Unfortunately, each of the data features seems to either have a greater density at the lower range of feature values or large density at the extremes of the data feature ranges. This will cause our model to not perform as well as we would like. Here are the inputs displayed as five-bin histograms:
 
 {line-numbers=off}
 ~~~~~~~~
@@ -422,45 +430,46 @@ Mitoses
 4	14
 ~~~~~~~~
 
-I won't do it in this example, but the feature "Bare Nuclei" should be removed because it is not even close to being a bell-shaped distribution. Another thing that you can do (recommended by Andrew Ng in his Coursera Machine Learning class) is to take the log of data and otherwise transform it to something that looks more like a Gaussian distribution. In the class WisconsinAnomalyDetection, you could for example, transform the data using something like:
-
-{lang="java",linenos=on}
-~~~~~~~~
-  // make the data look more like a Gaussian (bell curve shaped) distribution:
-  double min = 1.e6, max = -1.e6;
-  for (int i=0; i<9; i++) {
-    xs[i] = Math.log(xs[i] + 1.2);
-    if (xs[i] < min) min = xs[i];
-    if (xs[i] > max) max = xs[i];
-  }
-  for (int i=0; i<9; i++) xs[i] = (xs[i] - min) / (max - min);
-~~~~~~~~
-
-The constant 1.2 in line 4 is a tuning parameter that I got by trial and error by iterating on adjusting the factor and looking at the data histograms.
+I won't do it in this example, but the feature "Bare Nuclei" should be removed because it is not even close to being a bell-shaped distribution. Another thing that you can do (recommended by Andrew Ng in his Coursera Machine Learning class) is to take the log of data and otherwise transform it to something that looks more like a Gaussian distribution.
 
 In a real application you would drop features that you can not transform to something like a Gaussian distribution.
 
-Here are the results of running the code as it is in the github repository for this book:
+Here are the results of running the code as it is in the github repository for this book (with some verbose output removed for brevity):
 
 {line-numbers=off}
 ~~~~~~~~
- -- best epsilon = 0.28
- -- number of test examples = 63
+   cross_validation_error_count = 75.0 for epsilon = 0.05
+   cross_validation_error_count = 75.0 for epsilon = 0.07
+   cross_validation_error_count = 75.0 for epsilon = 0.08
+   cross_validation_error_count = 68.0 for epsilon = 0.14
+   cross_validation_error_count = 113.0 for epsilon = 0.24
+   cross_validation_error_count = 113.0 for epsilon = 0.25
+   cross_validation_error_count = 113.0 for epsilon = 0.38
+   cross_validation_error_count = 113.0 for epsilon = 0.39
+   cross_validation_error_count = 113.0 for epsilon = 0.4
+   cross_validation_error_count = 113.0 for epsilon = 0.41
+   cross_validation_error_count = 113.0 for epsilon = 0.42
+   cross_validation_error_count = 113.0 for epsilon = 0.43
+   cross_validation_error_count = 113.0 for epsilon = 0.44
+
+**** Best epsilon value = 0.15000000000000002
+   cross_validation_error_count = 63.0 for epsilon = 0.15000000000000002
+
+ -- best epsilon = 0.15000000000000002
+ -- number of test examples = 66
  -- number of false positives = 0.0
- -- number of true positives = 11.0
- -- number of false negatives = 8.0
- -- number of true negatives = 44.0
+ -- number of true positives = 8.0
+ -- number of false negatives = 11.0
+ -- number of true negatives = 47.0
  -- precision = 1.0
- -- recall = 0.5789473684210527
- -- F1 = 0.7333333333333334
-
-
-Using the trained model:
-malignant result = true, benign result = false
+ -- recall = 0.42105263157894735
+ -- F1 = 0.5925925925925926
+malignant_result true
+benign_result false
 ~~~~~~~~
 
 
-How do we evaluate these results? The precision value of 1.0 means that there were no false positives. False positives are predictions of a true result when it should have been false. The value 0.578 for recall means that of all the samples that should have been classified as positive, we only predicted about 57.8% of them. The F1 score is calculated as two times the product of precision and recall, divided by the sum of precision plus recall.
+How do we evaluate these results? The precision value of 1.0 means that there were no false positives. False positives are predictions of a true result when it should have been false. The value 0.421 for recall means that of all the samples that should have been classified as positive, we only predicted about 42% of them. The F1 score is calculated as two times the product of precision and recall, divided by the sum of precision plus recall.
 
 
 
