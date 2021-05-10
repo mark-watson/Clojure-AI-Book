@@ -39,7 +39,7 @@ where {$$}x_i{/$$} are the samples and we can calculate the squared variance as:
 We calculate the parameters of {$$}\mu{/$$} and {$$} \sigma ^2{/$$} for each feature. A bell shaped distribution in two dimensions is easy to visualize as is an inverted bowl shape in three dimensions. What if we have many features? Well, the math works and don't worry about not being able to picture it in your mind.
  
 
-## AnomalyDetection Utility Class
+## AnomalyDetection Utility Class Written in Java
 
 The class **AnomalyDetection** developed in this section is fairly general purpose. It processes a set of training examples and for each feature calculates {$$}\mu{/$$} and {$$} \sigma ^2{/$$}. We are also training for a third parameter: an epsilon "cutoff" value: if for a given input vector if {$$}P(x : \mu, \sigma ^2){/$$} evaluates to a value greater than epsilon then the input vector is "normal", less than epsilon implies that the input vector is an "anomaly." The math for calulating these three features from training data is fairly easy but the code is not: we need to organize the training data and search for a value of epsilon that minimizes the error for a cross validaton data set.
 
@@ -275,18 +275,44 @@ public class AnomalyDetection {
 }
 ~~~~~~~~
 
-Once the training data and the values of {$$}\mu{/$$} (the varible **mu** in the code) are defined for each feature we can define the method **train** in lines 86 through 104 that calculated the best **epsilon** "cutoff" value for the training data set using the method **train_helper** defined in lines 138 through 165. We use the "best" **epsilon** value by testing with the separate cross validation data set; we do this by calling the method **test** that is defined in lines 167 through 198.
+Once the training data and the values of {$$}\mu{/$$} (the variable **mu** in the code) are defined for each feature we can define the method **train** in lines 86 through 104 that calculated the best **epsilon** "cutoff" value for the training data set using the method **train_helper** defined in lines 138 through 165. We use the "best" **epsilon** value by testing with the separate cross validation data set; we do this by calling the method **test** that is defined in lines 167 through 198.
 
+## Clojure Experiment For the University of Wisconsin Cancer Data Using Java Anomaly Detection Code
 
-## Example Using the University of Wisconsin Cancer Data
-
-The example in this section loads the University of Wisconsin data and uses the class **AnomalyDetection** developed in the last section to find anomalies, which for this example will be input vectors that represented malignancy in the original data.
+The example in this section loads the University of Wisconsin data and uses the Java class **AnomalyDetection** developed in the last section to find anomalies, which for this example will be input vectors that represented malignancy in the original data.
 
 The Wisconsin data has 9 input features and one target output. Optionally the example program can use Incenter to plot the distribution of input variables. For of these plots are shown here:
 ![Distributions for 4 of the 9 input features](images/anomaly_detection.md:wisconsin_plots.png)
 
 
-{lang="Clojure",linenos=on}
+**project.clj**:
+
+{lang="clojure",linenos=on}
+~~~~~~~~
+(defproject anomaly_detection_clj "0.1.0-SNAPSHOT"
+  :description "Example of Clojure using Java Anomaly Detection code"
+  :url "https://markwatson.com"
+  :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
+            :url "https://www.eclipse.org/legal/epl-2.0/"}
+  :dependencies [[org.clojure/clojure "1.10.1"]
+                 ;;[com.markwatson/anomaly_detection "1.0-SNAPSHOT"]
+                 [org.apache.commons/commons-io "1.3.2"]
+                 [org.clojure/data.csv "1.0.0"]
+                 [incanter "1.9.3"]]
+  :source-paths      ["src"]
+  :java-source-paths ["src-java"]
+  :javac-options     ["-target" "1.8" "-source" "1.8"]
+  :main ^:skip-aot anomaly-detection-clj.core
+  :target-path "target/%s"
+  :profiles {:uberjar {:aot :all
+                       :jvm-opts ["-Dclojure.compiler.direct-linking=true"]}})
+~~~~~~~~
+
+
+
+**src/anomaly_detection/core.clj**:
+
+{lang="clojure",linenos=on}
 ~~~~~~~~
 (ns anomaly-detection-clj.core
   (:gen-class)
@@ -298,7 +324,7 @@ The Wisconsin data has 9 input features and one target output. Optionally the ex
 
 (import (com.markwatson.anomaly_detection AnomalyDetection))
 
-(def GENERATE_PLOTS true)
+(def GENERATE_PLOTS false)
 
 (defn print-histogram [title values-2d index-to-display]
   (println "** plotting:" title)
@@ -355,12 +381,15 @@ The Wisconsin data has 9 input features and one target output. Optionally the ex
           (println "malignant_result false"))
         (if benign_result
           (println "benign_result true")
-          (println "benign_result false"))))))
-          
+          (println "benign_result false"))
+
+        ))))
 (defn -main
+  "I don't do a whole lot ... yet."
   [& _]
   (testAD))
 ~~~~~~~~
+
 
 Data used by an anomaly detection model should have (roughly) a Gaussian (bell curve shape) distribution. What form does the cancer data have? Unfortunately, each of the data features seems to either have a greater density at the lower range of feature values or large density at the extremes of the data feature ranges. This will cause our model to not perform as well as we would like. Here are the inputs displayed as five-bin histograms:
 
