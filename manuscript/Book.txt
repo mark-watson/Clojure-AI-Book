@@ -4,5 +4,6 @@ opennlp.md
 anomaly_detection.md
 webscrape.md
 semantic_web.md
+jena_wrapper.md
 kgn.md
 conclusion.md

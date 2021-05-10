@@ -93,7 +93,7 @@ Since the DBPedia queries are time consuming, I created a tiny subset of DBPedia
 
 TBD
 
-{lang="Clojure",linenos=on}
+{lang="clojure",linenos=on}
 ~~~~~~~~
 (defproject knowledge_graph_navigator_clj "0.1.0-SNAPSHOT"
   :description "Knowledge Graph Navigator"
@@ -113,7 +113,7 @@ TBD
 
 **sparql.clj**:
 
-{lang="Clojure",linenos=on}
+{lang="clojure",linenos=on}
 ~~~~~~~~
 (ns knowledge-graph-navigator-clj.sparql
   (:require [clj-http.client :as client])
@@ -164,7 +164,7 @@ TBD
 
 **entities_by_name.clj**:
 
-{lang="Clojure",linenos=on}
+{lang="clojure",linenos=on}
 ~~~~~~~~
 (ns knowledge-graph-navigator-clj.entities-by-name
   (:require [knowledge-graph-navigator-clj.sparql :as sparql])
@@ -199,7 +199,7 @@ TBD
 
 **relationships.clj**:
 
-{lang="Clojure",linenos=on}
+{lang="clojure",linenos=on}
 ~~~~~~~~
 (ns knowledge-graph-navigator-clj.relationships
   (:require [knowledge-graph-navigator-clj.sparql :as sparql]) ;; for non-cached
@@ -250,7 +250,7 @@ TBD
 
 **kgn.clj**:
 
-{lang="Clojure",linenos=on}
+{lang="clojure",linenos=on}
 ~~~~~~~~
 (ns knowledge-graph-navigator-clj.kgn
   (:require [knowledge-graph-navigator-clj.entities-by-name :as entity-name])
