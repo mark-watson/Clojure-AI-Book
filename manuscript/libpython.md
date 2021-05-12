@@ -9,6 +9,56 @@ To get started I want to point you towards two resources that you will want to f
 
 I suggest bookmarking the libpython-clj GitHub repository for reference and treat Carin Meier's python-clj examples as your main source for using a wide variety of Python libraries with lib python-clj.
 
+## Using spaCy for Natural Language Processing
+
+TBD
+
+An example (code we will implement later):
+
+{linenos=on}
+~~~~~~~~
+(text->entities test-text)
+(text->tokens-and-pos test-text)
+(text->pos test-text)
+(text->tokens test-text)
+~~~~~~~~
+
+{linenos=on}
+~~~~~~~~
+(PERSON ORG GPE DATE MONEY)
+([John PROPN] [Smith PROPN] [worked VERB] [for ADP] [IBM PROPN] [in ADP] [Mexico PROPN]
+ [last ADJ] [year NOUN] [and CCONJ] [earned VERB] [$ SYM] [1 NUM] [million NUM]
+ [in ADP] [salary NOUN] [and CCONJ] [bonuses NOUN] [. PUNCT])
+(PROPN PROPN VERB ADP PROPN ADP PROPN ADJ NOUN CCONJ VERB SYM NUM NUM ADP NOUN
+ CCONJ NOUN PUNCT)
+(John Smith worked for IBM in Mexico last year and earned $ 1 million in salary
+ and bonuses .)
+~~~~~~~~
+
+
+  
+## Using the Hugging Face Transformer Models For Question Answering
+
+TBD
+
+An example (code we will implement later):
+
+{linenos=on}
+~~~~~~~~
+(qa "where does Bill call home?"
+    "Since last year, Bill lives in Seattle. He likes to skateboard.")
+(qa "what does Bill enjoy?"
+    "Since last year, Bill lives in Seattle. He likes to skateboard.")
+~~~~~~~~
+      
+{linenos=on}
+~~~~~~~~
+The generated output is:
+{"score": 0.9626545906066895, "start": 31, "end": 38, "answer": "Seattle"}
+{"score": 0.9084932804107666, "start": 52, "end": 62, "answer": "skateboard"}
+~~~~~~~~
+
+
 
 ## Getting Set Up
 
@@ -53,6 +103,7 @@ TBD
               [libpython-clj.python :as py :refer [py. py.. py.-]]))
 
 (require-python '[spacy :as sp])
+(require-python '[QA :as qa]) ;; loads the local file QA.py
 
 (def nlp (sp/load "en_core_web_sm"))
 
@@ -73,14 +124,22 @@ TBD
 (defn text->entities [text]
   (map (fn [entity] (py.- entity label_))
        (py.- (nlp text) ents)))
-	       
+
+(defn qa
+  "Use Transformer model for question answering"
+  [question context-text]
+  (qa/answer question context-text)) ;; prints to stdout and returns a map
+
 (defn -main
   [& _]
   (println (text->entities test-text))
   (println (text->tokens-and-pos test-text))
   (println (text->pos test-text))
-  (println (text->tokens test-text)))
-  
+  (println (text->tokens test-text))
+  (qa "where does Bill call home?"
+      "Since last year, Bill lives in Seattle. He likes to skateboard.")
+  (qa "what does Bill enjoy?"
+      "Since last year, Bill lives in Seattle. He likes to skateboard."))
 ~~~~~~~~
 
 If you **lein run** to run the test **-main** function in lines ZZZ-ZZZ in the last listing, you will see (with some output removed here for brevity and reformatted):
@@ -95,12 +154,9 @@ If you **lein run** to run the test **-main** function in lines ZZZ-ZZZ in the l
  CCONJ NOUN PUNCT)
 (John Smith worked for IBM in Mexico last year and earned $ 1 million in salary
  and bonuses .)
+{'score': 0.9626545906066895, 'start': 31, 'end': 38, 'answer': 'Seattle'}           
+{'score': 0.9084932804107666, 'start': 52, 'end': 62, 'answer': 'skateboard'}
 ~~~~~~~~
 
-
-
-{lang="clojure",linenos=on}
-~~~~~~~~
-~~~~~~~~
-
+This example shows how to load the local Python file **QA.py** and call a function defined in the file. This is a good approach if you, for example, had existing Python code that uses TensorFlow or PyTorch, or was a complete application written in Python that you wanted to use from Clojure. While it is possible to do everything in Clojure calling directly into Python libraries it is simpler to write simple Python wrappers.
 
