@@ -2,14 +2,12 @@
 
 Anomaly detection models are used in one very specific class of use cases: when you have many negative (non-anomaly) examples and relatively few positive (anomaly) examples. We can refer to this as an unbalanced training set. For training we will ignore positive examples, create a model of "how things should be," and hopefully be able to detect anomalies different from the original negative examples.
 
-If you have a large training set of both negative and positive examples then do not use anomaly detection models. If your training examples are balanced then use a classification model as we will see later in the chapter [Deep Learning Using Deeplearning4j](#dl4j).
+If you have a large training set of both negative and positive examples then do not use anomaly detection models. If your training examples are balanced then use a classification model as we saw earlier in the chapter [Deep Learning Using Deeplearning4j](#dl4j).
 
 
 ## Motivation for Anomaly Detection
 
-We used the University of Wisconsin cancer data in an earlier chapter on using DeepLearning4J for deep learning. Here we use the same data set for anomaly detection.
-
-When should we use anomaly detection? You should use supervised learning algorithms like neural networks and logistic classification when there are roughly equal number of available negative and positive examples in the training data. The University of Wisconsin cancer data set is fairly evenly split between negative and positive examples.
+When should we use anomaly detection? You should use supervised learning algorithms like neural networks and logistic classification when there are roughly equal number of available negative and positive examples in the training data. The University of Wisconsin cancer data set is fairly evenly split between negative and positive examples so I artificially fudged it for this example.
 
 Anomaly detection should be used when you have many negative ("normal") examples and relatively few positive ("anomaly") examples. For the example in this chapter we will simulate scarcity of positive ("anomaly") results by preparing the data using the Wisconsin cancer data as follows:
 
@@ -47,14 +45,14 @@ To be clear: we separate the input examples into three separate sets of training
 
 I present the example program as one long listing, with more code explanation after the listing. Please note the long loop over each input training example starting at line 28 and ending on line 74. The code in lines 25 through 44 processes the input training data sample into three disjoint sets of training, cross validation, and testing data. Then the code in lines 45 through 63 copies these three sets of data to Java arrays.
 
-The code in lines 65 through 73 calculates, for a training example, the value of {$$}\mu{/$$} (the variable **mu** in the code).
+The code in lines XXXX through YYYY calculates, for a training example, the value of {$$}\mu{/$$} (the variable **mu** in the code).
 
 ## Clojure Experiment For the University of Wisconsin Cancer Data Using Java Anomaly Detection Code
 
 The example in this section loads the University of Wisconsin data and uses the Java class **AnomalyDetection** developed in the last section to find anomalies, which for this example will be input vectors that represented malignancy in the original data.
 
 The Wisconsin data has 9 input features and one target output. Optionally the example program can use Incenter to plot the distribution of input variables. For of these plots are shown here:
-![Distributions for 4 of the 9 input features](images/anomaly_detection.md:wisconsin_plots.png)
+![Distributions for 4 of the 9 input features](images/wisconsin_plots.png)
 
 
 **project.clj**:
@@ -62,12 +60,13 @@ The Wisconsin data has 9 input features and one target output. Optionally the ex
 {lang="clojure",linenos=on}
 ~~~~~~~~
 (defproject anomaly_detection_clj "0.1.0-SNAPSHOT"
-  :description "Example of Clojure using Java Anomaly Detection code"
+  :description "Anomaly Detection code"
   :url "https://markwatson.com"
-  :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
-            :url "https://www.eclipse.org/legal/epl-2.0/"}
+  :license
+  {:name
+   "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
+   :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.1"]
-                 ;;[com.markwatson/anomaly_detection "1.0-SNAPSHOT"]
                  [org.apache.commons/commons-io "1.3.2"]
                  [org.clojure/data.csv "1.0.0"]
                  [incanter "1.9.3"]]
@@ -82,7 +81,7 @@ The Wisconsin data has 9 input features and one target output. Optionally the ex
 
 
 
-**src/anomaly_detection/core.clj**:
+**src/anomaly_detection/core.clj** (code formatted for page width):
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -94,7 +93,8 @@ The Wisconsin data has 9 input features and one target output. Optionally the ex
   (:require [clojure.java.io :as io])
   (:require [clojure.data.csv :as csv]))
 
-(import (com.markwatson.anomaly_detection AnomalyDetection))
+(import
+ (com.markwatson.anomaly_detection AnomalyDetection))
 
 (def GENERATE_PLOTS false)
 
@@ -102,22 +102,27 @@ The Wisconsin data has 9 input features and one target output. Optionally the ex
   (println "** plotting:" title)
   (let [column (for [row values-2d]
                  (nth row index-to-display))]
-    (incanter.core/view (incanter.charts/histogram column :title title))))
+    (incanter.core/view
+      (incanter.charts/histogram column
+                                 :title title))))
 
 (defn data->gausian
-  "separate labeled output, and then make the data look more like a Gausian (bell curve shaped) distribution"
+  "separate labeled output and then make the data look more like a Gausian (bell curve shaped) distribution"
   [vector-of-numbers-as-strings]
   (let [v (map read-string vector-of-numbers-as-strings)
         training-data0 (map
-                         (fn [x] (Math/log (+ (* 0.1 x) 1.2)))
+                         (fn [x]
+                           (Math/log
+                             (+ (* 0.1 x) 1.2)))
                          (butlast v))
         target-output (* 0.5 (- (last v) 2))                ; make target output be [0,1] instead of [2,4]
         vmin (apply min training-data0)
         vmax (apply max training-data0)
         training-data (map
-                        (fn [x] (/
-                                  (- x vmin)
-                                  (+ 0.0001 (- vmax vmin))))
+                        (fn [x]
+                          (/
+                            (- x vmin)
+                            (+ 0.0001 (- vmax vmin))))
                         training-data0)]
     (concat training-data [target-output])))
 
@@ -126,28 +131,41 @@ The Wisconsin data has 9 input features and one target output. Optionally the ex
         cdata
         (map
           data->gausian
-          (with-open [reader (io/reader "data/cleaned_wisconsin_cancer_data.csv")]
+          (with-open
+            [reader
+              (io/reader
+               "data/cleaned_wisconsin_cancer_data.csv")]
             (doall
               (csv/read-csv reader))))]
     (if GENERATE_PLOTS
       (do
         (print-histogram "Clump Thickness" cdata 0)
-        (print-histogram "Uniformity of Cell Size" cdata 1)
-        (print-histogram "Uniformity of Cell Shape" cdata 2)
+        (print-histogram
+          "Uniformity of Cell Size" cdata 1)
+        (print-histogram
+          "Uniformity of Cell Shape" cdata 2)
         (print-histogram "Marginal Adhesion" cdata 3)
-        (print-histogram "Single Epithelial Cell Size" cdata 4)
+        (print-histogram
+          "Single Epithelial Cell Size" cdata 4)
         (print-histogram "Bare Nuclei" cdata 5)
         (print-histogram "Bland Chromatin" cdata 6)
         (print-histogram "Normal Nucleoli" cdata 7)
         (print-histogram "Mitoses" cdata 8)))
     ;; get best model parameters:
     (let [java-cdata (into-array (map double-array cdata))
-          detector (new AnomalyDetection 10 (- (count cdata) 1) java-cdata)]
+          detector
+          (new AnomalyDetection
+            10 (- (count cdata) 1) java-cdata)]
       (. detector train)
-      (let [test_malignant (double-array [0.5 1 1 0.8 0.5 0.5 0.7 1 0.1])
-            test_benign (double-array [0.5 0.4 0.5 0.1 0.8 0.1 0.3 0.6 0.1])
-            malignant_result (. detector isAnamoly test_malignant)
-            benign_result (. detector isAnamoly test_benign)]
+      (let [test_malignant
+            (double-array [0.5 1 1 0.8 0.5 0.5 0.7 1 0.1])
+            test_benign
+            (double-array
+             [0.5 0.4 0.5 0.1 0.8 0.1 0.3 0.6 0.1])
+            malignant_result
+            (. detector isAnamoly test_malignant)
+            benign_result
+            (. detector isAnamoly test_benign)]
         (if malignant_result
           (println "malignant_result true")
           (println "malignant_result false"))
@@ -163,73 +181,7 @@ The Wisconsin data has 9 input features and one target output. Optionally the ex
 ~~~~~~~~
 
 
-Data used by an anomaly detection model should have (roughly) a Gaussian (bell curve shape) distribution. What form does the cancer data have? Unfortunately, each of the data features seems to either have a greater density at the lower range of feature values or large density at the extremes of the data feature ranges. This will cause our model to not perform as well as we would like. Here are the inputs displayed as five-bin histograms:
-
-{line-numbers=off}
-~~~~~~~~
-Clump Thickness
-0	177
-1	174
-2	154
-3	63
-4	80
-
-Uniformity of Cell Size
-0	393
-1	86
-2	54
-3	43
-4	72
-
-Uniformity of Cell Shape
-0	380
-1	92
-2	58
-3	54
-4	64
-
-Marginal Adhesion
-0	427
-1	85
-2	42
-3	37
-4	57
-
-Single Epithelial Cell Size
-0	394
-1	117
-2	76
-3	28
-4	33
-
-Bare Nuclei
-0	409
-1	44
-2	33
-3	27
-4	135
-
-Bland Chromatin
-0	298
-1	182
-2	41
-3	97
-4	30
-
-Normal Nucleoli
-0	442
-1	56
-2	39
-3	37
-4	74
-
-Mitoses
-0	567
-1	42
-2	8
-3	17
-4	14
-~~~~~~~~
+Data used by an anomaly detection model should have (roughly) a Gaussian (bell curve shape) distribution. What form does the cancer data have? Unfortunately, each of the data features seems to either have a greater density at the lower range of feature values or large density at the extremes of the data feature ranges. This will cause our model to not perform as well as we would like.
 
 I won't do it in this example, but the feature "Bare Nuclei" should be removed because it is not even close to being a bell-shaped distribution. Another thing that you can do (recommended by Andrew Ng in his Coursera Machine Learning class) is to take the log of data and otherwise transform it to something that looks more like a Gaussian distribution.
 

@@ -3,19 +3,19 @@
 
 
 
-One limitation of back propagation neural networks seen in the last chapter is that they are limited to the number of neuron layers that can be efficiently trained. If you experimented with the sample back propagation code then you may have noticed that it took longer to train a network with two hidden layers compared to the training time for a network with only one hidden layer. There are also problems like vanishing gradients (the backpropagated errors that are used to update connection weights) that occur in architectures with many layers. Deep learning uses computational improvements to mitigate the vanishing gradient problem like using ReLu activation functions rather than the more traditional Sigmoid function, and networks called "skip connections" networks where some layers are initially turned off with connections skipping to the next active layer. After some initial training the skipped layers are activated and become part of the model (as in ResNet50, mentioned in the section [Roadmap for the DL4J Model Zoo](#zoo) at the end of this chapter).
+One limitation of conventional back propagation neural networks is that they are limited to the number of neuron layers that can be efficiently trained. There are also problems like vanishing gradients (the backpropagated errors that are used to update connection weights) that occur in architectures with many layers.
 
-Digging deeper into the problem of vanishing gradients, the problem with back propagation networks is that as error gradients are back propagated through the network toward the input layer, the gradients get smaller and smaller. The effect is that it can take a lot of time to train back propagation networks with many hidden layers. Even worse, the small backpropagated errors get so small that they cause numerical underflows.
+Deep learning uses computational improvements to mitigate the vanishing gradient problem like using ReLu activation functions rather than the more traditional Sigmoid function, and networks called "skip connections" networks where some layers are initially turned off with connections skipping to the next active layer.
 
-I became interested in deep learning neural networks when I took Geoffrey Hinton's Neural Network class (a Coursera class, taken summer of 2012) and then for the next seven years most of my professional work involved deep learning. I have used GAN (generative adversarial networks) models for synthesizing numeric spreadsheet data, LSTM (long short term memory) models to synthesize highly structured text data like nested JSON, and for NLP (natural language processing). Several of my 55 US patents use neural network and Deep Learning technology.
+Modern deep learning frameworks like DeepLearning4J, tensorFlow, and PyTorch are easy to use and efficient. We use DeepLearning4J in this chapter because it is written in Java and easy to use with Clojure. In a later chapter we will use the Clojure library **libpython-clj** to access other deep learning-based tools like the Hugging Face Transformer models for question answering systems as well as the **spaCy** Python library for natural language processing (NLP).
+
+I have used GAN (generative adversarial networks) models for synthesizing numeric spreadsheet data, LSTM (long short term memory) models to synthesize highly structured text data like nested JSON, and for NLP (natural language processing). Several of my 55 US patents use neural network and Deep Learning technology.
 
 The [Deeplearning4j.org](http://deeplearning4j.org/) Java library supports many neural network algorithms including support for Deep Learning (DL).  Note that I will often refer to Deeplearning4j as DL4J. 
 
-We will first look at a simple example of a feed forward network using the same University of Wisconsin cancer database that we used earlier. Deep learning refers to neural networks with many layers, possibly with weights connecting neurons in non-adjacent layers which makes it possible to model temporal and spacial patterns in data.
+We will look at a simple example of a feed forward network using the same University of Wisconsin cancer database that we will also use later in the chapel on anomaly detection.
 
-There is a separate [repository of DL4J examples](https://github.com/eclipse/deeplearning4j-examples) that you should clone because the last half of this chapter is a general discussion of running the DL4J examples and modifying them for your needs with one additional example using LSTM models.
-
-After the first simple example we then look at how to set up DL4J projects using Maven, and then discuss other types of layer classes that you will likely use in your projects. After learning how to set up and use DL4J and having a roadmap of commonly used layer classes, then you will then be set to work on your own projects.
+There is a separate [repository of DL4J examples](https://github.com/eclipse/deeplearning4j-examples) that you might want to look at since any of these Java examples that look useful for your projects can be used in Clojure using the example here to get started.
 
 ## Feed Forward Classification Networks
 
@@ -23,17 +23,9 @@ Feed forward classification networks are a type of deep neural network that can 
 
 In general, simpler network architectures are better than unnecessarily complicated architectures. You can start with simple architectures and add layers, different layer types, and parallel models as-needed. For feed forward networks model complexity has two dimensions: the numbers of neurons in hidden layers, and also the number of hidden layers. If you put too many neurons in hidden layers then the training data is effectively memorized and this will hurt performance on data samples not used in training. In practice, I "starve the network" by reducing the number of hidden neurons until the model has reduced accuracy on independent test data. Then I slightly increase the number of neurons in hidden layers. This technique helps avoid models simply memorizing training data.
 
-## Feed Forward Example
+Our example here reads the University of Wisconsin cancer training and testing data sets, creates a model (lines XXX-YYY), trains it (line ZZZ) and tests it (lines AAA-BBB).
 
-The following screen shot shows an IntelliJ project (you can use the free community or professional version for the examples in this book) for the example in this chapter:
-
-![IntelliJ project view for the examples in this chapter](images/intellij_dl.png)
-
-The Deeplearning4j library can use user-written Java classes to import training and testing data into a form that the Deeplearning4j library can use. Some of the examples at [https://github.com/eclipse/deeplearning4j-examples](https://github.com/eclipse/deeplearning4j-examples) use custom data loaders but in this simple example we use built-in utilities for reading spreadsheet data (see lines 46-56 in the following listing).
-
-The class **ClassifierWisconsinData** reads the University of Wisconsin cancer training and testing data sets, creates a model (lines 59-81), trains it (line 82) and tests it (lines 84-97). The value of the variable **numHidden** set in line 3 refers to the number of neurons in each hidden layer.
-
-You can increase the number of hidden units in line 36 (something that you might do for more complex problems). To add a hidden layer you can repeat lines 66-71, and you would change the layer indices (first argument) as appropriate in calls to the chained method **.layer()** so the layer indices are all different and increasing in value.
+You can increase the number of hidden units in line XXXX (something that you might do for more complex problems). To add a hidden layer you can repeat lines XXX-CCC.
 
 
 {lang="clojure",linenos=on}
@@ -114,37 +106,37 @@ You can increase the number of hidden units in line 36 (something that you might
 
 It is very important to not use training data for testing because performance on recognizing training data should always be good assuming that you have enough memory capacity in a network (i.e., enough hidden units and enough neurons in each hidden layer).
 
-The program output is (much output removed for brevity):
+The program output shows the target (correct output) and the output predicted by the trained model:
 
 {line-numbers=off}
 ~~~~~~~~
-desired output: [ 0.0 1.0 ] predicted output: [ 0.161 0.839 ]
-desired output: [ 0.0 1.0 ] predicted output: [ 0.392 0.608 ]
-desired output: [ 1.0 0.0 ] predicted output: [ 0.910 0.090 ]
-desired output: [ 0.0 1.0 ] predicted output: [ 0.161 0.839 ]
-desired output: [ 0.0 1.0 ] predicted output: [ 0.161 0.839 ]
-desired output: [ 1.0 0.0 ] predicted output: [ 0.963 0.037 ]
-desired output: [ 1.0 0.0 ] predicted output: [ 0.949 0.051 ]
-desired output: [ 1.0 0.0 ] predicted output: [ 0.950 0.050 ]
-desired output: [ 0.0 1.0 ] predicted output: [ 0.208 0.792 ]
-desired output: [ 1.0 0.0 ] predicted output: [ 0.944 0.056 ]
-desired output: [ 1.0 0.0 ] predicted output: [ 0.923 0.077 ]
-desired output: [ 0.0 1.0 ] predicted output: [ 0.161 0.839 ]
-desired output: [ 1.0 0.0 ] predicted output: [ 0.944 0.056 ]
-desired output: [ 0.0 1.0 ] predicted output: [ 0.161 0.839 ]
-desired output: [ 1.0 0.0 ] predicted output: [ 0.964 0.036 ]
-desired output: [ 0.0 1.0 ] predicted output: [ 0.168 0.832 ]
-desired output: [ 0.0 1.0 ] predicted output: [ 0.166 0.834 ]
-desired output: [ 0.0 1.0 ] predicted output: [ 0.162 0.838 ]
-desired output: [ 0.0 1.0 ] predicted output: [ 0.161 0.839 ]
-desired output: [ 1.0 0.0 ] predicted output: [ 0.952 0.048 ]
-desired output: [ 1.0 0.0 ] predicted output: [ 0.940 0.060 ]
-desired output: [ 1.0 0.0 ] predicted output: [ 0.923 0.077 ]
-desired output: [ 1.0 0.0 ] predicted output: [ 0.963 0.037 ]
+target: [ 0.0 1.0 ] predicted : [ 0.16 0.84 ]
+target: [ 0.0 1.0 ] predicted : [ 0.39 0.61 ]
+target: [ 1.0 0.0 ] predicted : [ 0.91 0.09 ]
+target: [ 0.0 1.0 ] predicted : [ 0.16 0.84 ]
+target: [ 0.0 1.0 ] predicted : [ 0.16 0.84 ]
+target: [ 1.0 0.0 ] predicted : [ 0.96 0.04 ]
+target: [ 1.0 0.0 ] predicted : [ 0.95 0.05 ]
+target: [ 1.0 0.0 ] predicted : [ 0.95 0.05 ]
+target: [ 0.0 1.0 ] predicted : [ 0.21 0.79 ]
+target: [ 1.0 0.0 ] predicted : [ 0.94 0.06 ]
+target: [ 1.0 0.0 ] predicted : [ 0.92 0.08 ]
+target: [ 0.0 1.0 ] predicted : [ 0.16 0.84 ]
+target: [ 1.0 0.0 ] predicted : [ 0.94 0.06 ]
+target: [ 0.0 1.0 ] predicted : [ 0.16 0.84 ]
+target: [ 1.0 0.0 ] predicted : [ 0.96 0.04 ]
+target: [ 0.0 1.0 ] predicted : [ 0.17 0.83 ]
+target: [ 0.0 1.0 ] predicted : [ 0.17 0.83 ]
+target: [ 0.0 1.0 ] predicted : [ 0.16 0.84 ]
+target: [ 0.0 1.0 ] predicted : [ 0.16 0.84 ]
+target: [ 1.0 0.0 ] predicted : [ 0.95 0.05 ]
+target: [ 1.0 0.0 ] predicted : [ 0.94 0.06 ]
+target: [ 1.0 0.0 ] predicted : [ 0.92 0.08 ]
+target: [ 1.0 0.0 ] predicted : [ 0.96 0.04 ]
 ~~~~~~~~
 
 
-## Documentation for Other Types of Deep Learning Layers
+## Optional Material: Documentation for Other Types of DeepLearning4J Builtin Layers
 
 The [documentation for the built-in layer classes in DL4J](https://deeplearning4j.org/api/latest/org/deeplearning4j/nn/conf/layers/package-tree.html) is probably more than you need for now so let's review the most other types of layers that I sometimes use. In the simple example we used in the last section we used two types of layers:
 
@@ -166,8 +158,8 @@ As you build more deep learning enabled applications, depending on what requirem
 
 ## Deep Learning Wrap Up
 
-I first used neural networks in the late 1980s for phoneme (speech) recognition, specifically using time delay neural networks and I gave a talk about it at [IEEE First Annual International Conference on Neural Networks San Diego, California June 21-24, 1987](http://ieeexplore.ieee.org/xpl/articleDetails.jsp?reload=true&arnumber=4307059). In the following year I wrote the Backpropagation neural network code that my company used in a bomb detector that we built for the FAA. Back then, neural networks were not widely accepted but in the present time Google, Microsoft, and many other companies are using deep learning for a wide range of practical problems. Exciting work is also being done in the field of natural language processing. The examples in this chapter are simple so you can experiment with them easily. I wanted to introduce you to [Deeplearning4j](http://deeplearning4j.org/) because it is written in Java (plus native code in FORTRAN and C/C++) reasonably easy to use in Clojure applications. In the last chapter, I called the Java DeepLearning4J APIs directly from Clojure. Here I will take a different approach of using a wrapper library that I wrote for my Java AI book. In this case, I think that this is easy using OpenNLP in Clojure applications.
+I first used neural networks in the late 1980s for phoneme (speech) recognition, specifically using time delay neural networks and I gave a talk about it at [IEEE First Annual International Conference on Neural Networks San Diego, California June 21-24, 1987](http://ieeexplore.ieee.org/xpl/articleDetails.jsp?reload=true&arnumber=4307059). In the following year I wrote the Backpropagation neural network code that my company used in a bomb detector that we built for the FAA. Back then, neural networks were not widely accepted but in the present time Google, Microsoft, and many other companies are using deep learning for a wide range of practical problems. Exciting work is also being done in the field of natural language processing.
 
-Deep Learning has become a standard tool for modeling data and making predictions or classifying data. Most of the online classes on Deep Learning use Python. DL4J can import Keras/TensorFlow models so one strategy is for you to build models using Python and import trained models into DL4J.
+The example in this chapter is simple so you can experiment with it and provided examples for dealing with calling the DL4J Java APIs directly from Clojure.
 
 Later we will look at an example calling directly out to Python code using the **libpython-clj** library to use the spaCy natural language processing library. You can also use the **libpython-clj** library to access libraries like TensorFlow, PyTorch, etc. in your Clojure applications.

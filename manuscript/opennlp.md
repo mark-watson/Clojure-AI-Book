@@ -1,10 +1,8 @@
 # Natural Language Processing Using OpenNLP {#opennlp}
 
-Here we use the [Apache OpenNLP project](https://opennlp.apache.org). OpenNLP has pre-trained models for tokenization, sentence segmentation, part-of-speech tagging, named entity extraction, chunking, parsing, and coreference resolution. As we see later OpenNLP has tools to also build our own models. OpenNLP is written in Java
+Here we use the [Apache OpenNLP project](https://opennlp.apache.org) written in Java. OpenNLP has pre-trained models for tokenization, sentence segmentation, part-of-speech tagging, named entity extraction, chunking, parsing, and coreference resolution. Here we use a subset of OpenNLP's functionality. My Java AI book has a more complete treatment, including building custom classification models and performing chunk-parsing of sentence structure.
 
-I have worked in the field of Natural Language Processing (NLP) since the early 1980s. Many more people are now interested in the field of NLP and the techniques have changed drastically in the last decade.
-
-Currently, OpenNLP has support for Danish, German, English, Spanish, Portuguese, and Swedish. I include in the github repository some trained models for English in the directory **models**.
+Currently, OpenNLP has support for Danish, German, English, Spanish, Portuguese, and Swedish. I include in the github repository pre-trained models for English in the directory **models**.
 
 
 ## Using the Clojure and Java Wrappers for OpenNLP
@@ -33,25 +31,26 @@ The **project.clj** file shows the setup for incorporating Java code into a Cloj
 (defproject opennlp-clj "0.1.0-SNAPSHOT"
   :description "Example using OpenNLP with Clojure"
   :url "http://markwatson.com"
-  :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
-            :url "https://www.eclipse.org/legal/epl-2.0/"}
+  :license
+  {:name
+   "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
+   :url "https://www.eclipse.org/legal/epl-2.0/"}
   :source-paths      ["src"]
   :java-source-paths ["src-java"]
   :javac-options     ["-target" "1.8" "-source" "1.8"]
 
   :dependencies [[org.clojure/clojure "1.10.1"]
-                 ;[com.markwatson/opennlp "1.0-SNAPSHOT"] ;;from my Java AI book
-                 [opennlp/tools "1.5.0"]
-                 ]
+                 ;from my Java AI book:
+                 ;[com.markwatson/opennlp "1.0-SNAPSHOT"]
+                 [opennlp/tools "1.5.0"]]
   :repl-options {:init-ns opennlp-clj.core})
   ~~~~~~~~
 
-
-The model files, including the categorization model you will learn to build later in this chapter, are found in the subdirectory **models**.
+Note the use of **:java-source-paths** to specify where the Java codes stored in the project. When you use **lein run** to try the example, both the Java and Clojure code is compiled. When I first wrote this example, I used the maven output target for the OpenNLP example in my Java AI book. I left the dependency in this **project.clj** file commented out.
 
 TBD:
 
-{lang="clojue",linenos=off}
+{lang="clojue",linenos=on}
 ~~~~~~~~
 (ns opennlp-clj.core
   (:import (com.markwatson.opennlp NLP)))
@@ -97,7 +96,7 @@ Here I tokenize text into a Java array that is used to call the Java OpenNLP cod
 
 The test code for this project shows how to use these APIs:
 
-{lang="clojure",linenos=off}
+{lang="clojure",linenos=on}
 ~~~~~~~~
 (ns opennlp-clj.core-test
   (:require [clojure.test :as test])
@@ -117,7 +116,8 @@ The test code for this project shows how to use these APIs:
           people (onlp/person-names token-java-array)]
       (println "Input text:\n" test-text)
       (println "Tokens as Java array:\n" token-java-array)
-      (println "Tokens as Clojure seq:\n" token-clojure-seq)
+      (println "Tokens as Clojure seq:\n"
+               token-clojure-seq)
       (println "Part of speech tokens:\n" words-pos)
       (println "Companies:\n" companies)
       (println "Places:\n" places)
@@ -130,7 +130,7 @@ Here is the test output:
 {linenos=off}
 ~~~~~~~~
 Input text:
- The cat chased the mouse around the tree while Mary Smith (who works at IBM in San Francisco) watched.
+The cat chased the mouse around the tree while Mary Smith (who works at IBM in San Francisco) watched.
 Tokens as Java array:
  #object[[Ljava.lang.String; 0x2f04105 [Ljava.lang.String;@2f04105]
 Tokens as Clojure seq:
@@ -144,5 +144,7 @@ Places:
 People:
  (Mary Smith)
  ~~~~~~~~
+
+The part of speech tokens like DT (determiner), NN (noun), etc. are defined in the README file for this project.
 
 **Note:** my Java AI book covers OpenNLP in more depth, including how to train your own classification models.
