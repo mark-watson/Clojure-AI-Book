@@ -5,7 +5,9 @@ The Knowledge Graph Navigator (which I will often refer to as KGN) is a tool for
 
 The most full featured version of KGN, including a full user interface, is featured in my book [Loving Common Lisp, or the Savvy Programmer's Secret Weapon](https://leanpub.com/lovinglisp) that you can read free online. That version performs more speculative SPARQL queries to find information compared to the example here that I designed for ease of understanding, and modification.
 
-**Note:** this example program makes many SPARQL queries to the DBPedia SPARQL endpoint and can take a few minutes to run. For faster development, I recommend that you install the free edition of [GraphDB](https://www.ontotext.com/products/graphdb/), load the file **dbpedia_sample.nt** into a graph named **dbpedia** and change the value for the variable **USE-LOCAL-GRAPHDB** to **true**. With a local GraphDB SPARQL endpoint the example program will run in a few seconds and you will have more fun experimenting with it. That said, if you just want to run this example a few times, then just leave the code as-is and try **lein run**.
+**Note:** this example program makes many SPARQL queries to the DBPedia SPARQL endpoint and can take a few minutes to run. For faster development, I recommend that you install the free edition of [GraphDB](https://www.ontotext.com/products/graphdb/), load the file **dbpedia_sample.nt** into a graph named **dbpedia** and change the value for the variable **USE-LOCAL-GRAPHDB** in **sparql.clj** to **true**. With a local GraphDB SPARQL endpoint the example program will run in a few seconds and you will have more fun experimenting with it. That said, if you just want to run this example a few times, then just leave the code as-is and try **lein run**.
+
+![File dbpedia_sample.nt loaded into the free version of GraphDB](images/graphdb.jpg)
 
 I chose to use DBPedia instead of WikiData for this example because DBPedia URIs are human readable. The following URIs represent the concept of a *person*. The semantic meanings of DBPedia and FOAF (friend of a friend) URIs are self-evident to a human reader while the WikiData URI is not:
 
@@ -29,15 +31,13 @@ After looking an interactive session using the example program for this chapter 
 
 ## Entity Types Handled by KGN
 
-To keep this example simple we handle just four entity types:
+To keep this example simple we handle just three entity types:
 
 - People
 - Organizations
 - Places
  
-In addition to finding detailed information for people, companies, cities, and countries we will also search for relationships between person entities and company entities. This search process consists of generating a series of SPARQL queries and calling the DBPedia SPARQL endpoint.
-
-As we look at the KGN implementation I will point out where and how you can easily add support for more entity types and in the wrap-up I will suggest further projects that you might want to try implementing with this example.
+In addition to finding detailed information for people, organizations, and places we will also search for relationships between person entities and company entities. This search process consists of generating a series of SPARQL queries and calling the DBPedia SPARQL endpoint.
 
 Before we design and write the code, I want to show you the final output for an example:
 
@@ -86,9 +86,9 @@ The output (with some text shortened) is:
 
 ## General Design of KGN with Example Output
 
-The example application works processing a list or Person, Place, and Organization names. We fgenerate SPARQL queries to DBPedia to find information about the entities and relationships between them.
+The example application works processing a list or Person, Place, and Organization names. We generate SPARQL queries to DBPedia to find information about the entities and relationships between them.
 
-Since the DBPedia queries are time consuming, I created a tiny subset of DBPedia in the file **dbpedia_sample.nt** and load it into a RDF data store like **GraphDB** or **Fuseki** running on my laptop. This local setup is especially helpful during development when the same queries are repeatedly used for testing.
+Since the DBPedia queries are time consuming, I created a tiny subset of DBPedia in the file **dbpedia_sample.nt** and load it into a RDF data store like **GraphDB** or **Fuseki** running on my laptop. This local setup is especially helpful during development when the same queries are repeatedly used for testing. If you don't modify the file **sparql.clj** then by default the public DBPedia SPARQL endpoint will be used.
 
 
 ## Implementation
@@ -130,7 +130,6 @@ TBD
 (defn dbpedia [sparql-query]
   ;;(let [q (str "https://dbpedia.org//sparql?output=csv&query=" (url-encode sparql-query))
   (let [q (str "http://127.0.0.1:8080/sparql?output=csv&query=" (url-encode sparql-query))
-        _ (println q)
         response (client/get q)
         body (:body response)]
     (csv/read-csv body)))
@@ -303,17 +302,6 @@ TBD
 
 
 
-This KGN example was hopefully both interesting to you and simple enough in its implementation (because we relied heavily on code from the last two chapters) that you feel comfortable modifying it and reusing it as a part of your own Java applications.
+This KGN example was hopefully both interesting to you and simple enough in its implementation that you can use it as a jumping off point for your own projects.
 
-
-## Wrap-up
-
-If you enjoyed running and experimenting with this example and want to modify it for your own projects then I hope that I provided a sufficient road map for you to do so.
-
-I suggest further projects that you might want to try implementing with this example:
-
-- Write a web application that processes news stories and annotates them with additional data from DBPedia and/or WikiData.
-- In a web or desktop application, detect entities in text and display additional information when the user's mouse cursor hovers over a word or phrase that is identified as an entity found in DBPedia or WikiData.
-- Clone this KGN example and enable it to work simultaneously with DBPedia, WikiData, and local RDF files by using three instances of the class **JenaApis** and in the main application loop access all three data sources.
-
-I had the idea for the KGN application because I was spending quite a bit of time manually setting up SPARQL queries for DBPedia (and other public sources like WikiData) and I wanted to experiment with partially automating this process. I have experimented with versions of KGN written in Java, Hy language ([Lisp running on Python that I wrote a short book on](https://leanpub.com/hy-lisp-python/read)), Swift, and Common Lisp and all four implementations take different approaches as I experimented with different ideas. You might want to check out my [web site devoted to different versions of KGN: www.knowledgegraphnavigator.com](http://www.knowledgegraphnavigator.com/).
+I had the idea for the KGN application because I was spending quite a bit of time manually setting up SPARQL queries for DBPedia (and other public sources like WikiData) and I wanted to experiment with partially automating this process. I have experimented with versions of KGN written in Java, Hy language ([Lisp running on Python that I wrote a short book on](https://leanpub.com/hy-lisp-python/read)), Swift, and Common Lisp and all four implementations take different approaches as I experimented with different ideas.
