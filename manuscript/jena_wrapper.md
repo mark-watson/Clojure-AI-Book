@@ -5,23 +5,24 @@ TBD
 {lang="clojure",linenos=on}
 ~~~~~~~~
 (defproject semantic_web_jena_clj "0.1.0-SNAPSHOT"
-  :description "Clojure Wrapper for the Apache Jena DRF and SPARQL library"
+  :description "Clojure Wrapper for Apache Jena"
   :url "https://markwatson.com"
-  :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
-            :url "https://www.eclipse.org/legal/epl-2.0/"}
+  :license
+  {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
+   :url "https://www.eclipse.org/legal/epl-2.0/"}
   :source-paths      ["src"]
   :java-source-paths ["src-java"]
   :javac-options     ["-target" "1.8" "-source" "1.8"]
   :dependencies [[org.clojure/clojure "1.10.1"]
-                 ;[com.markwatson/semanticweb "1.0.3-SNAPSHOT"]
                  [org.apache.derby/derby "10.15.2.0"]
                  [org.apache.derby/derbytools "10.15.2.0"]
                  [org.apache.derby/derbyclient "10.15.2.0"]
-                 [org.apache.jena/apache-jena-libs "3.17.0" :extension "pom"]]
+                 [org.apache.jena/apache-jena-libs
+                  "3.17.0" :extension "pom"]]
   :repl-options {:init-ns semantic-web-jena-clj.core})
 ~~~~~~~~
 
-It is worth noting the directory structure for this project that also includes Java code (some files not shown for brevity):
+We will use the Jena library for handling RDF and SPARQL queries and the Derby database library for implementing query caching. It is worth noting the directory structure for this project that also includes Java code (some files not shown for brevity):
 
 {linenos=on}
 ~~~~~~~~
@@ -59,9 +60,12 @@ I don't list the file **JenaApis.java** here but you might want to have it open 
 {lang="clojure",linenos=on}
 ~~~~~~~~
 (ns semantic-web-jena-clj.core
-  (:import (com.markwatson.semanticweb JenaApis Cache QueryResult)))
+  (:import (com.markwatson.semanticweb JenaApis Cache
+                                       QueryResult)))
 
-(defn- get-jena-api-model "get a default model with OWL reasoning" []
+(defn- get-jena-api-model
+  "get a default model with OWL reasoning"
+  []
   (new JenaApis))
 
 (defonce model (get-jena-api-model))
@@ -77,16 +81,17 @@ I don't list the file **JenaApis.java** here but you might want to have it open 
 (defn query "SPARQL query" [sparql-query]
   (results->clj (. model query sparql-query)))
 
-(defn query-remote "remote service like DBPedia, etc." [remote-service sparql-query]
-  (results->clj (. model queryRemote remote-service sparql-query)))
+(defn query-remote
+ "remote service like DBPedia, etc."
+ [remote-service sparql-query]
+  (results->clj
+    (. model queryRemote remote-service sparql-query)))
 
 (defn query-dbpedia [sparql-query]
   (query-remote "https://dbpedia.org/sparql" sparql-query))
-;;  (query-dbpedia "select * where { ?subject ?property ?object . } limit 10")
 
 (defn query-wikidata [sparql-query]
   (query-remote "\"https://query.wikidata.org/bigdata/namespace/wdq/sparql" sparql-query))
-;;  (query-dbpedia  "select ?p where { <http://dbpedia.org/resource/Bill_Gates> ?p <http://dbpedia.org/resource/Microsoft> . } limit 3")
 ~~~~~~~~
 
 
@@ -99,7 +104,8 @@ Test code:
             [semantic-web-jena-clj.core :refer :all]))
 
 (deftest load-data-and-sample-queries
-  (testing "Load local triples files and make some SPARQL queries"
+  (testing
+    "Load local triples files and SPARQL queries"
     (load-rdf-file "data/sample_news.nt")
     (let [results (query "select * { ?s ?p ?o } limit 5")]
       (println results))
