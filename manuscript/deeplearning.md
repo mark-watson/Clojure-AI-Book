@@ -32,17 +32,25 @@ You can increase the number of hidden units in line XXXX (something that you mig
 ~~~~~~~~
 (ns deeplearning-dl4j-clj.wisconsin-data
   (:import [org.datavec.api.split FileSplit]
-           [org.deeplearning4j.datasets.datavec RecordReaderDataSetIterator]
-           [org.datavec.api.records.reader.impl.csv CSVRecordReader]
-           [org.deeplearning4j.nn.conf NeuralNetConfiguration$Builder]
-           [org.deeplearning4j.nn.conf.layers OutputLayer$Builder DenseLayer$Builder]
+           [org.deeplearning4j.datasets.datavec 
+            RecordReaderDataSetIterator]
+           [org.datavec.api.records.reader.impl.csv
+            CSVRecordReader]
+           [org.deeplearning4j.nn.conf
+            NeuralNetConfiguration$Builder]
+           [org.deeplearning4j.nn.conf.layers
+            OutputLayer$Builder DenseLayer$Builder]
            [org.deeplearning4j.nn.weights WeightInit]
            [org.nd4j.linalg.activations Activation]
-           [org.nd4j.linalg.lossfunctions LossFunctions$LossFunction]
-           [org.deeplearning4j.optimize.listeners ScoreIterationListener]
-           [org.deeplearning4j.nn.multilayer MultiLayerNetwork]
+           [org.nd4j.linalg.lossfunctions
+            LossFunctions$LossFunction]
+           [org.deeplearning4j.optimize.listeners
+            ScoreIterationListener]
+           [org.deeplearning4j.nn.multilayer
+            MultiLayerNetwork]
            [java.io File]
-           [org.nd4j.linalg.learning.config Adam Sgd AdaDelta AdaGrad AdaMax Nadam NoOp]))
+           [org.nd4j.linalg.learning.config Adam Sgd
+            AdaDelta AdaGrad AdaMax Nadam NoOp]))
 
 (def numHidden 3)
 (def numOutputs 1)
@@ -59,10 +67,18 @@ You can increase the number of hidden units in line XXXX (something that you mig
   "Using DL4J with Wisconsin data"
   [& args]
   (let [recordReader (new CSVRecordReader)
-        _ (. recordReader initialize (new FileSplit (new File "data/", "training.csv")))
-        trainIter (new RecordReaderDataSetIterator recordReader batchSize labelIndex numClasses)
+        _ (. recordReader
+            initialize
+            (new FileSplit
+             (new File "data/", "training.csv")))
+        trainIter
+        (new RecordReaderDataSetIterator
+          recordReader batchSize labelIndex numClasses)
         recordReaderTest (new CSVRecordReader)
-        _ (. recordReaderTest initialize (new FileSplit (new File "data/", "testing.csv")))
+        _ (. recordReaderTest
+            initialize
+             (new FileSplit
+              (new File "data/", "testing.csv")))
         testIter (new RecordReaderDataSetIterator recordReaderTest batchSize labelIndex numClasses)
         conf (->
                (new NeuralNetConfiguration$Builder)
@@ -80,7 +96,8 @@ You can increase the number of hidden units in line XXXX (something that you mig
                      (.build)))
                (.layer
                  1,
-                 (-> (new OutputLayer$Builder LossFunctions$LossFunction/MCXENT)
+                 (-> (new OutputLayer$Builder
+                       LossFunctions$LossFunction/MCXENT)
                      (.nIn numHidden)
                      (.nOut numClasses)
                      (.activation Activation/SOFTMAX)
@@ -96,11 +113,13 @@ You can increase the number of hidden units in line XXXX (something that you mig
             features (. ds getFeatures)
             labels (. ds getLabels)
             predicted (. model output features false)]
-        (doseq [i (range 0 52 2)]                           ;; 26 test samples in data/testing.csv
+        ;; 26 test samples in data/testing.csv:
+        (doseq [i (range 0 52 2)]
           (println
             "desired output: [" (. labels getDouble i)
             (. labels getDouble (+ i 1)) "]"
-            "predicted output: [" (. predicted getDouble i)
+            "predicted output: ["
+            (. predicted getDouble i)
             (. predicted getDouble (+ i 1)) "]"))))))
 ~~~~~~~~
 
@@ -136,7 +155,7 @@ target: [ 1.0 0.0 ] predicted : [ 0.96 0.04 ]
 ~~~~~~~~
 
 
-## Optional Material: Documentation for Other Types of DeepLearning4J Builtin Layers
+## Optional Material: Documentation For Other Types of DeepLearning4J Builtin Layers
 
 The [documentation for the built-in layer classes in DL4J](https://deeplearning4j.org/api/latest/org/deeplearning4j/nn/conf/layers/package-tree.html) is probably more than you need for now so let's review the most other types of layers that I sometimes use. In the simple example we used in the last section we used two types of layers:
 

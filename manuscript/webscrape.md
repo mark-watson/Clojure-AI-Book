@@ -17,7 +17,7 @@ We need to require the **jsoup** dependency in the project file:
   :url "http://markwatson.com"
   :license
   {:name
-   "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
+   "EPL-2.0 OR GPL-2+ WITH Classpath-exception-2.0"
    :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.jsoup/jsoup "1.7.2"]]
@@ -35,15 +35,21 @@ The following bit of example code uses **jsoup** to get the complete plain text 
 (import (org.jsoup Jsoup))
 
 (defn get-html-anchors [jsoup-web-page-contents]
-  (let [anchors (. jsoup-web-page-contents select "a[href]")]
+  (let [anchors
+        (. jsoup-web-page-contents select "a[href]")]
     (for [anchor anchors]
-      (let [anchor-text (. (first (. anchor childNodes)) text)
-            anchor-uri-base (. (first (. anchor childNodes)) baseUri)
-            href-attribute (. (. anchor attributes) get "href")
+      (let [anchor-text
+            (. (first (. anchor childNodes)) text)
+            anchor-uri-base
+            (. (first (. anchor childNodes)) baseUri)
+            href-attribute
+            (. (. anchor attributes) get "href")
             anchor-uri
             (if (str/starts-with? href-attribute "http")
               href-attribute
-              (str/join "" [anchor-uri-base (. (. anchor attributes) get "href")]))
+              (str/join ""
+                 [anchor-uri-base
+                  (. (. anchor attributes) get "href")]))
             furi (first (. anchor childNodes))]
         {:text (str/trim anchor-text) :uri anchor-uri}))))
 
@@ -73,8 +79,9 @@ TDB ^
 
 (deftest a-test
   (testing
-    "Fetch my personal website and check number key/values in results"
-    (let [page-data (fetch-web-page-data "https://markwatson.com")]
+    "Fetch my website and check number of results"
+    (let [page-data
+         (fetch-web-page-data "https://markwatson.com")]
       (pp/pprint page-data)
       (is (= (count page-data) 2)))))
 ~~~~~~~~
@@ -105,7 +112,8 @@ Output might look like (most of the output is not shown):
    :uri "https://github.com/mark-watson"}
   {:text "LinkedIn",
    :uri "https://www.linkedin.com/in/marklwatson/"}
-  {:text "Twitter", :uri "https://twitter.com/mark_l_watson"}
+  {:text "Twitter",
+   :uri "https://twitter.com/mark_l_watson"}
 ... )}
 ~~~~~~~~
 

@@ -27,7 +27,7 @@ An example (code we will implement later):
 
 I reformatted the following to fit the page width:
 
-{linenos=on}
+{lang=plain,linenos=on}
 ~~~~~~~~
 (PERSON ORG GPE DATE MONEY)
 ([John PROPN] [Smith PROPN] [worked VERB] [for ADP]
@@ -46,11 +46,9 @@ I reformatted the following to fit the page width:
   
 ## Using the Hugging Face Transformer Models For Question Answering
 
-TBD
+Before looking at the code for this example, let's look at how it is used:
 
-An example (code we will implement later):
-
-{linenos=on}
+{lang=clojure",linenos=on}
 ~~~~~~~~
 (def
   context
@@ -59,7 +57,7 @@ An example (code we will implement later):
 (qa "what does Bill enjoy?" context)
 ~~~~~~~~
       
-{linenos=on}
+{lang=json,linenos=on}
 ~~~~~~~~
 The generated output is:
 {"score": 0.9626545906066895, "start": 31, "end": 38,
@@ -68,9 +66,15 @@ The generated output is:
  "answer": "skateboard"}
 ~~~~~~~~
 
-
+Nice results that show the power of using publicly available pre-trained deep learning models.
 
 ## Using libpython-clj With The spaCy Python NLP Library
+
+I combined both examples we just saw in one project.
+
+
+TBD
+
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -80,7 +84,7 @@ The generated output is:
   :url "http://markwatson.com"
   :license
   {:name
-   "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
+   "EPL-2.0 OR GPL-2+ WITH Classpath-exception-2.0"
    :url "https://www.eclipse.org/legal/epl-2.0/"}
   :jvm-opts ["-Djdk.attach.allowAttachSelf"
              "-XX:+UnlockDiagnosticVMOptions"
@@ -164,7 +168,7 @@ Formatted for page width:
 
 If you **lein run** to run the test **-main** function in lines ZZZ-ZZZ in the last listing, you will see (with some output removed here for brevity and reformatted):
 
-{lang="clojure",linenos=on}
+{lang="plain",linenos=on}
 ~~~~~~~~
 (PERSON ORG GPE DATE MONEY)
 ([John PROPN] [Smith PROPN] [worked VERB] [for ADP]

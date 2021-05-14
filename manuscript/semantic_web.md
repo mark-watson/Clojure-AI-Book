@@ -5,14 +5,11 @@ We will start with a tutorial on Semantic Web data standards like RDF, RDFS, and
 The scope of the Semantic Web is comprised of all public data sources on the Internet that follow specific standards like RDF. Knowledge Graphs may be large scale, as the graphs that drive Google's and Facebook's business, or they can be specific to an organization.
 
 **Notes:**
-
 - The material in this chapter is background material. If you want to jump right into code examples then proceed to the next two chapters.
 - Much of the material here was derived from a chapter in my Java AI book.
 
 ## Learning Plan
-
 You will learn how to do the following:
-
 - Understand RDF data formats.
 - Understand SPARQL queries for RDF data stores (both local and remote).
 - Use the Apache Jena library (covered in the next chapter) to use local RDF data and perform SPARQL queries.
@@ -370,15 +367,11 @@ SELECT ?subject WHERE { ?subject kb:containsState "Maryland" . }
 
 The output is:
 
-{lang="bash",linenos=off}
+{lang="plain",linenos=off}
 ~~~~~~~~
-Enter a SPARQL query:
-PREFIX kb:  <http://knowledgebooks.com/ontology#>
-SELECT ?subject WHERE { ?subject kb:containsState "Maryland" . }
-
 [QueryResult vars:[subject]
 Rows:
-	[http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/]
+  [http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/]
 ~~~~~~~~
 
 We can also match partial string literals against regular expressions:
@@ -396,21 +389,12 @@ SELECT ?subject ?object
 
 The output is:
 
-{lang="bash",linenos=off}
+{lang="plain",linenos=off}
 ~~~~~~~~
-Enter a SPARQL query:
-PREFIX kb: <http://knowledgebooks.com/ontology#>
-SELECT ?subject ?object
-       WHERE {
-         ?subject
-         kb:containsOrganization
-         ?object FILTER regex(?object, "University") .
-       }
-
 [QueryResult vars:[subject, object]
 Rows:
-	[http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/, 
-	 University of Maryland]
+  [http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/, 
+   University of Maryland]
 ~~~~~~~~
 
 Prior to this last example query we only requested that the query return values for subject and predicate for triples that matched the query.
@@ -433,19 +417,8 @@ When WHERE clauses contain more than one triple pattern to match, this is equiva
 
 The output is:
 
-{lang="bash",linenos=off}
+{lang="plain",linenos=off}
 ~~~~~~~~
-Enter a SPARQL query:
-PREFIX kb: <http://knowledgebooks.com/ontology#>
-SELECT DISTINCT ?subject ?a_predicate ?an_object
- WHERE {
-    ?subject kb:containsOrganization ?object FILTER regex(?object,"University") .
-    ?subject ?a_predicate ?an_object .
-}
-ORDER BY ?a_predicate ?an_object
-LIMIT 10
-OFFSET 5
-
 [QueryResult vars:[subject, a_predicate, an_object]
 Rows:
 	[http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/,

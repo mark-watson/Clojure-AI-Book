@@ -33,7 +33,7 @@ The **project.clj** file shows the setup for incorporating Java code into a Cloj
   :url "http://markwatson.com"
   :license
   {:name
-   "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
+   "EPL-2.0 OR GPL-2+ WITH Classpath-exception-2.0"
    :url "https://www.eclipse.org/legal/epl-2.0/"}
   :source-paths      ["src"]
   :java-source-paths ["src-java"]
@@ -46,7 +46,7 @@ The **project.clj** file shows the setup for incorporating Java code into a Cloj
   :repl-options {:init-ns opennlp-clj.core})
   ~~~~~~~~
 
-Note the use of **:java-source-paths** to specify where the Java codes stored in the project. When you use **lein run** to try the example, both the Java and Clojure code is compiled. When I first wrote this example, I used the maven output target for the OpenNLP example in my Java AI book. I left the dependency in this **project.clj** file commented out.
+Note the use of **:java-source-paths** to specify where the Java codes stored in the project. When you use **lein run** to try the example, both the Java and Clojure code is compiled. When I first wrote this example, I used the maven output target for the OpenNLP example in my Java AI book. I left the dependency in this **project.clj** file commented out and instead added the two Java source files to this project.
 
 TBD:
 
@@ -127,7 +127,7 @@ The test code for this project shows how to use these APIs:
 
 Here is the test output:
 
-{linenos=off}
+{lang=plain,linenos=off}
 ~~~~~~~~
 Input text:
 The cat chased the mouse around the tree while Mary Smith (who works at IBM in San Francisco) watched.

@@ -7,6 +7,8 @@ The Knowledge Graph Navigator (which I will often refer to as KGN) is a tool for
 
 The most full featured version of KGN, including a full user interface, is featured in my book [Loving Common Lisp, or the Savvy Programmer's Secret Weapon](https://leanpub.com/lovinglisp) that you can read free online. That version performs more speculative SPARQL queries to find information compared to the example here that I designed for ease of understanding, and modification.
 
+We will be running an example using three person entities, one company entity, and one place entity. The following figure shows a very small part of the DBPedia Knowledge Graph that is centered around these entities. The data for this figure was collected by an example Knowledge Graph Creator from my Common Lisp book:
+
 ![File dbpedia_sample.nt loaded into the free version of GraphDB](images/graphdb.jpg)
 
 I chose to use DBPedia instead of WikiData for this example because DBPedia URIs are human readable. The following URIs represent the concept of a *person*. The semantic meanings of DBPedia and FOAF (friend of a friend) URIs are self-evident to a human reader while the WikiData URI is not:
@@ -18,7 +20,7 @@ http://dbpedia.org/ontology/Person
 http://xmlns.com/foaf/0.1/name
 ~~~~~~~~
 
-I frequently use WikiData in my work and WikiData is one of the most useful public knowledge bases. I have both DBPedia and WikiData Sparql endpoints in the file **Sparql.java** that we will look at later, with the WikiData endpoint comment out. You can try manually querying WikiData at the [WikiData SPARL endpoint](https://query.wikidata.org). For example, you might explore the WikiData URI for the *person* concept using:
+I frequently use WikiData in my work and WikiData is one of the most useful public knowledge bases. I have both DBPedia and WikiData Sparql endpoints in the example code that we will look at later, with the WikiData endpoint comment out. You can try manually querying WikiData at the [WikiData SPARL endpoint](https://query.wikidata.org). For example, you might explore the WikiData URI for the *person* concept using:
 
 {lang=sparql, linenos=off}
 ~~~~~~~~
@@ -41,17 +43,19 @@ To keep this example simple we handle just three entity types:
  
 In addition to finding detailed information for people, organizations, and places we will also search for relationships between person entities and company entities. This search process consists of generating a series of SPARQL queries and calling the DBPedia SPARQL endpoint.
 
-Before we design and write the code, I want to show you the final output for an example:
+Before we design and write the code, I want to show you sample output from our example program:
 
-```
+{lang="clojure",linenos=off}
+~~~~~~~~
 (kgn {:People ["Bill Gates" "Steve Jobs" "Melinda Gates"]
       :Organization ["Microsoft"]
       :Place        ["California"]})
-```
+~~~~~~~~
 
 The output (with some text shortened) is:
 
-```
+{lang="json",linenos=off}
+~~~~~~~~
 {:entity-summaries
  (("Bill Gates"
    "http://dbpedia.org/resource/Bill_Gates"
@@ -84,7 +88,7 @@ The output (with some text shortened) is:
   (["<http://dbpedia.org/resource/Steve_Jobs>"
     "<http://dbpedia.org/ontology/birthPlace>"
     "<http://dbpedia.org/resource/California>"]))}
-```
+~~~~~~~~
 
 ## KGN Implementation
 
@@ -100,7 +104,8 @@ TBD
   :description "Knowledge Graph Navigator"
   :url "https://markwatson.com"
   :license
-  {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
+  {:name
+   "EPL-2.0 OR GPL-2+ WITH Classpath-exception-2.0"
    :url  "https://www.eclipse.org/legal/epl-2.0/"}
   :source-paths      ["src"]
   :java-source-paths ["src-java"]
@@ -113,10 +118,12 @@ TBD
                  [org.clojure/math.combinatorics "0.1.6"]
                  [org.apache.derby/derby "10.15.2.0"]
                  [org.apache.derby/derbytools "10.15.2.0"]
-                 [org.apache.derby/derbyclient "10.15.2.0"]
+                 [org.apache.derby/derbyclient
+                  "10.15.2.0"]
                  [org.apache.jena/apache-jena-libs
                   "3.17.0" :extension "pom"]]
-  :repl-options {:init-ns knowledge-graph-navigator-clj.kgn}
+  :repl-options
+  {:init-ns knowledge-graph-navigator-clj.kgn}
   :main ^:skip-aot knowledge-graph-navigator-clj.kgn)
 ~~~~~~~~
 
@@ -136,7 +143,7 @@ I copied the code from the last chapter into this project to save readers from n
 ;; see https://github.com/mark-watson/clj-sparql
 
 (def USE-LOCAL-GRAPHDB false)
-(def USE-CACHING true)                                      ;; use Jena wrapper
+(def USE-CACHING true) ;; use Jena wrapper
 
 (defn dbpedia [sparql-query]
   (let [q
@@ -191,7 +198,8 @@ I copied the code from the last chapter into this project to save readers from n
 {lang="clojure",linenos=on}
 ~~~~~~~~
 (ns knowledge-graph-navigator-clj.entities-by-name
-  (:require [knowledge-graph-navigator-clj.sparql :as sparql])
+  (:require [knowledge-graph-navigator-clj.sparql
+             :as sparql])
   (:require [clojure.pprint :as pp])
   (:require clojure.string))
 
@@ -208,7 +216,7 @@ I copied the code from the last chapter into this project to save readers from n
     results))
 
 (defn -main
-  "I don't do a whole lot."
+  "test/dev entities by name"
   [& _]
   (println
     (dbpedia-get-entities-by-name
@@ -279,7 +287,7 @@ I copied the code from the last chapter into this project to save readers from n
     @relationship-statements))
 
 (defn -main
-  "I don't do a whole lot."
+  "dev/test entity relationships code"
   [& _]
   (println
     "Testing entity-results->relationship-links")
@@ -312,10 +320,10 @@ I copied the code from the last chapter into this project to save readers from n
    "<http://dbpedia.org/ontology/Place>"})
 
 (defn kgn
-  "Top level function for the Knowledge Graph Navigator library
-   Inputs: a map with keys Person, Place, and Organization. values list of names"
+  "Top level function for the KGN library.
+   Inputs: a map with keys Person, Place, and
+   Organization. values list of names"
   [input-entity-map]
-  ;;(println "* kgn:" input-entity-map)
   (let [entities-summary-data
         (filter
           ;; get rid of empty SPARQL results:
@@ -332,7 +340,8 @@ I copied the code from the last chapter into this project to save readers from n
                      entity-name
                      (entity-map entity-key))))))))
         entity-uris (map second entities-summary-data)
-        combinations-by-2-of-entity-uris (combo/combinations entity-uris 2)
+        combinations-by-2-of-entity-uris
+        (combo/combinations entity-uris 2)
         discovered-relationships
         (filter
           (fn [x] (> (count x) 0))

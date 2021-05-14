@@ -64,7 +64,7 @@ The Wisconsin data has 9 input features and one target output. Optionally the ex
   :url "https://markwatson.com"
   :license
   {:name
-   "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
+   "EPL-2.0 OR GPL-2+ WITH Classpath-exception-2.0"
    :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.apache.commons/commons-io "1.3.2"]
@@ -75,8 +75,10 @@ The Wisconsin data has 9 input features and one target output. Optionally the ex
   :javac-options     ["-target" "1.8" "-source" "1.8"]
   :main ^:skip-aot anomaly-detection-clj.core
   :target-path "target/%s"
-  :profiles {:uberjar {:aot :all
-                       :jvm-opts ["-Dclojure.compiler.direct-linking=true"]}})
+  :profiles {:uberjar
+              {:aot :all
+               :jvm-opts
+               ["-Dclojure.compiler.direct-linking=true"]}})
 ~~~~~~~~
 
 
@@ -115,7 +117,8 @@ The Wisconsin data has 9 input features and one target output. Optionally the ex
                            (Math/log
                              (+ (* 0.1 x) 1.2)))
                          (butlast v))
-        target-output (* 0.5 (- (last v) 2))                ; make target output be [0,1] instead of [2,4]
+        ; target output should be [0,1] instead of [2,4]:
+        target-output (* 0.5 (- (last v) 2))
         vmin (apply min training-data0)
         vmax (apply max training-data0)
         training-data (map
