@@ -39,23 +39,21 @@ We calculate the parameters of {$$}\mu{/$$} and {$$} \sigma ^2{/$$} for each fea
 
 ## AnomalyDetection Utility Class Written in Java
 
-The class **AnomalyDetection** in the directory **src-java** is fairly general purpose. I won't list the Java code in the file **AnomalyDetection.java** here but please do open it in a text editor to refer to while reading this section. This Java class processes a set of training examples and for each feature calculates {$$}\mu{/$$} and {$$} \sigma ^2{/$$}. We are also training for a third parameter: an epsilon "cutoff" value: if for a given input vector if {$$}P(x : \mu, \sigma ^2){/$$} evaluates to a value greater than epsilon then the input vector is "normal", less than epsilon implies that the input vector is an "anomaly." The math for calculating these three features from training data is fairly easy but the code is not: we need to organize the training data and search for a value of epsilon that minimizes the error for a cross validation data set.
+The class **AnomalyDetection** (from my Java AI book) in the directory **src-java** is fairly general purpose. I won't list the Java code in the file **AnomalyDetection.java** here but please do open it in a text editor to refer to while reading this section. This Java class processes a set of training examples and for each feature calculates {$$}\mu{/$$} and {$$} \sigma ^2{/$$}. We are also training for a third parameter: an epsilon "cutoff" value: if for a given input vector if {$$}P(x : \mu, \sigma ^2){/$$} evaluates to a value greater than epsilon then the input vector is "normal", less than epsilon implies that the input vector is an "anomaly." The math for calculating these three features from training data is fairly easy but the code is not: we need to organize the training data and search for a value of epsilon that minimizes the error for a cross validation data set.
 
 To be clear: we separate the input examples into three separate sets of training, cross validation, and testing data. We use the training data to set the model parameters, use the cross validation data to learn an epsilon value, and finally use the testing data to get precision, recall, and F1 scores that indicate how well the model detects anomalies in data not used for training and cross validation.
 
-I present the example program as one long listing, with more code explanation after the listing. Please note the long loop over each input training example starting at line 28 and ending on line 74. The code in lines 25 through 44 processes the input training data sample into three disjoint sets of training, cross validation, and testing data. Then the code in lines 45 through 63 copies these three sets of data to Java arrays.
-
-The code in lines XXXX through YYYY calculates, for a training example, the value of {$$}\mu{/$$} (the variable **mu** in the code).
+If you are interested in the Java implementation either read the source code or for more detail read the code description in my Java AI book.
 
 ## Clojure Experiment For the University of Wisconsin Cancer Data Using Java Anomaly Detection Code
 
-The example in this section loads the University of Wisconsin data and uses the Java class **AnomalyDetection** developed in the last section to find anomalies, which for this example will be input vectors that represented malignancy in the original data.
+The example in this section loads the University of Wisconsin data and uses the Java class **AnomalyDetection** described in the last section to find anomalies, which for this example will be input vectors that represented malignancy in the original data. We don't train on the non-malignancy samples.
 
-The Wisconsin data has 9 input features and one target output. Optionally the example program can use Incenter to plot the distribution of input variables. For of these plots are shown here:
+The Wisconsin data has 9 input features and one target output. Optionally the example program can use Incanter to plot the distribution of input variables. For of these plots are shown here:
 ![Distributions for 4 of the 9 input features](images/wisconsin_plots.png)
 
 
-**project.clj**:
+Let's start by looking at the project file **project.clj**:
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -83,7 +81,7 @@ The Wisconsin data has 9 input features and one target output. Optionally the ex
 
 
 
-**src/anomaly_detection/core.clj** (code formatted for page width):
+The example code in **src/anomaly_detection/core.clj** is formatted for page width:
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -109,7 +107,8 @@ The Wisconsin data has 9 input features and one target output. Optionally the ex
                                  :title title))))
 
 (defn data->gausian
-  "separate labeled output and then make the data look more like a Gausian (bell curve shaped) distribution"
+  "separate labeled output and then make the data look
+   more like a Gausian (bell curve shaped) distribution"
   [vector-of-numbers-as-strings]
   (let [v (map read-string vector-of-numbers-as-strings)
         training-data0 (map
@@ -190,7 +189,7 @@ I won't do it in this example, but the feature "Bare Nuclei" should be removed b
 
 In a real application you would drop features that you can not transform to something like a Gaussian distribution.
 
-Here are the results of running the code as it is in the github repository for this book (with some verbose output removed for brevity):
+Here are the results of running the code as it is in the GitHub repository for this book (with some verbose output removed for brevity):
 
 {line-numbers=off}
 ~~~~~~~~

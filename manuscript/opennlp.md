@@ -46,11 +46,11 @@ The **project.clj** file shows the setup for incorporating Java code into a Cloj
   :repl-options {:init-ns opennlp-clj.core})
   ~~~~~~~~
 
-Note the use of **:java-source-paths** to specify where the Java codes stored in the project. When you use **lein run** to try the example, both the Java and Clojure code is compiled. When I first wrote this example, I used the maven output target for the OpenNLP example in my Java AI book. I left the dependency in this **project.clj** file commented out and instead added the two Java source files to this project.
+Note the use of **:java-source-paths** to specify where the Java codes stored in the project. When you use **lein run** to try the example, both the Java and Clojure code is compiled. When I first wrote this example, I used the maven output target for the OpenNLP example in my Java AI book. I left the dependency in this **project.clj** file commented out and instead added the two Java source files to this project. Copying the code into this project should make it easier for you to run this example.
 
-TBD:
+In the following listing notice that I have two versions of each function: one returns Java data structures and one returns a Clojure **seq**.
 
-{lang="clojue",linenos=on}
+{lang="clojure",linenos=on}
 ~~~~~~~~
 (ns opennlp-clj.core
   (:import (com.markwatson.opennlp NLP)))
@@ -127,7 +127,7 @@ The test code for this project shows how to use these APIs:
 
 Here is the test output:
 
-{lang=plain,linenos=off}
+{lang=text,linenos=off}
 ~~~~~~~~
 Input text:
 The cat chased the mouse around the tree while Mary Smith (who works at IBM in San Francisco) watched.

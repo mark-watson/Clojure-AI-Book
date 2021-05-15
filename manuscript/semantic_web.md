@@ -367,7 +367,7 @@ SELECT ?subject WHERE { ?subject kb:containsState "Maryland" . }
 
 The output is:
 
-{lang="plain",linenos=off}
+{lang="text",linenos=off}
 ~~~~~~~~
 [QueryResult vars:[subject]
 Rows:
@@ -389,7 +389,7 @@ SELECT ?subject ?object
 
 The output is:
 
-{lang="plain",linenos=off}
+{lang="text",linenos=off}
 ~~~~~~~~
 [QueryResult vars:[subject, object]
 Rows:
@@ -417,7 +417,7 @@ When WHERE clauses contain more than one triple pattern to match, this is equiva
 
 The output is:
 
-{lang="plain",linenos=off}
+{lang="text,linenos=off}
 ~~~~~~~~
 [QueryResult vars:[subject, a_predicate, an_object]
 Rows:
