@@ -6,7 +6,7 @@ Before we start a technical discussion about web scraping I want to point out to
 
 ## Web Scraping Using the **jsoup** Library
 
-We will use the MIT licensed Java library [jsoup](http://jsoup.org/). One reason I selected **jsoup** for the examples in this chapter out of many fine libraries that provide similar functionality is the particularly nice documentation, especially [The **jsoup** Cookbook](http://jsoup.org/cookbook/) which I urge you to bookmark as a general reference. In this chapter I will concentrate on just the most frequent web scraping use cases that I use in my own work.
+We will use the MIT licensed Java library [jsoup](http://jsoup.org/). One reason I selected **jsoup** for the examples in this chapter out of many fine libraries that provide similar functionality is the particularly nice documentation, especially [The **jsoup Cookbook**](http://jsoup.org/cookbook/) which I urge you to bookmark as a general reference. In this chapter I will concentrate on just the most frequent web scraping use cases that I use in my own work: getting all plain text and links from a web site. It should be straightforward for you to take the following example and extend it with whatever else you may need from the **jsoup Cookbook**.
 
 We need to require the **jsoup** dependency in the project file:
 
@@ -24,8 +24,11 @@ We need to require the **jsoup** dependency in the project file:
   :repl-options {:init-ns webscraping.core})
 ~~~~~~~~
 
-The following bit of example code uses **jsoup** to get the complete plain text and also the anchor (**<a href=...**) data for a web page.
+The example code for this chapter uses **jsoup** to get the complete plain text and also the anchor (**<a href=...**) data for a web page. In reading the following code let's start at the end: lines 28-35 where we fetch data from a web site as a **jsoup** document object. Once we have this document object, we use the Java method **text** on to get plain text. On line 37 we use the utility function **get-html-anchors** that is defined in lines 6-23. On line 8 we search for all anchor patterns "a[href]". For each anchor, we construct the full target URI. Lines 17-21 handle the corner case of URIs like:
 
+    https://example/com#faq
+
+where we need to use check if a URI starts with "http" in which case we just use the URI as-is. Otherwise, treat the URI as a partial like "#faq" that is added to the base URI.
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -68,7 +71,7 @@ The following bit of example code uses **jsoup** to get the complete plain text 
     {:page-text all-page-text :anchors anchors}))
 ~~~~~~~~
 
-TDB ^
+Let's look a the test code for an example of fetching the text and links from my personal web site:
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -85,10 +88,6 @@ TDB ^
       (pp/pprint page-data)
       (is (= (count page-data) 2)))))
 ~~~~~~~~
-
-TBD ^
-
-For training data for machine learning it is useful to just grab all text on a web page and assume that common phrases dealing with web navigation, etc. will be dropped from learned models because they occur in many different training examples for different classifications.
 
 Output might look like (most of the output is not shown):
 
@@ -116,5 +115,8 @@ Output might look like (most of the output is not shown):
    :uri "https://twitter.com/mark_l_watson"}
 ... )}
 ~~~~~~~~
+
+
+For training data for machine learning it is useful to just grab all text on a web page and assume that common phrases dealing with web navigation, etc. will be dropped from learned models because they occur in many different training examples for different classifications.
 
 I find the **jsoup** library to be robust for fetching and parsing HTML data from web pages. As we have seen it is straightforward to use **jsoup** in Clojure projects.
