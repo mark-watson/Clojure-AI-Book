@@ -71,6 +71,8 @@ where we need to use check if a URI starts with "http" in which case we just use
     {:page-text all-page-text :anchors anchors}))
 ~~~~~~~~
 
+On lines 32-33 I am setting the same user agent as my local web browser. In principle I would prefer making up a user agent name that contains my name and why I am spidering data, but in practice some web sites refuse requests from non-standard agents.
+
 Let's look a the test code for an example of fetching the text and links from my personal web site:
 
 {lang="clojure",linenos=on}
@@ -115,7 +117,6 @@ Output might look like (most of the output is not shown):
    :uri "https://twitter.com/mark_l_watson"}
 ... )}
 ~~~~~~~~
-
 
 For training data for machine learning it is useful to just grab all text on a web page and assume that common phrases dealing with web navigation, etc. will be dropped from learned models because they occur in many different training examples for different classifications.
 

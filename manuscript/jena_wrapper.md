@@ -1,6 +1,8 @@
 # Clojure Wrapper for the Jena RDF and SPARQL Library
 
-TBD
+If you read through the optional background material in the last chapter you have some understanding of RDF Data and SPARQL queries. If you skipped the last chapter you can still follow along with the code here.
+
+When querying remote SPARQL endpoints like DBPedia and WikiData I often find that I repeatedly make some of the same queries many times, especially during development and testing. I have found that by caching SPARQL query results that I can greatly improve my developer experience. We will use the Apache Derby relational database (pure Java code and easy to embed in applications) for query caching.
 
 We declare both Jena and the Derby relational database libraries as dependencies in out project file:
 
@@ -25,7 +27,7 @@ We declare both Jena and the Derby relational database libraries as dependencies
   :repl-options {:init-ns semantic-web-jena-clj.core})
 ~~~~~~~~
 
-We will use the Jena library for handling RDF and SPARQL queries and the Derby database library for implementing query caching. It is worth noting the directory structure for this project that also includes Java code (some files not shown for brevity):
+We will use the Jena library for handling RDF and SPARQL queries and the Derby database library for implementing query caching. Please note that the directory structure for this project that also includes Java code that I wrote to wrap the Jena APIs for my specific needs (some files not shown for brevity):
 
 {linenos=on}
 ~~~~~~~~
@@ -58,8 +60,22 @@ $ tree
         └── core_test.clj
 ~~~~~~~~
 
-I don't list the file **JenaApis.java** here but you might want to have it open in an editor while reading the following listing of the Clojure code that wraps this Java code:
-        
+While I expect that you will just use the Java code as-is, there is one modification that you might want to make for your applications: I turned on OWL reasoning by default. If you don't need OWL reasoning and you will be working with large numbers of RDF triples (tens of millions should file nicely in-memory on your laptop), then you might want to change the following two likes of code in **JenaApis.java** by uncommenting line 2 and commenting line 4:
+
+{lang="java",linenos=on}
+~~~~~~~~
+ // use if OWL reasoning not required:
+ //model = ModelFactory.createDefaultModel();
+ // to use the OWL reasoner:
+ model = ModelFactory.createOntologyModel();
+~~~~~~~~
+
+OWL reasoning is expensive but for small RDF Data sets you might as well leave it turned on.
+
+I don't list the file **JenaApis.java** here but you might want to have it open in an editor while reading the following listing of the Clojure code that wraps this Java code.
+
+The Clojure wrapping functions are mostly self-explanatory. The main corner case is converting Java results from Jena to Clojure **seq** data structures, as we do in lines 13-14.
+
 {lang="clojure",linenos=on}
 ~~~~~~~~
 (ns semantic-web-jena-clj.core
@@ -112,8 +128,8 @@ Test code:
     "Load local triples files and SPARQL queries"
     (load-rdf-file "data/sample_news.nt")
     (let [results (query "select * { ?s ?p ?o } limit 5")]
-      (println results))
-    (is (= 0 0))))
+      (println results)
+      (is (= (count results) 6)))))
 
 (deftest dbpedia-test
   (testing "Try SPARQL query to DBPedia endpoint"
@@ -127,6 +143,8 @@ Test code:
       (query-dbpedia
         "select * where { ?subject ?property ?object . } limit 10"))))
 ~~~~~~~~
+
+You might question line 11: we are checking that the return values as a **seq** of length six while the SPARQL statement limits the returned results to five results. The "extra" result" if the first element in the **seq** that is a list of variable names from the PSARQL query.
 
 Output will look like (reformatted for readability and most output is not shown):
 

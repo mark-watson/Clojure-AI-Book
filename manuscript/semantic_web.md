@@ -1,15 +1,17 @@
 # Background Material for the Semantic Web and Knowledge Graphs {#semantic-web}
 
-We will start with a tutorial on Semantic Web data standards like RDF, RDFS, and OWL, then implement a wrapper for the Apache Jena library, and finally take a deeper dive into some examples. 
+We will start with a tutorial on Semantic Web data standards like RDF, RDFS, and OWL, then implement a wrapper for the Apache Jena library in the next chapter, and finally take a deeper dive into an example application in the chapter [Knowledge Graph Navigator](#kgn). 
 
-The scope of the Semantic Web is comprised of all public data sources on the Internet that follow specific standards like RDF. Knowledge Graphs may be large scale, as the graphs that drive Google's and Facebook's business, or they can be specific to an organization.
+The scope of the Semantic Web is comprised of all public data sources on the Internet that follow specific standards like RDF. Knowledge Graphs may be large scale, as the graphs that drive Google's and Facebook's businesses, or they can be specific to an organization.
 
 **Notes:**
+
 - The material in this chapter is background material. If you want to jump right into code examples then proceed to the next two chapters.
-- Much of the material here was derived from a chapter in my Java AI book.
+- Much of the material here was derived from a similar chapter in my Java AI book.
 
 ## Learning Plan
 You will learn how to do the following:
+
 - Understand RDF data formats.
 - Understand SPARQL queries for RDF data stores (both local and remote).
 - Use the Apache Jena library (covered in the next chapter) to use local RDF data and perform SPARQL queries.
@@ -27,7 +29,7 @@ I cover the Semantic Web in this book because I believe that Semantic Web techno
 
 There are several very good Semantic Web toolkits for the Java language and platform. Here we use Apache Jena because it is what I often use in my own work and I believe that it is a good starting technology for your first experiments with Semantic Web technologies. This chapter provides an incomplete coverage of Semantic Web technologies and is intended as a gentle introduction to a few useful techniques and how to implement those techniques in Clojure (using the Java Jena libraries). 
 
-This material is just the start of a journey in the technology that I think is as important as technologies like deep learning that get more public mindshare.
+This material is just the start of a journey in understanding the technology that I think is as important as technologies like deep learning that get more public mindshare.
 
 The following figure shows a layered hierarchy of data models that are used to implement Semantic Web applications. To design and implement these applications we need to think in terms of physical models (storage and access of RDF, RDFS, and perhaps OWL data), logical models (how we use RDF and RDFS to define relationships between data represented as unique URIs and string literals and how we logically combine data from different sources) and conceptual modeling (higher level knowledge representation and reasoning using OWL). Originally RDF data was serialized as XML data but other formats have become much more popular because they are easier to read and manually create. The top three layers in the figure might be represented as XML, or as LD-JSON (linked data JSON) or formats like N-Triples and N3 that we will use later.
 
@@ -38,7 +40,7 @@ RDF data is the bedrock of the Semantic Web and Knowledge Graphs.
 
 ## Available Tools
 
-In the previous edition of this book I used the open source Sesame library for the material on RDF. Sesame is now called RDF4J and is part of the Eclipse organization's projects.
+Previously for Java-based semantic web projects I used the open source Sesame library for managing and querying RDF Data. Sesame is now called RDF4J and is part of the Eclipse organization's projects.
 
 I decided to use the Apache Jena project in this new edition because I think Jena is slightly easier to set up a light weight development environment. If you need to set up an RDF server I recommend using the open source [Fuseki](https://jena.apache.org/documentation/fuseki2/) server which is part of the Apache Jena project. For experimenting with local Knowledge Graphs I also use the [free version of GraphDB](https://www.ontotext.com/try-graphdb-se). For client applications, in the next chapter we will use a Clojure wrapper for the Jena library that works with RDF and performing SPARQL queries.
 
@@ -149,24 +151,28 @@ This single N3 statement represents ten individual RDF triples. Each section def
 
 I promised you that the data in RDF data stores was easy to extend. As an example, let us assume that we have written software that is able to read online news articles and create RDF data that captures some of the semantics in the articles. If we extend our program to also recognize dates when the articles are published, we can simply reprocess articles and for each article add a triple to our RDF data store using a form like:
 
-{lang="sparql",linenos=off}
+{lang="sparql",linenos=on}
 ~~~~~~~~
 @prefix kb:  <http://knowledgebooks.com/ontology#> .
 
-<http://news.com/201234/> kb:datePublished "2008-05-11" .
+<http://news.com/201234/>
+  kb:datePublished
+  "2008-05-11" .
 ~~~~~~~~
 
-Here we just represent the date as a string. We can add a type to the object representing a specific date:
+Note that I split one RDF statement across three lines (3-5) here to fit page width. The RFD statement on lines 3-5 is legal and will be handled correctly by RDF parsers. Here we just represent the date as a string. We can add a type to the object representing a specific date:
 
 {lang="sparql",linenos=off}
 ~~~~~~~~
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix kb:  <http://knowledgebooks.com/ontology#> .
  
- <http://news.com/201234/> kb:datePublished "2008-05-11"^^xsd:date .
+ <http://news.com/201234/>
+   kb:datePublished
+   "2008-05-11"^^xsd:date .
 ~~~~~~~~
 
-Furthermore, if we do not have dates for all news articles that is often acceptable because when constructing SPARQL queries you can match optional patterns. If for example you are looking up articles on a specific subject then some results may have a publication date attached to the results for that article and some might not. In practice RDF supports types and we would use a date type as seen in the last example, not a string. However, in designing the example programs for this chapter I decided to simplify our representation of URIs and often use string literals as simple Java strings. For many applications this isn't a real limitation.
+Furthermore, if we do not have dates for all news articles that is often acceptable because when constructing SPARQL queries you can match optional patterns. If for example you are looking up articles on a specific subject then some results may have a publication date attached to the results for that article and some might not. In practice RDF supports types and we would use a date type as seen in the last example, not a string. However, in designing the example programs for this chapter I decided to simplify our representation of URIs and often use string literals as simple Java strings.
 
 ## Extending RDF with RDF Schema {#rdfs}
 
@@ -174,10 +180,10 @@ RDF Schema (RDFS) supports the definition of classes and properties based on set
 
 {lang="sparql",linenos=off}
 ~~~~~~~~
-@prefix kb:  <http://knowledgebooks.com/ontology#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
-@prefix dbo: <http://dbpedia.org/ontology/>
+@prefix kb:   <http://knowledgebooks.com/ontology#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+@prefix dbo:  <http://dbpedia.org/ontology/>
 
 <http://news.com/201234/>
   kb:containsCountry
@@ -193,7 +199,20 @@ RDF Schema (RDFS) supports the definition of classes and properties based on set
   rdf:type dbo:Country .
 ~~~~~~~~
 
-Because the Semantic Web is intended to be processed automatically by software systems it is encoded as RDF. There is a problem that must be solved in implementing and using the Semantic Web: everyone who publishes Semantic Web data is free to create their own RDF schemas for storing data; for example, there is usually no single standard RDF schema definition for topics like news stories and stock market data. The [SKOS](https://www.w3.org/2009/08/skos-reference/skos.html) is a namespace containing standard schemas and the most widely used standard is [schema.org](https://schema.org/docs/schemas.html). Understanding the ways of integrating different data sources using different schemas helps to understand the design decisions behind the Semantic Web applications. In this chapter I often use my own schemas in the knowledgebooks.com namespace for the simple examples you see here. When you build your own production systems part of the work is searching through **schema.org** and **SKOS** to use standard name spaces and schemas when possible. The use of standard schemas helps when you link internal proprietary Knowledge Graphs used in organization with public open data from sources like [WikiData](https://www.wikidata.org/wiki/Wikidata:Main_Page) and [DBPedia](https://wiki.dbpedia.org/about).
+Because the Semantic Web is intended to be processed automatically by software systems it is encoded as RDF. There is a problem that must be solved in implementing and using the Semantic Web: everyone who publishes Semantic Web data is free to create their own RDF schemas for storing data; for example, there is usually no single standard RDF schema definition for topics like news stories and stock market data. The [SKOS](https://www.w3.org/2009/08/skos-reference/skos.html) is a namespace containing standard schemas and the most widely used standard is [schema.org](https://schema.org/docs/schemas.html). Understanding the ways of integrating different data sources using different schemas helps to understand the design decisions behind the Semantic Web applications. In this chapter I often use my own schemas in the knowledgebooks.com namespace for the simple examples you see here. When you build your own production systems part of the work is searching through **schema.org** and **SKOS** to use standard name spaces and schemas when possible because this facilitates linking your data to other RDF Data on the web. The use of standard schemas helps when you link internal proprietary Knowledge Graphs used in organization with public open data from sources like [WikiData](https://www.wikidata.org/wiki/Wikidata:Main_Page) and [DBPedia](https://wiki.dbpedia.org/about).
+
+Let's consider an example: suppose that your local Knowledge Graph referred to President Joe Biden in which case we could "mint" our own URI like:
+
+    https://knowledgebooks.com/person#Joe_Biden
+
+In this case users of the local Knowledge Graph could not take advantage of connected data. For example, the DBPedia and WikiData URIs for How Biden are:
+
+    [https://dbpedia.org/resource/Joe_Biden](https://dbpedia.org/resource/Joe_Biden)
+    [http://www.wikidata.org/entity/Q6279](http://www.wikidata.org/entity/Q6279)
+
+Both of these URIs can be followed by clicking on the links if you are reading a PDF copy of this book. Please "follow your nose" and see how both of these URIs resolve to human-readable web pages.
+
+After telling you, dear reader, to always try to use public and standard URIs like the above examples for How Biden, I will now revert to using simple made-up URIs for the following discussion.
 
 We will start with an example that is an extension of the example in the last section that also uses RDFS. We add a few additional RDF statements:
 
@@ -250,7 +269,7 @@ kb:containsState rdfs:subPropertyOf kb:containsPlace .
         kb:containsState "Minnesota" , "Illinois" , 
                          "Mississippi" , "Iowa" ;
         kb:containsOrganization "National Guard" ,
-                         "U.S. Department of Agriculture" ,
+                         "U.S. Department of Agriculture",
                          "White House" ,
                          "Chicago Board of Trade" ,
                          "Department of Transportation" ;
@@ -259,7 +278,7 @@ kb:containsState rdfs:subPropertyOf kb:containsPlace .
                           "Glenn Hollander" ,
                           "Rich Feltes" ,
                           "George W. Bush" ;
-        kb:containsIndustryTerm "food inflation" , "food" ,
+        kb:containsIndustryTerm "food inflation", "food",
                                 "finance ministers" ,
                                 "oil" .
 
@@ -303,7 +322,7 @@ kb:containsState rdfs:subPropertyOf kb:containsPlace .
                            "Saudi Arabia" , "Spain" ,
                            "Italy" , India" , 
                            ""France" , "Canada" ,
-                           "Russia" , "Germany" , "China" ,
+                           "Russia", "Germany", "China",
                            "Japan" , "South Korea" ;
         kb:containsOrganization "Federal Reserve Bank" ,
                                 "European Union" ,
@@ -312,9 +331,10 @@ kb:containsState rdfs:subPropertyOf kb:containsPlace .
         kb:containsPerson "Lee Myung-bak" , "Rajat Nag" ,
                           "Luiz Inacio Lula da Silva" ,
                           "Jeffrey Lacker" ;
-        kb:containsCompany "Development Bank Managing" ,
-                           "Reuters" ,
-                           "Richmond Federal Reserve Bank" ;
+        kb:containsCompany
+            "Development Bank Managing" ,
+            "Reuters" ,
+            "Richmond Federal Reserve Bank";
         kb:containsIndustryTerm "central bank" , "food" ,
                                 "energy costs" ,
                                 "finance ministers" ,
@@ -326,6 +346,8 @@ kb:containsState rdfs:subPropertyOf kb:containsPlace .
                                 "Oil prices" , "oil" .
 ~~~~~~~~
 
+Please not that in the above RDF listing that I took advantage of the free form syntax of N3 and Turtle RDF formats to reformat the data to fit page width.
+
 In the following examples, we will use the main method in the class **JenaApi** (developed in the next chapter) that allows us to load multiple RDF input files and then to interactively enter SPARQL queries.
 
 We will start with a simple SPARQL query for subjects (news article URLs) and objects (matching countries) with the value for the predicate equal to **containsCountry**. Variables in queries start with a question mark character and can have any names:
@@ -333,10 +355,10 @@ We will start with a simple SPARQL query for subjects (news article URLs) and ob
 {lang="sparql",linenos=off}
 ~~~~~~~~
 SELECT ?subject ?object
-      WHERE {
-        ?subject
-        <http://knowledgebooks.com/ontology#containsCountry>
-        ?object .
+  WHERE {
+   ?subject
+   <http://knowledgebooks.com/ontology#containsCountry>
+   ?object .
 }
 ~~~~~~~~
 
@@ -369,9 +391,7 @@ The output is:
 
 {lang="text",linenos=off}
 ~~~~~~~~
-[QueryResult vars:[subject]
-Rows:
-  [http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/]
+http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/
 ~~~~~~~~
 
 We can also match partial string literals against regular expressions:
@@ -391,10 +411,8 @@ The output is:
 
 {lang="text",linenos=off}
 ~~~~~~~~
-[QueryResult vars:[subject, object]
-Rows:
-  [http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/, 
-   University of Maryland]
+http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/ 
+   "University of Maryland"
 ~~~~~~~~
 
 Prior to this last example query we only requested that the query return values for subject and predicate for triples that matched the query.
@@ -419,29 +437,45 @@ The output is:
 
 {lang="text,linenos=off}
 ~~~~~~~~
-[QueryResult vars:[subject, a_predicate, an_object]
-Rows:
-	[http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/,
-	 http://knowledgebooks.com/ontology#containsOrganization,
-	  University of Maryland]
-	[http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/,
-	 http://knowledgebooks.com/ontology#containsPerson, Ban Ki-moon]
-	[http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/,
-	 http://knowledgebooks.com/ontology#containsPerson, George W. Bush]
-	[http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/,
-	 http://knowledgebooks.com/ontology#containsPerson, Gordon Brown]
-	[http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/,
-	 http://knowledgebooks.com/ontology#containsPerson, Hu Jintao]
-	[http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/,
-	 http://knowledgebooks.com/ontology#containsPerson, Mahmoud Ahmadinejad]
-	[http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/,
-	 http://knowledgebooks.com/ontology#containsPerson, Pervez Musharraf]
-	[http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/,
-	 http://knowledgebooks.com/ontology#containsPerson, Steven Kull]
-	[http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/,
-	 http://knowledgebooks.com/ontology#containsPerson, Vladimir Putin]
-	[http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/,
-	 http://knowledgebooks.com/ontology#containsState, Maryland]
+http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/
+	 http://knowledgebooks.com/ontology#containsOrganization
+   "University of Maryland" .
+
+http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/
+	 http://knowledgebooks.com/ontology#containsPerson,
+	 "Ban Ki-moon" .
+	 
+http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/
+	 http://knowledgebooks.com/ontology#containsPerson
+	 "George W. Bush" .
+
+http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/
+	 http://knowledgebooks.com/ontology#containsPerson
+	 "Gordon Brown" .
+
+http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/
+	 http://knowledgebooks.com/ontology#containsPerson
+	 "Hu Jintao" .
+
+http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/
+	 http://knowledgebooks.com/ontology#containsPerson
+	 "Mahmoud Ahmadinejad" .
+
+http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/
+	 http://knowledgebooks.com/ontology#containsPerson
+	 "Pervez Musharraf" .
+
+http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/
+	 http://knowledgebooks.com/ontology#containsPerson
+	 "Steven Kull" .
+
+http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/
+	 http://knowledgebooks.com/ontology#containsPerson
+	 "Vladimir Putin" .
+
+http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/
+	 http://knowledgebooks.com/ontology#containsState
+	 "Maryland" .
 ~~~~~~~~
 
 
@@ -452,7 +486,7 @@ We are finished with our quick tutorial on using the SELECT query form. There ar
     any triples
 -   [DESCRIBE](https://www.w3.org/TR/rdf-sparql-query/#describe) – returns a new RDF graph containing matched resources
 
-A common matching pattern that I don't cover in this chapter is [optional](https://www.w3.org/TR/rdf-sparql-query/#optionals) but the **optional** matching pattern is used in the examples in the later chapter [Knowledge Graph Navigator](#kgn).
+A common matching pattern that I don't cover in this chapter is [optional](https://www.w3.org/TR/rdf-sparql-query/#optionals) but the **optional** matching pattern is used in the examples in the later chapter [Knowledge Graph Navigator](#kgn) so you will learn to use **optional** patterns later.
 
 ## OWL: The Web Ontology Language  {#owl}
 
@@ -506,4 +540,4 @@ The World Wide Web Consortium has defined three versions of the OWL language tha
 
 ## Semantic Web Wrap-up
 
-Writing Semantic Web applications is a very large topic, worthy of an entire book. I have covered in this chapter the background material for the next chapter: writing Clojure wrappers for using the Jena library.
+Writing Semantic Web applications and building Knowledge Graphs is a very large topic, worthy of an entire book. I have covered in this chapter the background material for the next chapter: writing Clojure wrappers for using the Jena library.
