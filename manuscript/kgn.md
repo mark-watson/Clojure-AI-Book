@@ -195,20 +195,44 @@ This example is contained in several source files. We will start at the low-leve
       "select * { ?s ?p ?o } limit 10")))
 ~~~~~~~~
 
+The next source file **sparql_utils.clj** contains one function that loads a SPARQL template file and performs variable substitutions for a map:
 
-The next source file **entities_by_name.clj** provides the functionality of finding DBPedia entity URIs for names of entities, for example "Steve Jobs." The heart of this functionality is one SPARQL query template that is used to look up URIs by name; in this example, the name is hard-wired to "Steve Jobs":
+{lang="clojure",linenos=on}
+~~~~~~~~
+(ns knowledge-graph-navigator-clj.sparql-utils)
+
+(defn sparql_template
+  "open SPARQL template file and perform variable substitutions"
+  [template-fpath substitution-map]
+  (let [template-as-string (slurp template-fpath)]
+    (clojure.string/replace
+      template-as-string
+      (re-pattern
+        ; create a regex pattern of quoted replacements separated by |:
+        ; code derived from a stackoverflow example by user bmillare
+        (apply
+          str
+          (interpose
+            "|"
+            (map
+              (fn [x] (java.util.regex.Pattern/quote x))
+              (keys substitution-map)))))
+      substitution-map)))
+~~~~~~~~
+
+The next source file **entities_by_name.clj** provides the functionality of finding DBPedia entity URIs for names of entities, for example "Steve Jobs." The heart of this functionality is one SPARQL query template that is used to look up URIs by name; in this example, the name is hard-wired to "Steve Jobs". The file **entities_by_name.sparql** contains:
 
 {lang="sparql",linenos=on}
 ~~~~~~~~
 select distinct ?s ?comment where {
-  ?s <http://www.w3.org/2000/01/rdf-schema#label> 
-     "Steve Jobs"@en .
-  ?s <http://www.w3.org/2000/01/rdf-schema#comment>
-      ?comment  .
-     FILTER  (lang(?comment) = "en") .
-   ?s
-    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>
-    <http://dbpedia.org/ontology/Person> .
+    ?s <http://www.w3.org/2000/01/rdf-schema#label>
+            "<NAME>"@en .
+    ?s <http://www.w3.org/2000/01/rdf-schema#comment>
+            ?comment  .
+    FILTER  (lang(?comment) = "en") .
+    ?s
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>
+        <ENTITY_TYPE> .
 }
 ~~~~~~~~
 
@@ -230,13 +254,9 @@ This SPARQL query is (in a not very readable form) in lines 11-19:
 
 (defn dbpedia-get-entities-by-name [name dbpedia-type]
   (let [sparql-query
-        (clojure.string/join
-          ""
-          ["select distinct ?s ?comment where { ?s <http://www.w3.org/2000/01/rdf-schema#label> \""
-           name
-           "\"@en . ?s <http://www.w3.org/2000/01/rdf-schema#comment>  ?comment  . FILTER  (lang(?comment) = \"en\") . ?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> "
-           dbpedia-type
-           ". }"])
+        (utils/sparql_template
+          "entities_by_name.sparql"
+          {"<NAME>" name "<ENTITY_TYPE>" dbpedia-type})
         results (sparql/sparql-endpoint sparql-query)]
     results))
 
@@ -260,20 +280,15 @@ This SPARQL query is (in a not very readable form) in lines 11-19:
 
 The main function in lines 23-38 was useful for debugging the SPARQL query and code and I left it in the example so you can run and test this file in isolation.
 
-The last utility function we need is defined in the source file **relationships.clj**. As in the last program listing, the SPARQL query is not easily read in the code so I list the SPARQL query here with the arguments **s-uri** and **o-uri** set to URIs:
-
-    "http://dbpedia.org/resource/Bill_Gates"
-    "http://dbpedia.org/resource/Microsoft"
-
-With theses arguments, the SPARQL query is:
+The last utility function we need is defined in the source file **relationships.clj** that uses a SPARQL query template file. This SPARQL template file **relationships.sparql** contains:
 
 {lang="sparql",linenos=on}
 ~~~~~~~~
 SELECT DISTINCT ?p {
-  <http://dbpedia.org/resource/Bill_Gates>
-    ?p
-    <http://dbpedia.org/resource/Microsoft> .
-  FILTER (!regex(str(?p),"wikiPage","i"))
+    <URI1>
+       ?p
+       <URI2> .
+    FILTER (!regex(str(?p),"wikiPage","i"))
 } LIMIT 5
 ~~~~~~~~
 
@@ -291,10 +306,9 @@ The **map** call on lines 15-18 is uses to discard the first SPARQL query result
 
 (defn dbpedia-get-relationships [s-uri o-uri]
   (let [query
-        (clojure.string/join
-          ""
-          ["SELECT DISTINCT ?p {{  "
-           s-uri " ?p " o-uri " . FILTER (!regex(str(?p), \"wikiPage\", \"i\")) }} LIMIT 5"])
+        (utils/sparql_template
+          "relationships.sparql"
+          {"<URI1>" s-uri "<URI2>" o-uri})
         results (sparql/sparql-endpoint query)]
     (map
       (fn [u] (clojure.string/join "" ["<" u ">"]))
