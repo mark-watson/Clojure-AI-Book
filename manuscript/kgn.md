@@ -1,13 +1,14 @@
 # Knowledge Graph Navigator {#kgn}
 
 
-The Knowledge Graph Navigator (which I will often refer to as KGN) is a tool for processing a set of entity names and automatically exploring the public Knowledge Graph [DBPedia](http://dbpedia.org) using SPARQL queries. I started to write KGN for my own use, to automate some things I used to do manually when exploring Knowledge Graphs, and later thought that KGN might be also useful for educational purposes. KGN shows the user the auto-generated SPARQL queries so hopefully the user will learn by seeing examples. KGN uses code developed in the earlier chapter [Resolve Entity Names to DBPedia References](#ner) and we will reuse here as well as the two Java classes **JenaAPis** and **QueryResults** (which wrap the Apache Jena library) from the chapter [Semantic Web](#semantic-web).
+The Knowledge Graph Navigator (which I will often refer to as KGN) is a tool for processing a set of entity names and automatically exploring the public Knowledge Graph [DBPedia](http://dbpedia.org) using SPARQL queries. I started to write KGN for my own use, to automate some things I used to do manually when exploring Knowledge Graphs, and later thought that KGN might be also useful for educational purposes. KGN shows the user the auto-generated SPARQL queries so hopefully the user will learn by seeing examples. KGN uses the Clojure Jena wrapper
+example code from the last chapter as well the two Java classes **JenaAPis** and **QueryResults** (which wrap the Apache Jena library) thatnwere also included in the example for the previous chapter.
 
-**Note:** There are three separate examples for implementing SPARQL queries in this example: use the code from the last chapter (Jena and query caching), a small standalone set of Clojure functions to access DBPedia, and a small standalone set of Clojure functions to access a local GraphDB RDF server with the data file **dppedia_sample.nt** loaded into a graph named **dbpedia**. The example code is set up to use Jena and query caching; edit the file **sparql.clj** to enable the other options.
+**Note:** There are three separate examples for implementing SPARQL queries in this example: use the code from the last chapter (Jena and query caching), a small standalone set of Clojure functions to access DBPedia, and a small standalone set of Clojure functions to access a local GraphDB RDF server with the data file **dbpedia_sample.nt** loaded into a graph named **dbpedia**. The example code is set up to use Jena and query caching; edit the file **sparql.clj** to enable the other options.
 
-The most full featured version of KGN, including a full user interface, is featured in my book [Loving Common Lisp, or the Savvy Programmer's Secret Weapon](https://leanpub.com/lovinglisp) that you can read free online. That version performs more speculative SPARQL queries to find information compared to the example here that I designed for ease of understanding, and modification.
+I have implemented parts of KGN in several languages: Common Lisp, Java, Racket Scheme, Swift, Python, and Hy. The most full featured version of KGN, including a full user interface, is featured in my book [Loving Common Lisp, or the Savvy Programmer's Secret Weapon](https://leanpub.com/lovinglisp) that you can read free online. That version performs more speculative SPARQL queries to find information compared to the example here that I designed for ease of understanding, and modification.
 
-We will be running an example using three person entities, one company entity, and one place entity. The following figure shows a very small part of the DBPedia Knowledge Graph that is centered around these entities. The data for this figure was collected by an example Knowledge Graph Creator from my Common Lisp book:
+We will be running an example using data containing three person entities, one company entity, and one place entity. The following figure shows a very small part of the DBPedia Knowledge Graph that is centered around these entities. The data for this figure was collected by an example Knowledge Graph Creator from my Common Lisp book:
 
 ![File dbpedia_sample.nt loaded into the free version of GraphDB](images/graphdb.jpg)
 
@@ -29,9 +30,9 @@ select ?p ?o where {
 } limit 10
 ~~~~~~~~
 
-For the rest of this chapter we will just use DBPedia.
+For the rest of this chapter we will just use DBPedia or data copied from DBPedia.
 
-After looking an interactive session using the example program for this chapter (that also includes listing automatically generated SPARQL queries) we will look at the implementation.
+After looking an interactive session using the example program for this chapter we will look at the implementation.
 
 ## Entity Types Handled by KGN
 
@@ -41,9 +42,9 @@ To keep this example simple we handle just three entity types:
 - Organizations
 - Places
  
-In addition to finding detailed information for people, organizations, and places we will also search for relationships between person entities and company entities. This search process consists of generating a series of SPARQL queries and calling the DBPedia SPARQL endpoint.
+In addition to finding detailed information for people, organizations, and places we will also search for relationships between entities. This search process consists of generating a series of SPARQL queries and calling the DBPedia SPARQL endpoint.
 
-Before we design and write the code, I want to show you sample output from our example program:
+Before we design and write the code, I want to show you sample output for our example program:
 
 {lang="clojure",linenos=off}
 ~~~~~~~~
@@ -90,13 +91,15 @@ The output (with some text shortened) is:
     "<http://dbpedia.org/resource/California>"]))}
 ~~~~~~~~
 
+Note that the output from the function **kgn** is a map containing two keys: **:entity-summaries** and **:discovered-relationships**.
+
 ## KGN Implementation
 
 The example application works processing a list or Person, Place, and Organization names. We generate SPARQL queries to DBPedia to find information about the entities and relationships between them.
 
 Since the DBPedia queries are time consuming, I created a tiny subset of DBPedia in the file **dbpedia_sample.nt** and load it into a RDF data store like **GraphDB** or **Fuseki** running on my laptop. This local setup is especially helpful during development when the same queries are repeatedly used for testing. If you don't modify the file **sparql.clj** then by default the public DBPedia SPARQL endpoint will be used.
 
-TBD
+The Clojure and Java files from the example in the last chapter were copied un-changed to the current example and the **project.clj** file contains the same dependencies as we used earlier:
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -129,7 +132,7 @@ TBD
 
 I copied the code from the last chapter into this project to save readers from needing to **lein install** the project in the last chapter. We won't look at that code again here.
 
-**sparql.clj**:
+This example is contained in several source files. We will start at the low-level code in **sparql.clj**. You can edit lines 10-11 if you want to change which SPARQL libraries and endpoints you want to use. There are utility functions for using DBPedia (lines 13-20), the free version of GraphDB (lines 22-35), and a top level function **sparql-endpoint** that can be configured to use the options you can change in lines 10-11. I have a top level wrapper function **sparql-endpoint** so the remainder of the example works without modification with all options. Lines 52-57 is a small man function to facilitate working with this file in isolation.
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -193,8 +196,30 @@ I copied the code from the last chapter into this project to save readers from n
 ~~~~~~~~
 
 
-**entities_by_name.clj**:
+The next source file **entities_by_name.clj** provides the functionality of finding DBPedia entity URIs for names of entities, for example "Steve Jobs." The heart of this functionality is one SPARQL query template that is used to look up URIs by name; in this example, the name is hard-wired to "Steve Jobs":
 
+{lang="sparql",linenos=on}
+~~~~~~~~
+select distinct ?s ?comment where {
+  ?s <http://www.w3.org/2000/01/rdf-schema#label> 
+     "Steve Jobs"@en .
+  ?s <http://www.w3.org/2000/01/rdf-schema#comment>
+      ?comment  .
+     FILTER  (lang(?comment) = "en") .
+   ?s
+    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>
+    <http://dbpedia.org/ontology/Person> .
+}
+~~~~~~~~
+
+The function **dbpedia-get-entities-by-name** takes two arguments **name** and **dbpedia-type** where **name** was set to "Steve Jobs" and **dbpedia-type** was set to the URI:
+
+    <http://dbpedia.org/ontology/Person>
+
+in the SPARQL query. The **FILTER** statement on line 6 is used to discard all string values that are not tagged to be English language ("en").
+
+This SPARQL query is (in a not very readable form) in lines 11-19:
+ 
 {lang="clojure",linenos=on}
 ~~~~~~~~
 (ns knowledge-graph-navigator-clj.entities-by-name
@@ -233,8 +258,28 @@ I copied the code from the last chapter into this project to save readers from n
   )
 ~~~~~~~~
 
+The main function in lines 23-38 was useful for debugging the SPARQL query and code and I left it in the example so you can run and test this file in isolation.
 
-**relationships.clj**:
+The last utility function we need is defined in the source file **relationships.clj**. As in the last program listing, the SPARQL query is not easily read in the code so I list the SPARQL query here with the arguments **s-uri** and **o-uri** set to URIs:
+
+    "http://dbpedia.org/resource/Bill_Gates"
+    "http://dbpedia.org/resource/Microsoft"
+
+With theses arguments, the SPARQL query is:
+
+{lang="sparql",linenos=on}
+~~~~~~~~
+SELECT DISTINCT ?p {
+  <http://dbpedia.org/resource/Bill_Gates>
+    ?p
+    <http://dbpedia.org/resource/Microsoft> .
+  FILTER (!regex(str(?p),"wikiPage","i"))
+} LIMIT 5
+~~~~~~~~
+
+There are three things to note here. The DISTINCT keyword removes duplicate results, In SPARQL queries URIs are enclosed in **<** **>** angle brackets but the brackets are not included in SPARQL query results so the example code adds them. Also, we are looking for all properties that link the two subject/object entity URIs except we don't want any property URIs that provides human readable results ("follow your nose" to dereference URIs to a human readable format); these property names contain the string "wikiPage" so we filter them out of the results.
+
+The **map** call on lines 15-18 is uses to discard the first SPARQL query result that is a list of variable bindings from the SPARQL query.
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -273,7 +318,8 @@ I copied the code from the last chapter into this project to save readers from n
                       (. @relationship-statements
                         contains a-tuple))
                   (reset! relationship-statements
-                    (cons a-tuple @relationship-statements))
+                    (cons a-tuple
+                          @relationship-statements))
                   nil))
             (doseq [x l2]
               (let [a-tuple [e2 x e1]]
@@ -281,7 +327,8 @@ I copied the code from the last chapter into this project to save readers from n
                       (. @relationship-statements
                         contains a-tuple))
                   (reset! relationship-statements
-                    (cons a-tuple @relationship-statements))
+                    (cons a-tuple
+                          @relationship-statements))
                   nil)))))
           nil)))
     @relationship-statements))
@@ -297,7 +344,16 @@ I copied the code from the last chapter into this project to save readers from n
        "http://dbpedia.org/resource/Microsoft"])))
 ~~~~~~~~
 
-**kgn.clj**:
+The function **entity-results->relationship-links** (lines 20-51) takes a list of entity URIs (without the angle brackets) and if there are **N** input URIs, then generates SPARQL queries for all **O(N^2)** combinations of choosing two entities at a time.
+ 
+The last source file **kgn.clj** contains the main function for this application. We use the Clojure library **clojure.math.combinatorics** to calculate all combinations of entity URIs, taken two at a time. In lines 11-17 we map entity type symbols to the DBPedia entity type URI for the symbol.
+
+There are two parts to the main function **kgn**:
+
+- Lines 24-39 collects comment descriptions for each input entity.
+- Lines 40-50 find, for each entity URI pair, possible relationships between entities.
+
+Function **kgn** returns a map of summaries and discovered entity relationships tat we saw listed early in this chapter.
 
 {lang="clojure",linenos=on}
 ~~~~~~~~

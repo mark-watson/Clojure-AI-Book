@@ -486,7 +486,7 @@ We are finished with our quick tutorial on using the SELECT query form. There ar
     any triples
 -   [DESCRIBE](https://www.w3.org/TR/rdf-sparql-query/#describe) – returns a new RDF graph containing matched resources
 
-A common matching pattern that I don't cover in this chapter is [optional](https://www.w3.org/TR/rdf-sparql-query/#optionals) but the **optional** matching pattern is used in the examples in the later chapter [Knowledge Graph Navigator](#kgn) so you will learn to use **optional** patterns later.
+A common matching pattern that I don't cover in this chapter is [optional](https://www.w3.org/TR/rdf-sparql-query/#optionals).
 
 ## OWL: The Web Ontology Language  {#owl}
 
