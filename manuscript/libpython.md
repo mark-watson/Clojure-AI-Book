@@ -67,7 +67,26 @@ The generated output is:
 
 Nice results that show the power of using publicly available pre-trained deep learning models. Usually the context text block that contains the answers will be a few paragraphs of text. This is a very simple example.
 
-## Using libpython-clj With The spaCy and Urging Face Transformer Python NLP Libraries
+## Combined spaCy and Transformer Question Answering
+
+{linenos=on}
+~~~~~~~~
+lp-libpython-spacy.core=> (spacy-qa-demo "what is the population of Paris?")
+$ $ entity: [Paris GPE] val: <http://dbpedia.org/ontology/Place>
+* * context text: Paris (French pronunciation: ​[paʁi] ()) is the capital and most populous city of France, with an estimated population of 2,150,271 residents as of 2020, in an area of 105 square kilometres (41 square miles). Since the 17th century, Paris has been one of Europe's major centres of finance, diplomacy, commerce, fashion, science and arts.
+ The City of Paris is the centre and seat of government of the Île-de-France, or Paris Region ...
+ {'score': 0.9000497460365295, 'start': 122, 'end': 131, 'answer': '2,150,271'}
+nlp-libpython-spacy.core=> (spacy-qa-demo "where does Bill Gates Work?")
+!! text/entities text: where does Bill Gates Work?
+$ $ entity: [Bill Gates PERSON] val: <http://dbpedia.org/ontology/Person>
+* * context text: William Henry Gates III (born October 28, 1955) is an American business magnate, software developer,
+ investor, and philanthropist. He is best known as the co-founder of Microsoft Corporation. During his career at Micro
+soft, Gates held the positions of chairman, chief executive officer (CEO), president and chief software architect, while also being the largest individual shareholder until May 2014. He is one of the best-known entrepreneurs and pioneers of the microcomputer revolution of the 1970s and 1980s.
+{'score': 0.3064478039741516, 'start': 213, 'end': 222, 'answer': 'Microsoft'}
+~~~~~~~~
+
+
+## Using libpython-clj With The spaCy and Hugging Face Transformer Python NLP Libraries
 
 I combined both examples we just saw in one project. Let's start with the project file which is largely copied from Carin Meier's **libpython-clj** examples GitHub repository.
 
