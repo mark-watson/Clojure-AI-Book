@@ -27,7 +27,7 @@ We declare both Jena and the Derby relational database libraries as dependencies
   :repl-options {:init-ns semantic-web-jena-clj.core})
 ~~~~~~~~
 
-We will use the Jena library for handling RDF and SPARQL queries and the Derby database library for implementing query caching. Please note that the directory structure for this project that also includes Java code that I wrote to wrap the Jena APIs for my specific needs (some files not shown for brevity):
+We will use the Jena library for handling RDF and SPARQL queries and the Derby database library for implementing query caching. Please note that the directory structure for this project also includes Java code that I wrote to wrap the Jena APIs for my specific needs (some files not shown for brevity):
 
 {linenos=on}
 ~~~~~~~~
@@ -60,7 +60,7 @@ $ tree
         └── core_test.clj
 ~~~~~~~~
 
-While I expect that you will just use the Java code as-is, there is one modification that you might want to make for your applications: I turned on OWL reasoning by default. If you don't need OWL reasoning and you will be working with large numbers of RDF triples (tens of millions should file nicely in-memory on your laptop), then you might want to change the following two likes of code in **JenaApis.java** by uncommenting line 2 and commenting line 4:
+While I expect that you will just use the Java code as is, there is one modification that you might want to make for your applications: I turned on OWL reasoning by default. If you don't need OWL reasoning and you will be working with large numbers of RDF triples (tens of millions should fit nicely in-memory on your laptop), then you might want to change the following two lines of code in **JenaApis.java** by uncommenting line 2 and commenting line 4:
 
 {lang="java",linenos=on}
 ~~~~~~~~
@@ -144,7 +144,7 @@ Test code:
         "select * where { ?subject ?property ?object . } limit 10"))))
 ~~~~~~~~
 
-You might question line 11: we are checking that the return values as a **seq** of length six while the SPARQL statement limits the returned results to five results. The "extra" result" if the first element in the **seq** that is a list of variable names from the PSARQL query.
+You might question line 11: we are checking that the return values as a **seq** of length six while the SPARQL statement limits the returned results to five results. The "extra" result" of the first element in the **seq** that is a list of variable names from the PSARQL query.
 
 Output will look like (reformatted for readability and most output is not shown):
 

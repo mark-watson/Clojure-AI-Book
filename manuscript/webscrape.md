@@ -28,7 +28,7 @@ The example code for this chapter uses **jsoup** to get the complete plain text 
 
     https://example/com#faq
 
-where we need to use check if a URI starts with "http" in which case we just use the URI as-is. Otherwise, treat the URI as a partial like "#faq" that is added to the base URI.
+where we need to use check if a URI starts with "http" in which case we just use the URI as is. Otherwise, treat the URI as a partial like "#faq" that is added to the base URI.
 
 {lang="clojure",linenos=on}
 ~~~~~~~~

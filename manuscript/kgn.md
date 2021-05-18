@@ -1,10 +1,16 @@
 # Knowledge Graph Navigator {#kgn}
 
 
-The Knowledge Graph Navigator (which I will often refer to as KGN) is a tool for processing a set of entity names and automatically exploring the public Knowledge Graph [DBPedia](http://dbpedia.org) using SPARQL queries. I started to write KGN for my own use, to automate some things I used to do manually when exploring Knowledge Graphs, and later thought that KGN might be also useful for educational purposes. KGN shows the user the auto-generated SPARQL queries so hopefully the user will learn by seeing examples. KGN uses the Clojure Jena wrapper
-example code from the last chapter as well the two Java classes **JenaAPis** and **QueryResults** (which wrap the Apache Jena library) thatnwere also included in the example for the previous chapter.
+The Knowledge Graph Navigator (which I will often refer to as KGN) is a tool for processing a set of entity names and automatically explores the public Knowledge Graph [DBPedia](http://dbpedia.org) using SPARQL queries. I started to write KGN for my own use to automate some things I used to do manually when exploring Knowledge Graphs, and later thought that KGN might be also useful for educational purposes. KGN shows the user the auto-generated SPARQL queries so hopefully the user will learn by seeing examples. KGN uses the Clojure Jena wrapper
+example code from the last chapter as well the two Java classes **JenaAPis** and **QueryResults** (which wrap the Apache Jena library) that were also included in the example for the previous chapter.
 
-**Note:** There are three separate examples for implementing SPARQL queries in this example: use the code from the last chapter (Jena and query caching), a small standalone set of Clojure functions to access DBPedia, and a small standalone set of Clojure functions to access a local GraphDB RDF server with the data file **dbpedia_sample.nt** loaded into a graph named **dbpedia**. The example code is set up to use Jena and query caching; edit the file **sparql.clj** to enable the other options.
+**Note:** There are three separate examples for implementing SPARQL queries in this example:
+
+- Use the code from the last chapter (Jena and query caching)
+- Use a small standalone set of Clojure functions to access DBPedia
+- Use a small standalone set of Clojure functions to access a local GraphDB RDF server with the data file **dbpedia_sample.nt** loaded into a graph named **dbpedia**.
+
+The example code is set up to use Jena and query caching; edit the file **sparql.clj** to enable the other options.
 
 I have implemented parts of KGN in several languages: Common Lisp, Java, Racket Scheme, Swift, Python, and Hy. The most full featured version of KGN, including a full user interface, is featured in my book [Loving Common Lisp, or the Savvy Programmer's Secret Weapon](https://leanpub.com/lovinglisp) that you can read free online. That version performs more speculative SPARQL queries to find information compared to the example here that I designed for ease of understanding, and modification.
 
@@ -358,7 +364,7 @@ The **map** call on lines 15-18 is uses to discard the first SPARQL query result
        "http://dbpedia.org/resource/Microsoft"])))
 ~~~~~~~~
 
-The function **entity-results->relationship-links** (lines 20-51) takes a list of entity URIs (without the angle brackets) and if there are **N** input URIs, then generates SPARQL queries for all **O(N^2)** combinations of choosing two entities at a time.
+The function **entity-results->relationship-links** (lines 20-51) takes a list of entity URIs (without the angle brackets) and if there are **N** input URIs it then generates SPARQL queries for all **O(N^2)** combinations of choosing two entities at a time.
  
 The last source file **kgn.clj** contains the main function for this application. We use the Clojure library **clojure.math.combinatorics** to calculate all combinations of entity URIs, taken two at a time. In lines 11-17 we map entity type symbols to the DBPedia entity type URI for the symbol.
 
@@ -367,7 +373,7 @@ There are two parts to the main function **kgn**:
 - Lines 24-39 collects comment descriptions for each input entity.
 - Lines 40-50 find, for each entity URI pair, possible relationships between entities.
 
-Function **kgn** returns a map of summaries and discovered entity relationships tat we saw listed early in this chapter.
+Function **kgn** returns a map of summaries and discovered entity relationships that we saw listed early in this chapter.
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -437,6 +443,6 @@ Function **kgn** returns a map of summaries and discovered entity relationships 
 ~~~~~~~~
 
 
-This KGN example was hopefully both interesting to you and simple enough in its implementation that you can use it as a jumping off point for your own projects.
+This KGN example was hopefully both interesting to you and simple enough in its implementation to use as a jumping off point for your own projects. 
 
 I had the idea for the KGN application because I was spending quite a bit of time manually setting up SPARQL queries for DBPedia (and other public sources like WikiData) and I wanted to experiment with partially automating this process. I have experimented with versions of KGN written in Java, Hy language ([Lisp running on Python that I wrote a short book on](https://leanpub.com/hy-lisp-python/read)), Swift, and Common Lisp and all four implementations take different approaches as I experimented with different ideas.
