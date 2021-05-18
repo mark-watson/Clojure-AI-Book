@@ -69,6 +69,8 @@ Nice results that show the power of using publicly available pre-trained deep le
 
 ## Combined spaCy and Transformer Question Answering
 
+Let's look at two examples: "what is the population of Paris?" and "where does Bill Gates Work?" That use both the spaCy library and the Hugging Face Transformer library (the printout of the context text is abbreviated for concision):
+
 {linenos=on}
 ~~~~~~~~
 lp-libpython-spacy.core=> (spacy-qa-demo "what is the population of Paris?")
@@ -200,6 +202,29 @@ Here is a listing of the example. The Python file **QA.py** loaded in line 9 wil
   [question context-text]
   (qa/answer question context-text)) ;; prints to stdout and returns a map
 
+(defn spacy-qa-demo [natural-language-query]
+  (let [entity-map
+        {"PERSON" "<http://dbpedia.org/ontology/Person>"
+         "ORG"    "<http://dbpedia.org/ontology/Organization>"
+         "GPE"    "<http://dbpedia.org/ontology/Place>"}
+        entities (text->entities natural-language-query)
+        get-text-fn (fn [entity]
+                      (println "$ $ entity:" entity "val:" (get entity-map (second entity)))
+                      (clojure.string/join
+                        " "
+                        (for [entity entities]
+                          (kgn/dbpedia-get-entity-text-by-name
+                           (first entity)
+                           (get entity-map (second entity))))))
+        context-text
+        (clojure.string/join
+          " "
+          (for [entity entities]
+            (get-text-fn entity)))
+        _ (println "* * context text:" context-text)
+        answer (qa natural-language-query context-text)]
+    answer))
+
 (defn -main
   [& _]
   (println (text->entities test-text))
@@ -209,7 +234,9 @@ Here is a listing of the example. The Python file **QA.py** loaded in line 9 wil
   (qa "where does Bill call home?"
       "Since last year, Bill lives in Seattle. He likes to skateboard.")
   (qa "what does Bill enjoy?"
-      "Since last year, Bill lives in Seattle. He likes to skateboard."))
+      "Since last year, Bill lives in Seattle. He likes to skateboard.")
+  (spacy-qa-demo "what is the population of Paris?")
+  (spacy-qa-demo "where does Bill Gates Work?"))
 ~~~~~~~~
 
 If you **lein run** to run the test **-main** function in lines ZZZ-ZZZ in the last listing, you will see (with some output removed here for brevity and reformatted):
