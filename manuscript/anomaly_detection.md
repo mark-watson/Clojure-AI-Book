@@ -7,7 +7,7 @@ If you have a large training set of both negative and positive examples then do 
 
 ## Motivation for Anomaly Detection
 
-When should we use anomaly detection? You should use supervised learning algorithms like neural networks and logistic classification when there are roughly equal number of available negative and positive examples in the training data. The University of Wisconsin cancer data set is fairly evenly split between negative and positive examples so I artificially fudged it for this example.
+When should we use anomaly detection? You should use supervised learning algorithms like neural networks and logistic classification when there are roughly an equal number of available negative and positive examples in the training data. The University of Wisconsin cancer data set is fairly evenly split between negative and positive examples so I artificially fudged it for this example.
 
 Anomaly detection should be used when you have many negative ("normal") examples and relatively few positive ("anomaly") examples. For the example in this chapter we will simulate scarcity of positive ("anomaly") results by preparing the data using the Wisconsin cancer data as follows:
 
@@ -39,13 +39,13 @@ We calculate the parameters of {$$}\mu{/$$} and {$$} \sigma ^2{/$$} for each fea
 
 ## AnomalyDetection Utility Class Written in Java
 
-The class **AnomalyDetection** (from my Java AI book) in the directory **src-java** is fairly general purpose. I won't list the Java code in the file **AnomalyDetection.java** here but please do open it in a text editor to refer to while reading this section. This Java class processes a set of training examples and for each feature calculates {$$}\mu{/$$} and {$$} \sigma ^2{/$$}. We are also training for a third parameter: an epsilon "cutoff" value: if for a given input vector if {$$}P(x : \mu, \sigma ^2){/$$} evaluates to a value greater than epsilon then the input vector is "normal", less than epsilon implies that the input vector is an "anomaly." The math for calculating these three features from training data is fairly easy but the code is not: we need to organize the training data and search for a value of epsilon that minimizes the error for a cross validation data set.
+The class **AnomalyDetection** (from my Java AI book) in the directory **src-java** is fairly general purpose. I won't list the Java code in the file **AnomalyDetection.java** here but please do open it in a text editor to refer to while reading this section. This Java class processes a set of training examples and for each feature calculates {$$}\mu{/$$} and {$$} \sigma ^2{/$$}. We are also training for a third parameter: an epsilon "cutoff" value: if for a given input vector {$$}P(x : \mu, \sigma ^2){/$$} evaluates to a value greater than epsilon then the input vector is "normal", less than epsilon implies that the input vector is an "anomaly." The math for calculating these three features from training data is fairly easy but the code is not: we need to organize the training data and search for a value of epsilon that minimizes the error for a cross validation data set.
 
 To be clear: we separate the input examples into three separate sets of training, cross validation, and testing data. We use the training data to set the model parameters, use the cross validation data to learn an epsilon value, and finally use the testing data to get precision, recall, and F1 scores that indicate how well the model detects anomalies in data not used for training and cross validation.
 
 If you are interested in the Java implementation either read the source code or for more detail read the code description in my Java AI book.
 
-## Clojure Experiment For the University of Wisconsin Cancer Data Using Java Anomaly Detection Code
+## Clojure Experiment for the University of Wisconsin Cancer Data Using Java Anomaly Detection Code
 
 The example in this section loads the University of Wisconsin data and uses the Java class **AnomalyDetection** described in the last section to find anomalies, which for this example will be input vectors that represented malignancy in the original data. We don't train on the non-malignancy samples.
 

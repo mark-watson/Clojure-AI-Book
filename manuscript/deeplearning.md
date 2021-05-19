@@ -6,15 +6,15 @@ In the last ten years Deep Learning has been so successful for solving difficult
 
 One limitation of conventional back propagation neural networks is that they are limited to the number of neuron layers that can be efficiently trained (the vanishing gradients problem).
 
-Deep learning uses computational improvements to mitigate the vanishing gradient problem like using ReLu activation functions rather than the more traditional Sigmoid function, and networks called "skip connections" networks where some layers are initially turned off with connections skipping to the next active layer.
+Deep learning uses computational improvements to mitigate the vanishing gradient problem like using ReLu activation functions rather than the more traditional Sigmoid function, and networks called "skip connections" where some layers are initially turned off with connections skipping to the next active layer.
 
 Modern deep learning frameworks like DeepLearning4J, TensorFlow, and PyTorch are easy to use and efficient. We use DeepLearning4J in this chapter because it is written in Java and easy to use with Clojure. In a later chapter we will use the Clojure library **libpython-clj** to access other deep learning-based tools like the Hugging Face Transformer models for question answering systems as well as the **spaCy** Python library for NLP.
 
 I have used GAN (generative adversarial networks) models for synthesizing numeric spreadsheet data, LSTM (long short term memory) models to synthesize highly structured text data like nested JSON, and for NLP (natural language processing). Several of my 55 US patents use neural network and Deep Learning technology.
 
-The [Deeplearning4j.org](http://deeplearning4j.org/) Java library supports many neural network algorithms. We will look at one simple example so you will feel comfortable integrating Deeplearning4j with you Clojure projects and a later optional-reading section details other available types of models.  Note that I will often refer to Deeplearning4j as DL4J. 
+The [Deeplearning4j.org](http://deeplearning4j.org/) Java library supports many neural network algorithms. We will look at one simple example so you will feel comfortable integrating Deeplearning4j with your Clojure projects and a later optional-reading section details other available types of models.  Note that I will often refer to Deeplearning4j as DL4J. 
 
-We start with a simple example of a feed forward network using the same University of Wisconsin cancer database that we will also use later in the chapel on anomaly detection.
+We start with a simple example of a feed forward network using the same University of Wisconsin cancer database that we will also use later in the chapter on anomaly detection.
 
 There is a separate [repository of DL4J examples](https://github.com/eclipse/deeplearning4j-examples) that you might want to look at since any of these Java examples that look useful for your projects can be used in Clojure using the example here to get started.
 
@@ -22,11 +22,11 @@ There is a separate [repository of DL4J examples](https://github.com/eclipse/dee
 
 Feed forward classification networks are a type of deep neural network that can contain multiple hidden neuron layers. In the example here the adjacent layers are fully connected (all neurons in adjacent layers are connected), as in the examples from the last chapter. The difference here is the use of the DL4J library that is written to scale to large problems and to use GPUs if you have them available.
 
-In general, simpler network architectures are better than unnecessarily complicated architectures. You can start with simple architectures and add layers, different layer types, and parallel models as-needed. For feed forward networks model complexity has two dimensions: the numbers of neurons in hidden layers, and also the number of hidden layers. If you put too many neurons in hidden layers then the training data is effectively memorized and this will hurt performance on data samples not used in training (refereed to as out of sample data). In practice, I "starve the network" by reducing the number of hidden neurons until the model has reduced accuracy on independent test data. Then I slightly increase the number of neurons in hidden layers. This technique helps avoid models simply memorizing training data (the over fitting problem).
+In general, simpler network architectures are better than unnecessarily complicated architectures. You can start with simple architectures and add layers, different layer types, and parallel models as needed. For feed forward networks model complexity has two dimensions: the numbers of neurons in hidden layers, and the number of hidden layers. If you put too many neurons in hidden layers then the training data is effectively memorized and this will hurt performance on data samples not used in training (referred to as out of sample data). In practice, I "starve the network" by reducing the number of hidden neurons until the model has reduced accuracy on independent test data. Then I slightly increase the number of neurons in hidden layers. This technique helps avoid models simply memorizing training data (the over fitting problem).
 
 Our example here reads the University of Wisconsin cancer training and testing data sets (lines 37-52), creates a model (lines 53-79), trains it (line 80) and tests it (lines 81-93).
 
-You can increase the number of hidden units in line 23 (something that you might do for more complex problems). To add a hidden layer you can repeat lines 67-74 (and incrementing the layer index from 1 to 2). Note that it this example, we are mostly working with Java data types, not Clojure types. In a later chapter that uses the Jena RDF/SPARQL library, we convert Java values to Clojure values.
+You can increase the number of hidden units in line 23 (something that you might do for more complex problems). To add a hidden layer you can repeat lines 67-74 (and incrementing the layer index from 1 to 2). Note that in this example, we are mostly working with Java data types, not Clojure types. In a later chapter that uses the Jena RDF/SPARQL library, we convert Java values to Clojure values.
 
 
 {lang="clojure",linenos=on}
@@ -156,18 +156,18 @@ target: [ 1.0 0.0 ] predicted : [ 0.92 0.08 ]
 target: [ 1.0 0.0 ] predicted : [ 0.96 0.04 ]
 ~~~~~~~~
 
-This is a simple example but is hopefully sufficient to get you started if you want to use DL4J in your Clojure projects. An alternative approach would be writing you model code in Java and embedding the Java code in your Clojure projects - we will see examples of this in later chapters.
+This is a simple example but is hopefully sufficient to get you started if you want to use DL4J in your Clojure projects. An alternative approach would be writing your model code in Java and embedding the Java code in your Clojure projects - we will see examples of this in later chapters.
 
-## Optional Material: Documentation For Other Types of DeepLearning4J Builtin Layers
+## Optional Material: Documentation For Other Types of DeepLearning4J Built In Layers
 
-The [documentation for the built-in layer classes in DL4J](https://deeplearning4j.org/api/latest/org/deeplearning4j/nn/conf/layers/package-tree.html) is probably more than you need for now so let's review the most other types of layers that I sometimes use. In the simple example we used in the last section we used two types of layers:
+The [documentation for the built in layer classes in DL4J](https://deeplearning4j.org/api/latest/org/deeplearning4j/nn/conf/layers/package-tree.html) is probably more than you need for now so let's review the most other types of layers that I sometimes use. In the simple example we used in the last section we used two types of layers:
 
 - [org.deeplearning4j.nn.conf.layers.DenseLayer](https://deeplearning4j.org/api/latest/org/deeplearning4j/nn/conf/layers/DenseLayer.html) - maintains connections to all neurons in the previous and next layer, or it is "fully connected."
-- [org.deeplearning4j.nn.conf.layers.OutputLayer](https://deeplearning4j.org/api/latest/org/deeplearning4j/nn/conf/layers/OutputLayer.html) - has built-in behavior for starting the back propagation calculations back through previous layers.
+- [org.deeplearning4j.nn.conf.layers.OutputLayer](https://deeplearning4j.org/api/latest/org/deeplearning4j/nn/conf/layers/OutputLayer.html) - has built in behavior for starting the back propagation calculations back through previous layers.
 
 As you build more deep learning enabled applications, depending on what requirements you have, you will likely need to use at least some of the following Dl4J layer classes:
 
-- [org.deeplearning4j.nn.conf.layers.AutoEncoder](https://deeplearning4j.org/api/latest/org/deeplearning4j/nn/conf/layers/AutoEncoder.html) - often used to remove noise from data. Autoencoders work by making the target training output values equal to the input training values while reducing the number of neurons in the AutoEncoding layer. The layer learns a concise representation of data, or "generalizes" data by learning in which features are important.
+- [org.deeplearning4j.nn.conf.layers.AutoEncoder](https://deeplearning4j.org/api/latest/org/deeplearning4j/nn/conf/layers/AutoEncoder.html) - often used to remove noise from data. Autoencoders work by making the target training output values equal to the input training values while reducing the number of neurons in the AutoEncoding layer. The layer learns a concise representation of data, or "generalizes" data by learning which features are important.
 - [org.deeplearning4j.nn.conf.layers.CapsuleLayer](https://deeplearning4j.org/api/latest/org/deeplearning4j/nn/conf/layers/CapsuleLayer.html) - Capsule networks are an attempt to be more efficient versions of convolutional models. Convolutional networks discard position information of detected features while capsule models maintain and use this information.
 - [org.deeplearning4j.nn.conf.layers.Convolution1D](https://deeplearning4j.org/api/latest/org/deeplearning4j/nn/conf/layers/Convolution1DLayer.html) - one dimensional convolutional layers learn one dimensional feature detectors. Trained layers learn to recognize features but discard the information of where the feature is located. These are often used for data input streams like signal data and word tokens in natural language processing.
 - [org.deeplearning4j.nn.conf.layers.Convolution2D](https://deeplearning4j.org/api/latest/org/deeplearning4j/nn/conf/layers/Convolution2D.html) - two dimensional convolutional layers learn two dimensional feature detectors. Trained layers learn to recognize features but discard the information of where the feature is located. These are often used for recognizing if a type of object appears inside a picture. Note that features, for example representing a nose or a mouth, are recognized but their location in an input picture does not matter. For example, you could cut up an image of someone's face, moving the ears to the picture center, the mouth to the upper left corner, etc., and the picture would still be predicted to contain a face with some probability because using soft max output layers produces class labels that can be interpreted as probabilities since the values over all output classes sum to the value 1.

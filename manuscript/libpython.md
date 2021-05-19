@@ -1,4 +1,4 @@
-# Python/Clojure Interoperation Using The libpython-clj Library
+# Python/Clojure Interoperation Using the libpython-clj Library
 
 In the last chapter we used the Java OpenNLP library for natural language processing (NLP). Here we take an alternative approach of using the **libpython-clj** library to access the [spaCy](https://spacy.io) NLP library implemented in Python (and the embedded compiled code written in FORTRAN and C/C++). The **libpython-clj** library can also be used to tap into the wealth of deep learning and numerical computation libraries written in Python. See the file **INSTALL_MLW.txt** for project dependencies.
 
@@ -160,7 +160,7 @@ nlp-libpython-spacy.core=> (type (nlp "The cat ran"))
 :pyobject
 ~~~~~~~~
 
-The output on line 3 prints as a string but is really a Python object (a **spaCy** **Document**) returned as a value from the wrapped **nlp** function. The Python **dir** function prints all methods and attributes of a Python object. Here, I only show four out of the  eighty eight methods and attributes on a **spaCy** **Document** object:
+The output on line 3 prints as a string but is really a Python object (a **spaCy** **Document**) returned as a value from the wrapped **nlp** function. The Python **dir** function prints all methods and attributes of a Python object. Here, I only show four out of the  eighty-eight methods and attributes on a **spaCy** **Document** object:
 
 {linenos=on}
 ~~~~~~~~
@@ -168,7 +168,7 @@ nlp-libpython-spacy.core=> (py/dir (nlp "The cat ran"))
 ["__iter__" "lang" "sentiment" "text" "to_json" ...]
 ~~~~~~~~
 
-The method **__iter__** is a Python iterator and allows Clojure code using **libpython-clj** to iterate through a Python collection using the Clojure **map** function as we will see in the example program. The **text** method returns a string representation of a **spaCy** **Document** object and we will also use **text** to get the print-representation of **spaCy** **Token** objects.
+The method **__iter__** is a Python iterator and allows Clojure code using **libpython-clj** to iterate through a Python collection using the Clojure **map** function as we will see in the example program. The **text** method returns a string representation of a **spaCy** **Document** object and we will also use **text** to get the print representation of **spaCy** **Token** objects.
 
 Here we call two of the wrapper functions in our example:
 
@@ -285,6 +285,6 @@ def answer (query_text,context_text):
 
 Lines 5-6 specify names for pre-trained model files that we use. In the example repository, the file **INSTALL_MLW.txt** shows how I installed the dependencies for this example on a Google Cloud Platform VPS. While I sometimes use Docker for projects with custom dependencies that I don't want to install on my laptop, I often prefer using a VPS that I can start and stop when I need it.
 
-Writing a Python wrapper that is called from your Clojure code is a good approach if you, for example, had existing Python code that uses TensorFlow or PyTorch, or was a complete application written in Python that you wanted to use from Clojure. While it is possible to do everything in Clojure calling directly into Python libraries it is sometimes simpler to write Python wrappers that define top level functions that you need in your Clojure project.
+Writing a Python wrapper that is called from your Clojure code is a good approach if, for example, you had existing Python code that uses TensorFlow or PyTorch, or there was a complete application written in Python that you wanted to use from Clojure. While it is possible to do everything in Clojure calling directly into Python libraries it is sometimes simpler to write Python wrappers that define top level functions that you need in your Clojure project.
 
 The material in this chapter is of particular interest to me because I use both NLP and Knowledge Graph technologies in my work. With the ability to access the Python **spaCY** and Hugging Face Transformer models, as well as the Java Jena library for semantic web and Knowledge Graph applications (more on this topic later), Clojure is a nice language to use for my projects.

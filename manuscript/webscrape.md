@@ -1,8 +1,8 @@
 # Web Scraping
 
-I often write software to automatically collect and use data from the web and other sources. As a practical matter, much of the data that many people use for machine learning either comes from the web or from internal data sources. This section provides some guidance and examples for getting text data from the web.
+I often write software to automatically collect and use data from the web and other sources. As a practical matter, much of the data that many people use for machine learning comes from either the web or from internal data sources. This section provides some guidance and examples for getting text data from the web.
 
-Before we start a technical discussion about web scraping I want to point out to you that much of the information on the web is copyright and the first thing that you should do is to read the terms of service for web sites to insure that your use of "scraped" or "spidered" data conforms with the wishes of the persons or organizations who own the content and pay to run scraped web sites.
+Before we start a technical discussion about web scraping I want to point out that much of the information on the web is copyright and the first thing that you should do is to read the terms of service for web sites to insure that your use of "scraped" or "spidered" data conforms with the wishes of the persons or organizations who own the content and pay to run scraped web sites.
 
 ## Web Scraping Using the **jsoup** Library
 
@@ -28,7 +28,7 @@ The example code for this chapter uses **jsoup** to get the complete plain text 
 
     https://example/com#faq
 
-where we need to use check if a URI starts with "http" in which case we just use the URI as is. Otherwise, treat the URI as a partial like "#faq" that is added to the base URI.
+where we need to use a check to see if a URI starts with "http" in which case we just use the URI as is. Otherwise, treat the URI as a partial like "#faq" that is added to the base URI.
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -73,7 +73,7 @@ where we need to use check if a URI starts with "http" in which case we just use
 
 On lines 32-33 I am setting the same user agent as my local web browser. In principle I would prefer making up a user agent name that contains my name and why I am spidering data, but in practice some web sites refuse requests from non-standard agents.
 
-Let's look a the test code for an example of fetching the text and links from my personal web site:
+Let's look at the test code for an example of fetching the text and links from my personal web site:
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
