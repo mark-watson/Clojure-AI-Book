@@ -15,7 +15,7 @@ This book uses two of the examples in my Java AI book that is also available for
 
 Git pull requests with code improvements will be appreciated by me and the readers of this book.
 
-## Clojure, With Some Java
+## Clojure, With Some Java and Python
 
 To be clear, I actually like Common Lisp slightly more than Clojure, even though Clojure is a beautifully designed modern language and Common Lisp is ancient and has defects. Then why do I use Clojure? The Java ecosystem is huge and Clojure takes full advantage of Java interoperability. Just as I sometimes need access to the rich Java ecosystem I also need Python libraries for some of my projects. Here we will use the **libpython-clj** library for that. I also like the language **Hy** that has a Clojure-like syntax and wraps the Python language. If you use Python then my book [A Lisp Programmer Living in Python-Land: The Hy Programming Language](https://leanpub.com/hy-lisp-python) might be of interest.
 

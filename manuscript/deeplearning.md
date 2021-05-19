@@ -8,7 +8,7 @@ One limitation of conventional back propagation neural networks is that they are
 
 Deep learning uses computational improvements to mitigate the vanishing gradient problem like using ReLu activation functions rather than the more traditional Sigmoid function, and networks called "skip connections" where some layers are initially turned off with connections skipping to the next active layer.
 
-Modern deep learning frameworks like DeepLearning4J, TensorFlow, and PyTorch are easy to use and efficient. We use DeepLearning4J in this chapter because it is written in Java and easy to use with Clojure. In a later chapter we will use the Clojure library **libpython-clj** to access other deep learning-based tools like the Hugging Face Transformer models for question answering systems as well as the **spaCy** Python library for NLP.
+Modern deep learning frameworks like DeepLearning4j, TensorFlow, and PyTorch are easy to use and efficient. We use DeepLearning4j in this chapter because it is written in Java and easy to use with Clojure. In a later chapter we will use the Clojure library **libpython-clj** to access other deep learning-based tools like the Hugging Face Transformer models for question answering systems as well as the **spaCy** Python library for NLP.
 
 I have used GAN (generative adversarial networks) models for synthesizing numeric spreadsheet data, LSTM (long short term memory) models to synthesize highly structured text data like nested JSON, and for NLP (natural language processing). Several of my 55 US patents use neural network and Deep Learning technology.
 

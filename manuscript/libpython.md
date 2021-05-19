@@ -53,7 +53,7 @@ nlp-libpython-spacy.core=> (text->tokens test-text)
 
 The part of speech tokens are defined in the repository directory for the last chapter in the file **nlp_opennlp/README.md**.
   
-## Using the Hugging Face Transformer Models For Question Answering
+## Using the Hugging Face Transformer Models for Question Answering
 
 Deep learning NLP libraries like BERT and Transformers have changed the landscape for applications like translation and question answering. Here we use a Hugging Face Transformer Model to answer questions when provided with a block of text that contains the answer to the questions. Before looking at the code for this example, let's look at how it is used:
 
