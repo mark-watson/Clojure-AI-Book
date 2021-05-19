@@ -15,33 +15,40 @@ I suggest bookmarking the **libpython-clj** GitHub repository for reference and 
 
 **spaCy** is a great library that is likely all you need for processing text and NLP. **spaCy** is written in Python and in the past for accessing **spaCy** I have used the Hy language (Clojure syntax Lisp that sits on top of Python), used the **py4cl** library with Common Lisp, or I just used Python. The **libpython-clj** library now gives me a great fourth option.
 
-Let's start by looking at test code in a REPL session and output for this example (we will implement the code later). I reformatted the following output to fit the page width:
+Let's start by looking at example code in a REPL session and output for this example (we will implement the code later). I reformatted the following output to fit the page width:
 
 {lang=text,linenos=on}
 ~~~~~~~~
 $ ~/Clojure-AI-Book-Code/nlp_libpython$ lein repl
 
-nlp-libpython-spacy.core=> (def test-text "John Smith worked for IBM in Mexico
-  last year and earned $1 million in salary and bonuses.")
+nlp-libpython-spacy.core=> (def test-text "John Smith
+  worked for IBM in Mexico last year and earned $1
+  million in salary and bonuses.")
 #'nlp-libpython-spacy.core/test-text
 
-nlp-libpython-spacy.core=> (text->entities test-text)
+nlp-libpython-spacy.core=> (text->entities
+                             test-text)
 (["John Smith" "PERSON"] ["IBM" "ORG"] ["Mexico" "GPE"]
  ["last year" "DATE"] ["$1 million" "MONEY"])
 
 nlp-libpython-spacy.core=> (text->tokens-and-pos test-text)
-(["John" "PROPN"] ["Smith" "PROPN"] ["worked" "VERB"] ["for" "ADP"]
- ["IBM" "PROPN"] ["in" "ADP"] ["Mexico" "PROPN"] ["last" "ADJ"] ["year" "NOUN"]
- ["and" "CCONJ"] ["earned" "VERB"] ["$" "SYM"] ["1" "NUM"] ["million" "NUM"]
- ["in" "ADP"] ["salary" "NOUN"] ["and" "CCONJ"] ["bonuses" "NOUN"] ["." "PUNCT"])
+(["John" "PROPN"] ["Smith" "PROPN"] ["worked" "VERB"]
+ ["for" "ADP"] ["IBM" "PROPN"] ["in" "ADP"]
+ ["Mexico" "PROPN"] ["last" "ADJ"] ["year" "NOUN"]
+ ["and" "CCONJ"] ["earned" "VERB"] ["$" "SYM"]
+ ["1" "NUM"] ["million" "NUM"] ["in" "ADP"]
+ ["salary" "NOUN"] ["and" "CCONJ"] ["bonuses" "NOUN"]
+ ["." "PUNCT"])
 
 nlp-libpython-spacy.core=> (text->pos test-text)
-("PROPN" "PROPN" "VERB" "ADP" "PROPN" "ADP" "PROPN" "ADJ" "NOUN" "CCONJ" "VERB"
- "SYM" "NUM" "NUM" "ADP" "NOUN" "CCONJ" "NOUN" "PUNCT")
+("PROPN" "PROPN" "VERB" "ADP" "PROPN" "ADP" "PROPN"
+ "ADJ" "NOUN" "CCONJ" "VERB" "SYM" "NUM" "NUM"
+ "ADP" "NOUN" "CCONJ" "NOUN" "PUNCT")
 
 nlp-libpython-spacy.core=> (text->tokens test-text)
-("John" "Smith" "worked" "for" "IBM" "in" "Mexico" "last" "year" "and" "earned"
- "$" "1" "million" "in" "salary" "and" "bonuses" ".")
+("John" "Smith" "worked" "for" "IBM" "in" "Mexico"
+ "last" "year" "and" "earned" "$" "1" "million"
+ "in" "salary" "and" "bonuses" ".")
 ~~~~~~~~
 
 The part of speech tokens are defined in the repository directory for the last chapter in the file **nlp_opennlp/README.md**.
@@ -52,20 +59,26 @@ Deep learning NLP libraries like BERT and Transformers have changed the landscap
 
 {lang=clojure",linenos=on}
 ~~~~~~~~
-lp-libpython-spacy.core=> (def context-text "Since last year, Bill lives
-   in Seattle. He likes to skateboard.")
+lp-libpython-spacy.core=> (def context-text "Since last
+   year, Bill lives in Seattle. He likes to skateboard.")
 #'nlp-libpython-spacy.core/context-text
 
-nlp-libpython-spacy.core=> (qa "where does Bill call home?" context-text)
+nlp-libpython-spacy.core=> (qa
+                             "where does Bill call home?"
+                             context-text)
 {'score': 0.9626545906066895, 'start': 31, 'end': 38,
  'answer': 'Seattle'}
  
-nlp-libpython-spacy.core=> (qa "what does Bill enjoy?" context-text)
+nlp-libpython-spacy.core=> (qa
+                             "what does Bill enjoy?"
+                             context-text)
 {'score': 0.9084932804107666, 'start': 52, 'end': 62,
  'answer': 'skateboard'}
 ~~~~~~~~
 
-Nice results that show the power of using publicly available pre-trained deep learning models. Usually the context text block that contains the answers will be a few paragraphs of text. This is a simple example containing only eleven words. When I use these Transformer models at work I typically provide a few paragraphs of text, which we will also do later in this chapter when we query the public DBPedia Knowledge Graph for context text.
+Nice results that show the power of using publicly available pre-trained deep learning models. Notice that the model handles equating the words "likes" with "enjoy." Similarly, the phrase "call home" is known to be similar to the word "lives." In traditional NLP systems, these capabilities would be handled with a synonym dictionary and a lot of custom code. By training Transformer models of (potentially) hundreds of gigabytes of text, an accurate model of natural language, grammar, synonyms, different sentence structure, etc. are handled with no extra custom code. By using word, phrase, and sentence embeddings Transformer models also learn the relationships between words including multiple word meanings.
+
+Usually the context text block that contains the information to answer queries will be a few paragraphs of text. This is a simple example containing only eleven words. When I use these Transformer models at work I typically provide a few paragraphs of text, which we will also do later in this chapter when we query the public DBPedia Knowledge Graph for context text.
 
 ## Combined spaCy and Transformer Question Answering
 
@@ -161,7 +174,8 @@ Here we call two of the wrapper functions in our example:
 ~~~~~~~~
 nlp-libpython-spacy.core=> (text->tokens "the cat ran")
 ("the" "cat" "ran")
-nlp-libpython-spacy.core=> (text->tokens-and-pos "the cat ran")
+nlp-libpython-spacy.core=> (text->tokens-and-pos
+                             "the cat ran")
 (["the" "DET"] ["cat" "NOUN"] ["ran" "VERB"])
 ~~~~~~~~
 
@@ -213,14 +227,14 @@ The combined demo that uses **spaCY**, the transformer model, and queries the pu
          "<http://dbpedia.org/ontology/Organization>"
          "GPE"    "<http://dbpedia.org/ontology/Place>"}
         entities (text->entities natural-language-query)
-        get-text-fn (fn [entity]
-                      (clojure.string/join
-                        " "
-                        (for [entity entities]
-                          (kgn/dbpedia-get-entity-text-by-name
-                           (first entity)
-                           (get entity-map
-                                (second entity))))))
+        get-text-fn
+        (fn [entity]
+          (clojure.string/join
+           " "
+           (for [entity entities]
+             (kgn/dbpedia-get-entity-text-by-name
+              (first entity)
+              (get entity-map (second entity))))))
         context-text
         (clojure.string/join
           " "
@@ -244,7 +258,7 @@ The combined demo that uses **spaCY**, the transformer model, and queries the pu
   (spacy-qa-demo "where does Bill Gates Work?"))
 ~~~~~~~~
 
-If you **lein run** to run the test **-main** function in lines 62-76 in the last listing, you will see the sample output that we saw earlier.
+If you **lein run** to run the test **-main** function in lines 63-76 in the last listing, you will see the sample output that we saw earlier.
 
 This example also shows how to load (see line 9 in the last listing) the local Python file **QA.py** and call a function defined in the file:
 
