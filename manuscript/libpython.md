@@ -258,7 +258,7 @@ The combined demo that uses **spaCY**, the transformer model, and queries the pu
   (spacy-qa-demo "where does Bill Gates Work?"))
 ~~~~~~~~
 
-If you **lein run** to run the test **-main** function in lines 63-76 in the last listing, you will see the sample output that we saw earlier.
+If you **lein run** to run the test **-main** function in lines 62-77 in the last listing, you will see the sample output that we saw earlier.
 
 This example also shows how to load (see line 9 in the last listing) the local Python file **QA.py** and call a function defined in the file:
 
