@@ -4,7 +4,7 @@ In the last chapter we used the Java OpenNLP library for natural language proces
 
 This example also uses the [Hugging Face Transformer models](https://huggingface.co/transformers/) for NLP question answering.
 
-To get started using **libpython-clj** I want to point you towards two resources that you will want to familiarize yourself with:
+To get started using **libpython-clj** I want to direct you toward two resources that you will want to familiarize yourself with:
 
 - [libpython-clj GitHub repository](https://github.com/clj-python/libpython-clj)
 - [Carin Meier's libpython-clj examples GitHub repository](https://github.com/gigasquid/libpython-clj-examples)
@@ -82,7 +82,7 @@ Usually the context text block that contains the information to answer queries w
 
 ## Combined spaCy and Transformer Question Answering
 
-Let's look at two example queries: "what is the population of Paris?" and "where does Bill Gates Work?." Here use both the spaCy library and the Hugging Face Transformer library. We also use some material covered in detail later in the book for accessing public Knowledge Graphs to get context text for entities found in the questions we are processing.
+Let's look at two example queries: "What is the population of Paris?" and "Where does Bill Gates Work?." Here use both the spaCy library and the Hugging Face Transformer library. We also use some material covered in detail later in the book for accessing public Knowledge Graphs to get context text for entities found in the questions we are processing.
 
 Let's use a REPL session to see some results (the printout of the context text is abbreviated for concision). I added a debug printout to the example code to print out the context text (this debug printout is not in the repository for the book example code):
 
@@ -105,7 +105,7 @@ soft, Gates held the positions of chairman, chief executive officer (CEO), presi
 
 This example may take longer to run because the example code is making SPARQL queries to the DBPedia public Knowledge Graph to get context text, a topic we will cover in depth later in the book.
 
-## Using libpython-clj With The spaCy and Hugging Face Transformer Python NLP Libraries
+## Using libpython-clj with the spaCy and Hugging Face Transformer Python NLP Libraries
 
 I combined both examples we just saw in one project. Let's start with the project file which is largely copied from Carin Meier's **libpython-clj** examples GitHub repository.
 
@@ -160,7 +160,7 @@ nlp-libpython-spacy.core=> (type (nlp "The cat ran"))
 :pyobject
 ~~~~~~~~
 
-The output on line 3 prints as a string but is really a Python object (a **spaCy** **Document**) returned as a value from the wrapped **nlp** function. The Python **dir** function prints all methods and attributes of a Python object. Here, I only show four out of the  eighty-eight methods and attributes on a **spaCy** **Document** object:
+The output on line 3 prints as a string but is really a Python object (a **spaCy** **Document**) returned as a value from the wrapped **nlp** function. The Python **dir** function prints all methods and attributes of a Python object. Here, I show only four out of the  eighty-eight methods and attributes on a **spaCy** **Document** object:
 
 {linenos=on}
 ~~~~~~~~
