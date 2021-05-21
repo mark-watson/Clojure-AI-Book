@@ -4,7 +4,9 @@ If you read through the optional background material in the last chapter you hav
 
 When querying remote SPARQL endpoints like DBPedia and WikiData I often find that I repeatedly make some of the same queries many times, especially during development and testing. I have found that by caching SPARQL query results that I can greatly improve my developer experience. We will use the Apache Derby relational database (pure Java code and easy to embed in applications) for query caching.
 
-We declare both Jena and the Derby relational database libraries as dependencies in out project file:
+One of the examples in the chapter [Python/Clojure Interoperation Using the libpython-clj Library](#libpython) performed SPARQL queries using simple pure Clojure code. The Jena libraries used here provide more functionality but I use both approaches in my own work.
+
+We declare both Jena and the Derby relational database libraries as dependencies in our project file:
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -107,7 +109,8 @@ The Clojure wrapping functions are mostly self-explanatory. The main corner case
     (. model queryRemote remote-service sparql-query)))
 
 (defn query-dbpedia [sparql-query]
-  (query-remote "https://dbpedia.org/sparql" sparql-query))
+  (query-remote "https://dbpedia.org/sparql"
+                sparql-query))
 
 (defn query-wikidata [sparql-query]
   (query-remote
@@ -115,7 +118,7 @@ The Clojure wrapping functions are mostly self-explanatory. The main corner case
 ~~~~~~~~
 
 
-Test code:
+Here is a listing of text code that loads RDF data from a file and does a SPARQL query, SPARQL queries DBPedia, and SPARQL queries WikiData:
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -144,7 +147,7 @@ Test code:
         "select * where { ?subject ?property ?object . } limit 10"))))
 ~~~~~~~~
 
-You might question line 11: we are checking that the return values as a **seq** of length six while the SPARQL statement limits the returned results to five results. The "extra" result" of the first element in the **seq** that is a list of variable names from the PSARQL query.
+You might question line 11: we are checking that the return values as a **seq** of length six while the SPARQL statement limits the returned results to five results on line 9. The "extra" result" of the first element in the **seq** that is a list of variable names from the SPARQL query.
 
 Output will look like (reformatted for readability and most output is not shown):
 
@@ -161,3 +164,5 @@ Output will look like (reformatted for readability and most output is not shown)
 ~~~~~~~~
 
 Data consists of nested lists where the first sub-list is the SPARQL query variable names, in this case: **subject property object**. Subsequent sub-lists are binding values for the query variables.
+
+We will use the Jena wrapper in the next chapter.

@@ -138,7 +138,7 @@ The Clojure and Java files from the example in the last chapter were copied un-c
 
 I copied the code from the last chapter into this project to save readers from needing to **lein install** the project in the last chapter. We won't look at that code again here.
 
-This example is contained in several source files. We will start at the low-level code in **sparql.clj**. You can edit lines 10-11 if you want to change which SPARQL libraries and endpoints you want to use. There are utility functions for using DBPedia (lines 13-20), the free version of GraphDB (lines 22-35), and a top level function **sparql-endpoint** that can be configured to use the options you can change in lines 10-11. I have a top level wrapper function **sparql-endpoint** so the remainder of the example works without modification with all options. Lines 52-57 is a small man function to facilitate working with this file in isolation.
+This example is contained in several source files. We will start at the low-level code in **sparql.clj**. You can edit lines 10-11 if you want to change which SPARQL libraries and endpoints you want to use. There are utility functions for using DBPedia (lines 13-20), the free version of GraphDB (lines 22-35), and a top level function **sparql-endpoint** that can be configured to use the options you can change in lines 10-11. I have a top level wrapper function **sparql-endpoint** so the remainder of the example works without modification with all options. Lines 52-57 is a small main function to facilitate working with this file in isolation.
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -201,21 +201,24 @@ This example is contained in several source files. We will start at the low-leve
       "select * { ?s ?p ?o } limit 10")))
 ~~~~~~~~
 
-The next source file **sparql_utils.clj** contains one function that loads a SPARQL template file and performs variable substitutions for a map:
+The next source file **sparql_utils.clj** contains one function that loads a SPARQL template file and performs variable substitutions from a map:
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
 (ns knowledge-graph-navigator-clj.sparql-utils)
 
 (defn sparql_template
-  "open SPARQL template file and perform variable substitutions"
+  "open SPARQL template file and perform
+   variable substitutions"
   [template-fpath substitution-map]
   (let [template-as-string (slurp template-fpath)]
     (clojure.string/replace
       template-as-string
       (re-pattern
-        ; create a regex pattern of quoted replacements separated by |:
-        ; code derived from a stackoverflow example by user bmillare
+        ; create a regex pattern of quoted replacements 
+        ; separated by |
+        ; this code is derived from a stackoverflow
+        ; example by user bmillare
         (apply
           str
           (interpose
@@ -248,7 +251,7 @@ The function **dbpedia-get-entities-by-name** takes two arguments **name** and *
 
 in the SPARQL query. The **FILTER** statement on line 6 is used to discard all string values that are not tagged to be English language ("en").
 
-This SPARQL query is (in a not very readable form) in lines 11-19:
+This SPARQL query template file is used in lines in lines 9-11:
  
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -286,7 +289,7 @@ This SPARQL query is (in a not very readable form) in lines 11-19:
 
 The main function in lines 23-38 was useful for debugging the SPARQL query and code and I left it in the example so you can run and test this file in isolation.
 
-The last utility function we need is defined in the source file **relationships.clj** that uses a SPARQL query template file. This SPARQL template file **relationships.sparql** contains:
+The last utility function we need is defined in the source file **relationships.clj** that uses another SPARQL query template file. This SPARQL template file **relationships.sparql** contains:
 
 {lang="sparql",linenos=on}
 ~~~~~~~~
@@ -300,7 +303,7 @@ SELECT DISTINCT ?p {
 
 There are three things to note here. The DISTINCT keyword removes duplicate results, In SPARQL queries URIs are enclosed in **<** **>** angle brackets but the brackets are not included in SPARQL query results so the example code adds them. Also, we are looking for all properties that link the two subject/object entity URIs except we don't want any property URIs that provides human readable results ("follow your nose" to dereference URIs to a human readable format); these property names contain the string "wikiPage" so we filter them out of the results.
 
-The **map** call on lines 15-18 is uses to discard the first SPARQL query result that is a list of variable bindings from the SPARQL query.
+The **map** call on lines 13-16 is used to discard the first SPARQL query result that is a list of variable bindings from the SPARQL query.
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -321,7 +324,8 @@ The **map** call on lines 15-18 is uses to discard the first SPARQL query result
         ;;discard SPARQL variable name p (?p):
         (second results)))) 
 
-(defn entity-results->relationship-links [uris-no-brackets]
+(defn entity-results->relationship-links
+  [uris-no-brackets]
   (let [uris (map
                (fn [u]
                  (clojure.string/join "" ["<" u ">"]))
@@ -364,7 +368,7 @@ The **map** call on lines 15-18 is uses to discard the first SPARQL query result
        "http://dbpedia.org/resource/Microsoft"])))
 ~~~~~~~~
 
-The function **entity-results->relationship-links** (lines 20-51) takes a list of entity URIs (without the angle brackets) and if there are **N** input URIs it then generates SPARQL queries for all **O(N^2)** combinations of choosing two entities at a time.
+The function **entity-results->relationship-links** (lines 18-49) takes a list of entity URIs (without the angle brackets) and if there are **N** input URIs it then generates SPARQL queries for all **O(N^2)** combinations of choosing two entities at a time.
  
 The last source file **kgn.clj** contains the main function for this application. We use the Clojure library **clojure.math.combinatorics** to calculate all combinations of entity URIs, taken two at a time. In lines 11-17 we map entity type symbols to the DBPedia entity type URI for the symbol.
 

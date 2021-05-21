@@ -181,9 +181,9 @@ RDF Schema (RDFS) supports the definition of classes and properties based on set
 {lang="sparql",linenos=off}
 ~~~~~~~~
 @prefix kb:   <http://knowledgebooks.com/ontology#> .
-@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-@prefix dbo:  <http://dbpedia.org/ontology/>
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dbo:  <http://dbpedia.org/ontology/> .
 
 <http://news.com/201234/>
   kb:containsCountry
@@ -207,12 +207,12 @@ Let's consider an example: suppose that your local Knowledge Graph referred to P
 
 In this case users of the local Knowledge Graph could not take advantage of connected data. For example, the DBPedia and WikiData URIs for How Biden are:
 
-    [https://dbpedia.org/resource/Joe_Biden](https://dbpedia.org/resource/Joe_Biden)
-    [http://www.wikidata.org/entity/Q6279](http://www.wikidata.org/entity/Q6279)
+- [https://dbpedia.org/resource/Joe_Biden](https://dbpedia.org/resource/Joe_Biden)
+- [http://www.wikidata.org/entity/Q6279](http://www.wikidata.org/entity/Q6279)
 
 Both of these URIs can be followed by clicking on the links if you are reading a PDF copy of this book. Please "follow your nose" and see how both of these URIs resolve to human-readable web pages.
 
-After telling you, dear reader, to always try to use public and standard URIs like the above examples for How Biden, I will now revert to using simple made-up URIs for the following discussion.
+After telling you, dear reader, to always try to use public and standard URIs like the above examples for Joe Biden, I will now revert to using simple made-up URIs for the following discussion.
 
 We will start with an example that is an extension of the example in the last section that also uses RDFS. We add a few additional RDF statements:
 
@@ -348,7 +348,7 @@ kb:containsState rdfs:subPropertyOf kb:containsPlace .
 
 Please note that in the above RDF listing I took advantage of the free form syntax of N3 and Turtle RDF formats to reformat the data to fit page width.
 
-In the following examples, we will use the main method in the class **JenaApi** (developed in the next chapter) that allows us to load multiple RDF input files and then to interactively enter SPARQL queries.
+In the following examples, I used the library developed in the next chapter that allows us to load multiple RDF input files and then to use SPARQL queries.
 
 We will start with a simple SPARQL query for subjects (news article URLs) and objects (matching countries) with the value for the predicate equal to **containsCountry**. Variables in queries start with a question mark character and can have any names:
 
@@ -415,15 +415,15 @@ http://news.yahoo.com/s/nm/20080616/ts_nm/worldleaders_trust_dc_1/
    "University of Maryland"
 ~~~~~~~~
 
-Prior to this last example query we requested that the query only return values for subject and predicate for triples that matched the query.
-However, we might want to return all triples whose subject (in this case a news article URI) is in one of the matched triples. Note that there are two matching triples, each terminated with a period:
+We might want to return all triples matching a property of containing an organization and where the object is a string containing the substring "University." The matching statement after the FILTER check matches every triple that matches the subject in the first pattern:
 
 {lang="sparql",linenos=off}
 ~~~~~~~~
 PREFIX kb: <http://knowledgebooks.com/ontology#>
 SELECT DISTINCT ?subject ?a_predicate ?an_object
  WHERE {
-    ?subject kb:containsOrganization ?object FILTER regex(?object,"University") .
+    ?subject kb:containsOrganization ?object .
+       FILTER regex(?object,"University") .
     ?subject ?a_predicate ?an_object .
 }
 ORDER BY ?a_predicate ?an_object
@@ -486,7 +486,7 @@ We are finished with our quick tutorial on using the SELECT query form. There ar
     any triples
 -   [DESCRIBE](https://www.w3.org/TR/rdf-sparql-query/#describe) – returns a new RDF graph containing matched resources
 
-A common matching pattern that I don't cover in this chapter is [optional](https://www.w3.org/TR/rdf-sparql-query/#optionals).
+A common SELECT matching pattern that I don't cover in this chapter is [optional](https://www.w3.org/TR/rdf-sparql-query/#optionals).
 
 ## OWL: The Web Ontology Language  {#owl}
 
@@ -540,4 +540,4 @@ The World Wide Web Consortium has defined three versions of the OWL language tha
 
 ## Semantic Web Wrap-up
 
-Writing Semantic Web applications and building Knowledge Graphs is a very large topic, worthy of an entire book. I have covered in this chapter the background material for the next chapter: writing Clojure wrappers for using the Jena library.
+Writing Semantic Web applications and building Knowledge Graphs is a very large topic, worthy of an entire book. I have covered in this chapter the background material for the next two chapters: writing Clojure wrappers for using the Jena library and the Knowledge Graph Navigator application.

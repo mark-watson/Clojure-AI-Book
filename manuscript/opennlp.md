@@ -46,9 +46,9 @@ The **project.clj** file shows the setup for incorporating Java code into a Cloj
   :repl-options {:init-ns opennlp-clj.core})
   ~~~~~~~~
 
-Note the use of **:java-source-paths** to specify where the Java codes are stored in the project. When you use **lein run** to try the example, both the Java and Clojure code is compiled. When I first wrote this example, I used the maven output target for the OpenNLP example in my Java AI book. I left the dependency in this **project.clj** file commented out and instead added the two Java source files to this project. Copying the code into this project should make it easier for you to run this example.
+Note the use of **:java-source-paths** to specify where the Java codes are stored in the project. When you use **lein run** to try the example, both the Java and Clojure code are compiled. When I first wrote this example, I used the maven output target for the OpenNLP example in my Java AI book. I left the dependency in this **project.clj** file commented out and instead added the two Java source files to this project. Copying the code into this project should make it easier for you to run this example.
 
-In the following listing notice that I have two versions of each function: one returns Java data structures and one returns a Clojure **seq**.
+In the following listing notice that I have two versions of tokenization functions:**tokenize->java** returns Java data structures and**tokenize->seq** returns a Clojure **seq**. The other example wrapper functions take a Java array of tokens as an argument.
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -148,3 +148,5 @@ People:
 The part of speech tokens like DT (determiner), NN (noun), etc. are defined in the README file for this project.
 
 **Note:** my Java AI book covers OpenNLP in more depth, including how to train your own classification models.
+
+We take a different approach to NLP in the next chapter: using the **libpython-clj** library to call Python NLP libraries and pre-trained deep learning models. The Python models have more functionality but the OpenNLP library is much easier to setup and use with Clojure.

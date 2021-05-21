@@ -1,4 +1,4 @@
-# Python/Clojure Interoperation Using the libpython-clj Library
+# Python/Clojure Interoperation Using the libpython-clj Library {#libpython}
 
 In the last chapter we used the Java OpenNLP library for natural language processing (NLP). Here we take an alternative approach of using the **libpython-clj** library to access the [spaCy](https://spacy.io) NLP library implemented in Python (and the embedded compiled code written in FORTRAN and C/C++). The **libpython-clj** library can also be used to tap into the wealth of deep learning and numerical computation libraries written in Python. See the file **INSTALL_MLW.txt** for project dependencies.
 
@@ -31,7 +31,8 @@ nlp-libpython-spacy.core=> (text->entities
 (["John Smith" "PERSON"] ["IBM" "ORG"] ["Mexico" "GPE"]
  ["last year" "DATE"] ["$1 million" "MONEY"])
 
-nlp-libpython-spacy.core=> (text->tokens-and-pos test-text)
+nlp-libpython-spacy.core=> (text->tokens-and-pos
+                             test-text)
 (["John" "PROPN"] ["Smith" "PROPN"] ["worked" "VERB"]
  ["for" "ADP"] ["IBM" "PROPN"] ["in" "ADP"]
  ["Mexico" "PROPN"] ["last" "ADJ"] ["year" "NOUN"]
@@ -55,7 +56,7 @@ The part of speech tokens are defined in the repository directory for the last c
   
 ## Using the Hugging Face Transformer Models for Question Answering
 
-Deep learning NLP libraries like BERT and Transformers have changed the landscape for applications like translation and question answering. Here we use a Hugging Face Transformer Model to answer questions when provided with a block of text that contains the answer to the questions. Before looking at the code for this example, let's look at how it is used:
+Deep learning NLP libraries like BERT and and other types of Transformer models have changed the landscape for applications like translation and question answering. Here we use a Hugging Face Transformer Model to answer questions when provided with a block of text that contains the answer to the questions. Before looking at the code for this example, let's look at how it is used:
 
 {lang=clojure",linenos=on}
 ~~~~~~~~
@@ -107,7 +108,7 @@ This example may take longer to run because the example code is making SPARQL qu
 
 ## Using libpython-clj with the spaCy and Hugging Face Transformer Python NLP Libraries
 
-I combined both examples we just saw in one project. Let's start with the project file which is largely copied from Carin Meier's **libpython-clj** examples GitHub repository.
+I combined the three examples we just saw in one project for this chapter. Let's start with the project file which is largely copied from Carin Meier's **libpython-clj** examples GitHub repository.
 
 
 {lang="clojure",linenos=on}
@@ -181,7 +182,7 @@ nlp-libpython-spacy.core=> (text->tokens-and-pos
 (["the" "DET"] ["cat" "NOUN"] ["ran" "VERB"])
 ~~~~~~~~
 
-Here is a listing of the example. The Python file **QA.py** loaded in line 9 will be seen later. The **spaCy** library requires a model file to be loaded as seen in line 11.
+Now let's look at the listing of the example project for this chapter. The Python file **QA.py** loaded in line 9 will be seen later. The **spaCy** library requires a model file to be loaded as seen in line 11.
 
 The combined demo that uses **spaCY**, the transformer model, and queries the public DBPedia Knowledge Graph is implemented in function **spacy-qa-demo** (lines 38-61). In line 49 we call a utility function **dbpedia-get-entity-text-by-name** that is described in a later chapter; for now it is enough to know that it uses the SPARQL query template in the file **get_entity_text.sparql** to get context text for an entity from DBPedia. This code is wrapped in the local function **get-text-fn** that is called for each entity name from in the natural language query.
 
@@ -220,7 +221,8 @@ The combined demo that uses **spaCY**, the transformer model, and queries the pu
 (defn qa
   "Use Transformer model for question answering"
   [question context-text]
-  (qa/answer question context-text)) ;; prints to stdout and returns a map
+  ;; prints to stdout and returns a map:
+  (qa/answer question context-text))
 
 (defn spacy-qa-demo [natural-language-query]
   (let [entity-map
@@ -260,7 +262,7 @@ The combined demo that uses **spaCY**, the transformer model, and queries the pu
   (spacy-qa-demo "where does Bill Gates Work?"))
 ~~~~~~~~
 
-If you **lein run** to run the test **-main** function in lines 62-77 in the last listing, you will see the sample output that we saw earlier.
+If you **lein run** to run the test **-main** function in lines 62-75 in the last listing, you will see the sample output that we saw earlier.
 
 This example also shows how to load (see line 9 in the last listing) the local Python file **QA.py** and call a function defined in the file:
 

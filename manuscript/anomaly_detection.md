@@ -1,13 +1,15 @@
 # Anomaly Detection Machine Learning Example
 
-Anomaly detection models are used in one very specific class of use cases: when you have many negative (non-anomaly) examples and relatively few positive (anomaly) examples. We can refer to this as an unbalanced training set. For training we will ignore positive examples, create a model of "how things should be," and hopefully be able to detect anomalies different from the original negative examples.
+Anomaly detection models are used in one very specific class of use cases: when you have many negative (non-anomaly) examples and relatively few positive (anomaly) examples. We can refer to this as an unbalanced training set. To try an experiment with anomaly detection we can reuse the Wisconsin data. For training we will ignore positive examples in the original data, create a model of "how things should be," and hopefully be able to detect anomalies different from the original positive examples (i.e., data samples indicating cancer malignancy).
+
+Anomaly detection is a difficult problem. The simple approach we use assumes that each data feature has a Gaussian distribution, or can be made to look like Gaussian distribution using a data transformation; this is often done by taking the logarithm of data features.
 
 If you have a large training set of both negative and positive examples then do not use anomaly detection models. If your training examples are balanced then use a classification model as we saw earlier in the chapter [Deep Learning Using Deeplearning4j](#dl4j).
 
 
 ## Motivation for Anomaly Detection
 
-When should we use anomaly detection? You should use supervised learning algorithms like neural networks and logistic classification when there are roughly an equal number of available negative and positive examples in the training data. The University of Wisconsin cancer data set is fairly evenly split between negative and positive examples so I artificially fudged it for this example.
+When should we use anomaly detection? This is important so I am going to repeat my suggestion that you should use supervised learning algorithms like neural networks and logistic classification when there are roughly an equal number of available negative and positive examples in the training data. The University of Wisconsin cancer data set is fairly evenly split between negative and positive examples so I artificially fudged it for this example.
 
 Anomaly detection should be used when you have many negative ("normal") examples and relatively few positive ("anomaly") examples. For the example in this chapter we will simulate scarcity of positive ("anomaly") results by preparing the data using the Wisconsin cancer data as follows:
 
@@ -73,15 +75,16 @@ Let's start by looking at the project file **project.clj**:
   :javac-options     ["-target" "1.8" "-source" "1.8"]
   :main ^:skip-aot anomaly-detection-clj.core
   :target-path "target/%s"
-  :profiles {:uberjar
-              {:aot :all
-               :jvm-opts
-               ["-Dclojure.compiler.direct-linking=true"]}})
+  :profiles
+  {:uberjar
+      {:aot :all
+       :jvm-opts
+       ["-Dclojure.compiler.direct-linking=true"]}})
 ~~~~~~~~
 
 
 
-The example code in **src/anomaly_detection/core.clj** is formatted for page width:
+The example code in **src/anomaly_detection/core.clj** is formatted for page width in the following listing:
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -176,9 +179,8 @@ The example code in **src/anomaly_detection/core.clj** is formatted for page wid
           (println "benign_result false"))
 
         ))))
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& _]
+        
+(defn -main [& _]
   (testAD))
 ~~~~~~~~
 
@@ -226,5 +228,6 @@ benign_result false
 
 How do we evaluate these results? The precision value of 1.0 means that there were no false positives. False positives are predictions of a true result when it should have been false. The value 0.421 for recall means that of all the samples that should have been classified as positive, we only predicted about 42% of them. The F1 score is calculated as two times the product of precision and recall, divided by the sum of precision plus recall.
 
+We used a simple approach here that has the benefit of working with small data sets. Ideally, even with highly unbalanced data sets, we would have sufficient positive examples to use deep learning to model features, data transformations, and a classification model. In many real-world problems with unbalanced data sets, sufficient data is not available.
 
 

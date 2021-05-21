@@ -20,13 +20,13 @@ There is a separate [repository of DL4J examples](https://github.com/eclipse/dee
 
 ## Feed Forward Classification Networks
 
-Feed forward classification networks are a type of deep neural network that can contain multiple hidden neuron layers. In the example here the adjacent layers are fully connected (all neurons in adjacent layers are connected), as in the examples from the last chapter. The difference here is the use of the DL4J library that is written to scale to large problems and to use GPUs if you have them available.
+Feed forward classification networks are a type of deep neural network that can contain multiple hidden neuron layers. In the example here the adjacent layers are fully connected (all neurons in adjacent layers are connected). The DL4J library is written to scale to large problems and to use GPUs if you have them available.
 
-In general, simpler network architectures are better than unnecessarily complicated architectures. You can start with simple architectures and add layers, different layer types, and parallel models as needed. For feed forward networks model complexity has two dimensions: the numbers of neurons in hidden layers, and the number of hidden layers. If you put too many neurons in hidden layers then the training data is effectively memorized and this will hurt performance on data samples not used in training (referred to as out of sample data). In practice, I "starve the network" by reducing the number of hidden neurons until the model has reduced accuracy on independent test data. Then I slightly increase the number of neurons in hidden layers. This technique helps avoid models simply memorizing training data (the over fitting problem).
+In general, simpler network architectures that can solve a problem are better than unnecessarily complicated architectures. You can start with simple architectures and add layers, different layer types, and parallel models as needed. For feed forward networks model complexity has two dimensions: the numbers of neurons in hidden layers, and the number of hidden layers. If you put too many neurons in hidden layers then the training data is effectively memorized and this will hurt performance on data samples not used in training (referred to as out of sample data). In practice, I "starve the network" by reducing the number of hidden neurons until the model has reduced accuracy on independent test data. Then I slightly increase the number of neurons in hidden layers. This technique helps avoid models simply memorizing training data (the over fitting problem).
 
-Our example here reads the University of Wisconsin cancer training and testing data sets (lines 37-52), creates a model (lines 53-79), trains it (line 80) and tests it (lines 81-93).
+Our example here reads the University of Wisconsin cancer training and testing data sets (lines 37-53), creates a model (lines 53-79), trains it (line 81) and tests it (lines 82-94).
 
-You can increase the number of hidden units in line 23 (something that you might do for more complex problems). To add a hidden layer you can repeat lines 67-74 (and incrementing the layer index from 1 to 2). Note that in this example, we are mostly working with Java data types, not Clojure types. In a later chapter that uses the Jena RDF/SPARQL library, we convert Java values to Clojure values.
+You can increase the number of hidden units per layer in line 23 (something that you might do for more complex problems). To add a hidden layer you can repeat lines 68-75 (and incrementing the layer index from 1 to 2). Note that in this example, we are mostly working with Java data types, not Clojure types. In a later chapter that uses the Jena RDF/SPARQL library, we convert Java values to Clojure values.
 
 
 {lang="clojure",linenos=on}
@@ -82,7 +82,8 @@ You can increase the number of hidden units in line 23 (something that you might
               (new File "data/", "testing.csv")))
         testIter
         (new RecordReaderDataSetIterator
-           recordReaderTest batchSize labelIndex numClasses)
+           recordReaderTest batchSize labelIndex
+           numClasses)
         conf (->
                (new NeuralNetConfiguration$Builder)
                (.seed initial-seed)

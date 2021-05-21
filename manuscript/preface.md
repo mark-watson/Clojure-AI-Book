@@ -1,7 +1,7 @@
 # Preface
 
 
-The latest edition of this book is always available for purchase at [https://leanpub.com/clojureai](https://leanpub.com/clojureai).  You can also download a free copy from [my website](https://markwatson.com/books). You are welcome to take free copies of both and share them. I offer the purchase option for readers who wish to directly support my work.
+The latest edition of this book is always available for purchase at [https://leanpub.com/clojureai](https://leanpub.com/clojureai).  You can also download a free copy from [my website](https://markwatson.com/books). You are welcome to take free copies of all of my eBooks and to share them. I offer the purchase option for readers who wish to directly support my work.
 
 I have been developing commercial Artificial Intelligence (AI) tools and applications since the 1980s and I usually use the Lisp languages Common Lisp, Clojure, Racket Scheme, and Gambit Scheme. This book contains code that I wrote for myself and I am wrapping it in a book in the hopes that my code and this book will also be useful to you, dear reader.
 
@@ -33,6 +33,6 @@ I enjoy AI programming, and hopefully this enthusiasm will also infect you.
 I produced the manuscript for this book using the [leanpub.com](http://leanpub.com) publishing system and I recommend leanpub.com to other authors.
 
 
-**Book Editor: Carol Watson**
+**Editor: Carol Watson**
 
 Thanks to the following people who found typos in this and earlier book editions: none so far!
