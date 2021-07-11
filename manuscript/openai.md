@@ -16,7 +16,7 @@ The library that I wrote for this chapter supports three functions: for completi
 
 Given the examples from [https://beta.openai.com](https://beta.openai.com) and the Clojure examples here, you should be able to modify my example code to use any of the functionality that OpenAI documents.
 
-We will look closely at the function **completions** and then just look at the small differences to the other two example functions. The definitions for all three exported functions are kept in the file **src/openai_api/core.clj***. You need to request an API key (I had to wait a few weeks to relieve my key) and set the value of the environment variable **OPENAI_KEY** to your key. You can add a statement like:
+We will look closely at the function **completions** and then just look at the small differences to the other two example functions. The definitions for all three exported functions are kept in the file **src/openai_api/core.clj***. You need to request an API key (I had to wait a few weeks to recieve my key) and set the value of the environment variable **OPENAI_KEY** to your key. You can add a statement like:
 
 {linenos=off}
 ~~~~~~~~
@@ -25,11 +25,7 @@ export OPENAI_KEY=sa-hdffds7&dhdhsdgffd
 
 to your **.profile** or other shell resource file.
 
-While I sometimes use pure Common Lisp libraries to make HTTP requests, I prefer running the **curl** utility as a separate process for these reasons:
-
-- No problems with system specific dependencies.
-- Use the standard library UIOP to run a shell command and capture the output as a string.
-- I use **curl** from the command line when experimenting with web services. After I get working **curl** options, it is very easy to translate this into Common Lisp code.
+While I sometimes use pure Clojure libraries to make HTTP requests, I prefer using the **curl** utility to experiment with API calls from the command line before starting to write any code.
 
 An example **curl** command line call to the beta OpenAPI APIs is:
 
@@ -49,10 +45,14 @@ In the file **src/openai_api/core.clj** we start with a helper function **openai
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
+(def
+  host
+  "https://api.openai.com/v1/engines/davinci/completions")
+
 (defn- openai-helper [body]
   (let [json-results
         (client/post
-          "https://api.openai.com/v1/engines/davinci/completions"
+          host
           {:accept :json
            :headers
                {"Content-Type"  "application/json"
@@ -62,10 +62,12 @@ In the file **src/openai_api/core.clj** we start with a helper function **openai
                }
            :body   body
            })]
-    ((first ((json/read-str (json-results :body)) "choices")) "text")))
+    ((first
+      ((json/read-str (json-results :body)) "choices"))
+       "text")))
 ~~~~~~~~
 
-I convert JSON data to a Lisp list and reach into the nested results list for the generated text string on line 14.
+I convert JSON data to a sequence and reach into the nested results list for the generated text string on lines 18-20. Here I am treating Clojure maps as access functions by passing a key value as an argument.
 
 The three example functions all use this **openai-helper** function. The first example function **completions** sets the parameters to complete a text fragment. You have probably seen examples of the OpenAI GPT-3 model writing stories, given a starting sentence. We are using the same model and functionality here:
 
@@ -77,7 +79,7 @@ The three example functions all use this **openai-helper** function. The first e
   (let
     [body
      (str
-       "{\"prompt\": \"" prompt-text "\", \"max_tokens\": "
+       "{\"prompt\": \"" prompt-text "\",\"max_tokens\": "
        (str max-tokens) "}")]
     (openai-helper body)))
 ~~~~~~~~
@@ -129,7 +131,7 @@ openai-api.core=> (openai-api.core/summarize some-text 150)
 openai-api.core=> 
 ~~~~~~~~
 
-The function **anser-question** is very similar to the function **summarize** except the JSON data passed to the API has one additional parameter that let the API know that we want a question answered:
+The function **answer-question** is very similar to the function **summarize** except the JSON data passed to the API has one additional parameter that let the API know that we want a question answered:
 
 - stop - The OpenAPI examples use the value: **[\n]**, which is what I use here.
 
