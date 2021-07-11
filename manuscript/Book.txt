@@ -7,4 +7,5 @@ webscrape.md
 semantic_web.md
 jena_wrapper.md
 kgn.md
+openai.md
 conclusion.md
