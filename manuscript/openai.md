@@ -2,7 +2,7 @@
 
 I have been working as an artificial intelligence practitioner since 1982 and the capability of the beta OpenAI APIs is the most impressive thing that I have seen (so far!) in my career. These APIs use the GPT-3 model.
 
-While you should (eventually) read the [online documentation for the APIs](https://beta.openai.com/docs/introduction/key-concepts), let's start by jumping into the example code. As seen in the **src/openai_api/core.clj** file we use the **clj-http.client** and **‌clojure.data.json** libraries:
+I recommend reading the online documentation for the [online documentation for the APIs](https://beta.openai.com/docs/introduction/key-concepts) to see all the capabilities of the beta OpenAI APIs.  Let's start by jumping into the example code.  As seen in the **src/openai_api/core.clj** file we use the **clj-http.client** and **‌clojure.data.json** libraries:
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -166,4 +166,4 @@ openai-api.core=> (openai-api.core/answer-question "What rivers are in Arizona?"
 " The Colorado, Verde, Salt, Gila, San Pedro, Little Colorado, and the San Francisco."
 ~~~~~~~~
 
-In addition to reading the beta OpenAPI API documentation you might want to read general material on the use of OpenAI's GPT-3 model.
+In addition to reading the beta OpenAPI API documentation you might want to read general material on the use of OpenAI's GPT-3 model. Since the APIs we are using are beta they may change. I will update this chapter and the source code on GitHub if the APIs change.
