@@ -27,7 +27,7 @@ to your **.profile** or other shell resource file.
 
 While I sometimes use pure Clojure libraries to make HTTP requests, I prefer using the **curl** utility to experiment with API calls from the command line before starting to write any code.
 
-An example **curl** command line call to the beta OpenAPI APIs is:
+An example **curl** command line call to the beta OpenAI APIs is:
 
 {lang="bash",linenos=on}
 ~~~~~~~~
@@ -39,7 +39,7 @@ curl \
         "max_tokens": 22}'
 ~~~~~~~~
 
-Here the API token "sa-hdffds7&dhdhsdgffd" on line 4 is made up - that is not my API token. All of the OpenAPIs expect JSON data with query parameters. To use the completion API, we set values for **prompt** and **max_tokens**. The value of **max_tokens** is the requested number of returns words or tokens. We will look at several examples later.
+Here the API token "sa-hdffds7&dhdhsdgffd" on line 4 is made up - that is not my API token. All of the OpenAI APIs expect JSON data with query parameters. To use the completion API, we set values for **prompt** and **max_tokens**. The value of **max_tokens** is the requested number of returns words or tokens. We will look at several examples later.
 
 In the file **src/openai_api/core.clj** we start with a helper function **openai-helper** that takes a string with the OpenAI API call arguments encoded as a **curl** command, calls the service, and then extracts the results from the returned JSON data:
 
@@ -84,7 +84,7 @@ The three example functions all use this **openai-helper** function. The first e
     (openai-helper body)))
 ~~~~~~~~
 
-Note that the OpenAPI models are stochastic. When generating output words (or tokens), the model assigns probabilities to possible words to generate and samples a word using these probabilities. As a simple example, suppose given prompt text "it fell and", then the model could only generate three words, with probabilities for each word based on this prompt text:
+Note that the OpenAI models are stochastic. When generating output words (or tokens), the model assigns probabilities to possible words to generate and samples a word using these probabilities. As a simple example, suppose given prompt text "it fell and", then the model could only generate three words, with probabilities for each word based on this prompt text:
 
 - the 0.9
 - that 0.1
@@ -133,7 +133,7 @@ openai-api.core=>
 
 The function **answer-question** is very similar to the function **summarize** except the JSON data passed to the API has one additional parameter that let the API know that we want a question answered:
 
-- stop - The OpenAPI examples use the value: **[\n]**, which is what I use here.
+- stop - The OpenAI API examples use the value: **[\n]**, which is what I use here.
 
 We also need to prepend the string "nQ: " to the prompt text.
 
@@ -166,4 +166,4 @@ openai-api.core=> (openai-api.core/answer-question "What rivers are in Arizona?"
 " The Colorado, Verde, Salt, Gila, San Pedro, Little Colorado, and the San Francisco."
 ~~~~~~~~
 
-In addition to reading the beta OpenAPI API documentation you might want to read general material on the use of OpenAI's GPT-3 model. Since the APIs we are using are beta they may change. I will update this chapter and the source code on GitHub if the APIs change.
+In addition to reading the beta OpenAI API documentation you might want to read general material on the use of OpenAI's GPT-3 model. Since the APIs we are using are beta they may change. I will update this chapter and the source code on GitHub if the APIs change.
