@@ -160,7 +160,7 @@ I promised you that the data in RDF data stores was easy to extend. As an exampl
   "2008-05-11" .
 ~~~~~~~~
 
-Note that I split one RDF statement across three lines (3-5) here to fit page width. The RFD statement on lines 3-5 is legal and will be handled correctly by RDF parsers. Here we just represent the date as a string. We can add a type to the object representing a specific date:
+Note that I split one RDF statement across three lines (3-5) here to fit page width. The RDF statement on lines 3-5 is legal and will be handled correctly by RDF parsers. Here we just represent the date as a string. We can add a type to the object representing a specific date:
 
 {lang="sparql",linenos=off}
 ~~~~~~~~
