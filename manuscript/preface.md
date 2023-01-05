@@ -1,7 +1,12 @@
+# Cover Material, Copyright, and License
+
+Copyright 2020-2023 Mark Watson. All rights reserved. This book may be shared using the Creative Commons “share and share alike, no modifications, no commercial reuse” license.
+
+This eBook will be updated occasionally so please periodically check the [leanpub.com web page for this book](https://leanpub.com/clojureai) for updates.
+
+Please visit the [author's website](http://markwatson.com).
+
 # Preface
-
-
-The latest edition of this book is always available for purchase at [https://leanpub.com/clojureai](https://leanpub.com/clojureai).  You can also download a free copy from my website [https://markwatson.com](https://markwatson.com). You are welcome to take free copies of all of my eBooks and to share them. I offer the purchase option for readers who wish to directly support my work.
 
 I have been developing commercial Artificial Intelligence (AI) tools and applications since the 1980s and I usually use the Lisp languages Common Lisp, Clojure, Racket Scheme, and Gambit Scheme. This book contains code that I wrote for myself and I am wrapping it in a book in the hopes that my code and this book will also be useful to you, dear reader.
 
