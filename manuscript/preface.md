@@ -10,6 +10,7 @@ Please visit the [author's website](http://markwatson.com).
 
 I have been developing commercial Artificial Intelligence (AI) tools and applications since the 1980s and I usually use the Lisp languages Common Lisp, Clojure, Racket Scheme, and Gambit Scheme. This book contains code that I wrote for myself and I am wrapping it in a book in the hopes that my code and this book will also be useful to you, dear reader.
 
+{width: "60%"}
 ![Mark Watson](images/Mark.png)
 
 I wrote this book for both professional programmers and home hobbyists who already know how to program in Clojure and who want to learn practical AI programming and information processing techniques. I have tried to make this an enjoyable book to work through. In the style of a “cook book,” the chapters can be studied in any order. 

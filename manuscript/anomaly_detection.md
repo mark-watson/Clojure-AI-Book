@@ -52,6 +52,8 @@ If you are interested in the Java implementation either read the source code or 
 The example in this section loads the University of Wisconsin data and uses the Java class **AnomalyDetection** described in the last section to find anomalies, which for this example will be input vectors that represented malignancy in the original data. We don't train on the non-malignancy samples.
 
 The Wisconsin data has 9 input features and one target output. Optionally the example program can use Incanter to plot the distribution of input variables. For of these plots are shown here:
+
+{width: "85%"}
 ![Distributions for 4 of the 9 input features](images/wisconsin_plots.png)
 
 
