@@ -41,6 +41,8 @@ I produced the manuscript for this book using the [leanpub.com](http://leanpub.c
 
 **Editor: Carol Watson**
 
+Thanks to Alex Ott who rewrote a few of the example programs with a better Clojure style.
+
 Thanks to the following people who found typos in this and earlier book editions: Roger Erens
 
 Thanks to the following people who suggested improvements in this and earlier book editions: non so far.
