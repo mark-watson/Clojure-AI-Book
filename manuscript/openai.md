@@ -2,15 +2,11 @@
 
 I have been working as an artificial intelligence practitioner since 1982 and the capability of the beta OpenAI APIs is the most impressive thing that I have seen (so far!) in my career. These APIs use the GPT-3 model.
 
-I recommend reading the online documentation for the [online documentation for the APIs](https://beta.openai.com/docs/introduction/key-concepts) to see all the capabilities of the beta OpenAI APIs.  Let's start by jumping into the example code.  As seen in the **src/openai_api/core.clj** file we use the **clj-http.client** and **‌clojure.data.json** libraries:
+I recommend reading the online documentation for the [online documentation for the APIs](https://beta.openai.com/docs/introduction/key-concepts) to see all the capabilities of the beta OpenAI APIs. 
 
-{lang="clojure",linenos=on}
-~~~~~~~~
-(ns openai-api.core
-  (:require [clj-http.client :as client])
-  (:require [clojure.data.json :as json]))
-~~~~~~~~
+**Note:** I implemented client code from scratch in earlier editions of this book. That code is still in the GitHub repository for this book in the directory **openai_api_mw**. The latest code that uses Werner Kok's library https://github.com/wkok/openai-clojure/ is in the directory **openai_api**. I haven't changed the APIs in my wrapper code, just the underlying implementation.
 
+Let's start by jumping into the example code.
 
 The library that I wrote for this chapter supports three functions: for completing text, summarizing text, and answering general questions. The single OpenAI model that the beta OpenAI APIs use is fairly general purpose and can generate cooking directions when given an ingredient list, grammar correction, write an advertisement from a product description, generate spreadsheet data from data descriptions in English text, etc. 
 
@@ -25,9 +21,7 @@ export OPENAI_KEY=sa-hdffds7&dhdhsdgffd
 
 to your **.profile** or other shell resource file.
 
-While I sometimes use pure Clojure libraries to make HTTP requests, I prefer using the **curl** utility to experiment with API calls from the command line before starting to write any code.
-
-An example **curl** command line call to the beta OpenAI APIs is:
+When experimenting with OpenAI APIs it is often start by using the **curl** utility. An example **curl** command line call to the beta OpenAI APIs is:
 
 {lang="bash",linenos=on}
 ~~~~~~~~
@@ -41,47 +35,119 @@ curl \
 
 Here the API token "sa-hdffds7&dhdhsdgffd" on line 4 is made up - that is not my API token. All of the OpenAI APIs expect JSON data with query parameters. To use the completion API, we set values for **prompt** and **max_tokens**. The value of **max_tokens** is the requested number of returns words or tokens. We will look at several examples later.
 
-In the file **src/openai_api/core.clj** we start with a helper function **openai-helper** that takes a string with the OpenAI API call arguments encoded as a **curl** command, calls the service, and then extracts the results from the returned JSON data:
+The file **src/openai_api/core.clj** contains the implementation of our wrapper library:
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
-(def
-  host
-  "https://api.openai.com/v1/engines/davinci/completions")
+(ns openai-api.core
+  (:require
+   [wkok.openai-clojure.api :as api]
+   [wkok.openai-clojure.openai :as openai])
+  
+  (:require [clj-http.client :as client])
+(:require [clojure.data.json :as json]))
+
+;; We are using Werner Kok's library https://github.com/wkok/openai-clojure/
+
+;; define the environment variable "OPENAI_KEY" with the value of your OpenAI API key
+
+;; remove:
 
 (defn- openai-helper [body]
   (let [json-results
         (client/post
-          host
-          {:accept :json
-           :headers
-               {"Content-Type"  "application/json"
-                "Authorization" 
-                (str "Bearer " 
-                     (System/getenv "OPENAI_KEY"))
-               }
-           :body   body
-           })]
-    ((first
-      ((json/read-str (json-results :body)) "choices"))
-       "text")))
-~~~~~~~~
+         "https://api.openai.com/v1/engines/davinci/completions"
+         {:accept :json
+          :headers
+          {"Content-Type"  "application/json"
+           "Authorization" (str "Bearer " (System/getenv "OPENAI_KEY"))}
+          :body   body})]
+    (clojure.string/trim
+     ((first ((json/read-str (json-results :body)) "choices")) "text"))))
 
-I convert JSON data to a sequence and reach into the nested results list for the generated text string on lines 18-20. Here I am treating Clojure maps as access functions by passing a key value as an argument.
 
-The three example functions all use this **openai-helper** function. The first example function **completions** sets the parameters to complete a text fragment. You have probably seen examples of the OpenAI GPT-3 model writing stories, given a starting sentence. We are using the same model and functionality here:
 
-{lang="clojure",linenos=on}
-~~~~~~~~
 (defn completions
   "Use the OpenAI API for text completions"
   [prompt-text max-tokens]
-  (let
-    [body
-     (str
-       "{\"prompt\": \"" prompt-text "\",\"max_tokens\": "
-       (str max-tokens) "}")]
-    (openai-helper body)))
+  (let [response
+         (api/create-completion
+          {:model "text-davinci-003"
+           :prompt prompt-text
+           :max_tokens max-tokens
+           :temperature 0.2})]
+    ((first (response :choices)) :text)))
+   
+
+(defn summarize
+  "Use the OpenAI API for text summarization"
+  [prompt-text max-tokens]
+  (let [response
+         (api/create-completion
+          {:model "text-davinci-003"
+           :prompt
+           (clojure.string/join
+            ""
+            ["Summarize this for a second-grade student:\n\n"
+             prompt-text])
+           :max_tokens max-tokens
+           :temperature 0.3
+           :top_k 1
+           :frequency_penalty 0.0
+           :presence_penalty 0.0})]
+        ((first (response :choices)) :text)))
+
+
+(defn answer-question
+  "Use the OpenAI API for question answering"
+  [prompt-text max-tokens]
+  (let [response
+          (api/create-completion
+           {:model "text-davinci-003"
+            :prompt
+            (clojure.string/join
+             ""
+             ["Answer the following question:\n\n"
+              prompt-text])
+            :max_tokens max-tokens
+            :temperature 0.3
+            :top_k 1
+            :frequency_penalty 0.0
+            :presence_penalty 0.0})]
+      ((first (response :choices)) :text)))
+
+
+(defn embeddings_DOES_NOT_WORK [text]
+  (let [response
+        (api/create-embedding
+         {:model "text-embedding-ada-002"
+          :input text})]
+    response))
+
+(defn embeddings [text]
+  (try
+    (let* [body
+           (str
+            "{\"input\": \""
+            (clojure.string/replace
+             (clojure.string/replace text #"[\" \n :]" " ")
+             #"\s+" " ")
+            "\", \"model\": \"text-embedding-ada-002\"}")
+           json-results
+           (client/post
+            "https://api.openai.com/v1/embeddings"
+            {:accept :json
+             :headers
+             {"Content-Type"  "application/json"
+              "Authorization" (str "Bearer " (System/getenv "OPENAI_KEY"))}
+             :body   body})]
+          ((first ((json/read-str (json-results :body)) "data")) "embedding"))
+    (catch Exception e
+      (println "Error:" (.getMessage e))
+      "")))
+
+(defn dot-product [a b]
+  (reduce + (map * a b)))
 ~~~~~~~~
 
 Note that the OpenAI models are stochastic. When generating output words (or tokens), the model assigns probabilities to possible words to generate and samples a word using these probabilities. As a simple example, suppose given prompt text "it fell and", then the model could only generate three words, with probabilities for each word based on this prompt text:
