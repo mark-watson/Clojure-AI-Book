@@ -4,9 +4,7 @@ COPIED FROM SWIFT BOOK - REWRITE
 
 The examples in this chapter are inspired by the Python LangChain and LlamaIndex projects, with just the parts I need for my projects written from scratch in Common Lisp. I wrote a Python book “LangChain and LlamaIndex Projects Lab Book: Hooking Large Language Models Up to the Real World Using GPT-3, ChatGPT, and Hugging Face Models in Applications” in March 2023: https://leanpub.com/langchain that you might also be interested in.
 
-The GitHub repository for this example can be found here: [https://github.com/mark-watson/Docs_QA_Swift](https://github.com/mark-watson/Docs_QA_Swift).
-
- 
+The GitHub repository for this example can be found here: TBD.
 
 We use two models in this example: a vector embedding model
 and a chatgpt-3.5turbo conversation model (see bottom of this file).
@@ -16,292 +14,172 @@ The vector embedding model is used to compare the similarity of two
 prompts.
 
 
-## Extending the String Class
-
-```swift
-import Foundation
-import NaturalLanguage
-
-// String utilities:
-
-extension String {
-    func removeCharacters(from forbiddenChars: CharacterSet) -> String {
-        let passed = self.unicodeScalars.filter { !forbiddenChars.contains($0) }
-        return String(String.UnicodeScalarView(passed))
-    }
-
-    func removeCharacters(from: String) -> String {
-        return removeCharacters(from: CharacterSet(charactersIn: from))
-    }
-    func plainText() -> String {
-        return self.removeCharacters(from:
-                                     “\”`()%$#@[]{}<>”).replacingOccurrences(of: “\n”,
-                                     with: “ “)
-    }
-}
-```
 
 ## Implementing a Local Vector Database for Document Embeddings
 
-```swift
-let openai_key = ProcessInfo.processInfo.environment[“OPENAI_KEY”]!
+For interactive development we will read all text files in the **data** directory, create a global variable **doc-strings** containing the string contents of each file, and then creating another global variable **doc-chunks** where each document string has been broken down into smaller chunks. For each chunk, we will call the OpenAI API for calculating document embeddings and store the embeddings for each chunk in the global variable **embeddings**.
 
-let openAiHost = “https://api.openai.com/v1/embeddings”
+When we want to query the documents in the **data** directory, we then calculate an embedding vector for the query and using a dot product calculation, efficiently find all chunks that are semantically similar to the query. The original text for these matching chunks is then combined with the user's query and passed to an OpenAI API for text completion.
 
-func openAiHelper(body: String)  -> String {
-    var ret = “”
-    var content = “{}”
-    let requestUrl = URL(string: openAiHost)!
-    var request = URLRequest(url: requestUrl)
-    request.httpMethod = “POST”
-    request.httpBody = body.data(using: String.Encoding.utf8);
-    request.setValue(“application/json”, forHTTPHeaderField: “Content-Type”)
-    request.setValue(“Bearer “ + openai_key, forHTTPHeaderField: “Authorization”)
-    let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-        if let error = error {
-            print(“—>> Error accessing OpenAI servers: \(error)”)
-            return
-        }
-        if let data = data, let s = String(data: data, encoding: .utf8) {
-            content = s
-            //print(“** s=“, s)
-            CFRunLoopStop(CFRunLoopGetMain())
-        }
-    }
-    task.resume()
-    CFRunLoopRun()
-    let c = String(content)
-    let i1 = c.range(of: “\”embedding\”:”)
-    if let r1 = i1 {
-        let i2 = c.range(of: “]”)
-        if let r2 = i2 {
-            ret = String(String(String(c[r1.lowerBound..<r2.lowerBound]).dropFirst(15)).dropLast(2))
-        }
-    }
-    return ret
-}
+```clojure
 
-public func embeddings(someText: String) -> [Float] {
-    let body: String = “{\”input\”: \”” + someText + “\”, \”model\”: \”text-embedding-ada-002\” }”
-    return readList(openAiHelper(body: body))
-}
 
-func dotProduct(_ list1: [Float], _ list2: [Float]) -> Float {
-    if list1.count != list2.count {
-        //fatalError(“Lists must have the same length.”)
-        print(“WARNING: Lists must have the same length: \(list1.count) != \(list2.count)”)
-        return 0.0
-    }
-    
-    var result: Float = 0
-    
-    for i in 0..<list1.count {
-        result += list1[i] * list2[i]
-    }
-    
-    return result
-}
 ```
 
-The source file conatins example code for creating embeddings and using dot product work to find semantic similarity:
+The source file contains example code for creating embeddings and using dot product work to find semantic similarity:
 
-```swift
-let emb1 = embeddings(someText: “John bought a new car”)
-let emb2 = embeddings(someText: “Sally drove to the store”)
-let emb3 = embeddings(someText: “The dog saw a cat”)
-let dotProductResult1 = dotProduct(emb1, emb2)
-print(dotProductResult1)
-let dotProductResult2 = dotProduct(emb1, emb3)
-print(dotProductResult2)
+```clojure
+
+
 ```
 
 The output is:
 
 ```Console
-0.8416926
-0.79411536
+
+
 ```
 
 For this example, we use an in-memory store of embedding vectors and chunk text.
-A text document is broken into smaller chuncks of text. Each chunk is embedded
+A text document is broken into smaller chunks of text. Each chunk is embedded
 and stored in the embeddingsStore. The chunk text is stored in the chunks array.
 The embeddingsStore and chunks array are used to find the most similar chunk
 to a prompt. The most similar chunk is used to generate a response to the prompt.
 
-```swift
-var embeddingsStore: Array<[Float]> = Array()
-var chunks: Array<String> = Array()
+```clojure
 
-func addEmbedding(_ embedding: [Float]) {
-    embeddingsStore.append(embedding)
-    //print(“Added embedding: count=\(embeddingsStore.count)  \(embedding)”)
-}
 
-func addChunk(_ chunk: String) {
-    chunks.append(chunk)
-}
 ```
 
 
 ## Create Local Embeddings Vectors From Local Text Files With OpenAI GPT APIs
 
+The code for handling OpenAI API calls is in the library **openai_api** in the GitHub repository for this book. You need to install that example project locally using:
 
-```swift
-func readList(_ input: String) -> [Float] {
-    return input.split(separator: “,\n”).compactMap {
-        Float($0.trimmingCharacters(in: .whitespaces))
-    }
-}
+    lien install
 
-let fileManager = FileManager.default
-let currentDirectoryURL = URL(fileURLWithPath: fileManager.currentDirectoryPath)
-let dataDirectoryURL = currentDirectoryURL.appendingPathComponent(“data”)
+The code in this project example is located in **src/docs_qa/vectordb.clj**:
 
-// Top level code expression to process all *.txt files in the data/ directory:
+```clojure
+(ns docs-qa.vectordb)
 
-do {
-    let directoryContents = try fileManager.contentsOfDirectory(at: dataDirectoryURL, includingPropertiesForKeys: nil)
-    let txtFiles = directoryContents.filter { $0.pathExtension == “txt” }
-    for txtFile in txtFiles {
-        let content = try String(contentsOf: txtFile)
-        let chnks = segmentTextIntoChunks(text: content.plainText(),
-                                          max_chunk_size: 100)
-        for chunk in chnks {
-            let embedding = embeddings(someText: chunk)
-            if embedding.count > 0 {
-                addEmbedding(embedding)
-                addChunk(chunk)
-            }
-        }
-    }
-} catch {
-}
-       
-func segmentTextIntoSentences(text: String) -> [String] {
-    let tokenizer = NLTokenizer(unit: .sentence)
-    tokenizer.string = text
-    let sentences = tokenizer.tokens(for: text.startIndex..<text.endIndex).map {
-       token -> String in
-         return String(text[token.lowerBound..<token.upperBound])
-    }
-    return sentences
-}
+(defn string-to-floats [s]
+  (map #(Float/parseFloat %) (clojure.string/split s #" ")))
 
-func segmentTextIntoChunks(text: String, max_chunk_size: Int) -> [String] {
-    let sentences = segmentTextIntoSentences(text: text)
-    var chunks: Array<String> = Array()
-    var currentChunk = “”
-    var currentChunkSize = 0
-    for sentence in sentences {
-        if currentChunkSize + sentence.count < max_chunk_size {
-            currentChunk += sentence
-            currentChunkSize += sentence.count
-        } else {
-            chunks.append(currentChunk)
-            currentChunk = sentence
-            currentChunkSize = sentence.count
-        }
-    }
-    return chunks
-}
+(defn truncate-string [s max-length]
+  (if (< (count s) max-length)
+    s
+    (subs s 0 max-length)))
+
+(defn break-into-chunks [s chunk-size]
+  (let [chunks (partition-all chunk-size s)]
+    (map #(apply str %) chunks)))
+
+(defn document-texts-from_dir [dir-path]
+  (map #(slurp %) (rest (file-seq (clojure.java.io/file dir-path)))))
+
+(defn document-texts-to-chunks [strings]
+  (flatten
+   (map #(break-into-chunks % 200) strings)))
+
+(def directory-path "data")
+
+(def doc-strings (document-texts-from_dir directory-path))
+
+(def doc-chunks
+  (filter #(> (count %) 40) (document-texts-to-chunks doc-strings)))
+
+(def chunk-embeddings
+  (map #(openai-api.core/embeddings %) doc-chunks))
+
+(def embeddings-with-chunk-texts
+  (map vector chunk-embeddings doc-chunks))
+
+;;(clojure.pprint/pprint (first embeddings-with-chunk-texts))
 ```
+
 
 
 
 ## Using Local Embeddings Vector Database With OpenAI GPT APIs
 
-We use the OpenAI QA API using gpt-3.5turbo model (reformatted to fit the page width):
+The main application code is in the file **src/docs_qa/core.clj**:
 
-```swift
-let openAiQaHost = “https://api.openai.com/v1/chat/completions”
+```clojure
+(ns docs-qa.core
+  (:require [clojure.java.jdbc :as jdbc]
+            [openai-api.core :refer :all]
+            [docs-qa.vectordb :refer :all])
+  (:gen-class))
 
-func openAiQaHelper(body: String)  -> String {
-    var ret = “”
-    var content = “{}”
-    let requestUrl = URL(string: openAiQaHost)!
-    var request = URLRequest(url: requestUrl)
-    request.httpMethod = “POST”
-    request.httpBody = body.data(using: String.Encoding.utf8);
-    request.setValue(“application/json”, forHTTPHeaderField: “Content-Type”)
-    request.setValue(“Bearer “ + openai_key, forHTTPHeaderField: “Authorization”)
-    let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-        if let error = error {
-            print(“—>> Error accessing OpenAI servers: \(error)”)
-            return
-        }
-        if let data = data, let s = String(data: data, encoding: .utf8) {
-            content = s
-            CFRunLoopStop(CFRunLoopGetMain())
-        }
-    }
-    task.resume()
-    CFRunLoopRun()
-    let c = String(content)
-    //print(“DEBUG response c:”, c)
-    // pull returned content for string instead of using a
-    // JSON parser:
-    let i1 = c.range(of: “\”content\”:”)
-    if let r1 = i1 {
-        let i2 = c.range(of: “\”}”)
-        if let r2 = i2 {
-            ret = String(
-                    String(
-                      String(c[r1.lowerBound..<r2.lowerBound])
-                        .dropFirst(11)))
-        }
-    }
-    return ret
-}
+(defn best-vector-matches [query]
+  (print "**count:" (count docs-qa.vectordb/embeddings-with-chunk-texts))
+  (clojure.string/join
+   " ."
+   (let [query-embedding (openai-api.core/embeddings query)]
+    (map
+     second
+     (filter
+      (fn [emb-text-pair]
+        (let [emb (first emb-text-pair)
+              text (second emb-text-pair)]
+          (> (openai-api.core/dot-product
+              query-embedding
+              emb)
+             0.79)))
+      docs-qa.vectordb/embeddings-with-chunk-texts)))))
 
-func questionAnswering(context: String, question: String) -> String {
-    let body = “{ \”model\”: \”gpt-3.5-turbo\”, \”messages\”: [ {\”role\”: \”system\”, \”content\”: \”” +
-      context + “\”}, {\”role\”: \”user\”, \”content\”: \”” + question + “\”}]}”
+(defn answer-prompt [prompt]
+  (openai-api.core/answer-question
+   prompt
+   50))
 
-    //print(“DEBUG body:”, body)
-    
-    let answer = openAiQaHelper(body: body)
-    if let i1 = answer.range(of: “\”content\”:”) {
-        // variable answer is a string containing JSON. We want to extract the value of the “content” key and we do so without using a JSON parser.
-        return String(answer[answer.startIndex..<i1.lowerBound])
-    }
-    return answer
-}
-
-//  Top level query interface:
-
-func query(_ query: String) -> String {
-    let queryEmbedding = embeddings(someText: query)
-    var contextText = “”
-    for i in 0..<embeddingsStore.count {
-        let dotProductResult = dotProduct(queryEmbedding, embeddingsStore[i])
-        if dotProductResult > 0.8 {
-            contextText.append(chunks[i])
-            contextText.append(“ “)
-        }
-    }
-    //print(“\n\n+++++++ contextText = \(contextText)\n\n”)
-    let answer = questionAnswering(context: contextText, question: query)
-    //print(“* * debug: query: “, query)
-    //print(“* * debug: answer:”, answer)
-    return answer
-
-}
-
-print(query(“What is the history of chemistry?”))
-print(query(“What is the definition of sports?”))
-print(query(“What is the microeconomics?”))
+(defn -main
+  []
+  (println "Loading text files in ./data/, performing chunking and getting OpenAI embeddings...")
+  (answer-prompt " do nothiing ")
+  (print "...done loading data and getting local embeddings.\n")
+  (loop []
+  (println "Enter a query:")
+  (let [input (read-line)]
+    (if (empty? input)
+      (println "Done.")
+      (do
+        (let [text (best-vector-matches input)
+              prompt
+              (clojure.string/replace
+               (clojure.string/join
+                "\n"
+                ["With the following CONTEXT:\n\n"
+                text
+                "\n\nANSWER:\n\n"
+                input])
+               #"\s+" " ")]
+          (println "** PROMPT:" prompt)
+          (println (answer-prompt prompt)))
+          (recur))))))
 ```
 
-The output for these three questions looks like:
+The main example function reads the text files in **./data/**, chunks the files, and uses the OpenAI APIs to get embeddings for each chunk. The main function then has an infinite loop where you can enter a question about your local documents, the most relevant chunks are identified and turned into a prompt along with your question, the the generated prompt and answer to the question are printed. You can enter a control-D to stop the example program:
 
 ```Console
-The history of chemistry dates back to ancient times when people began to manipulate materials to produce useful products. The ancient Egyptians were skilled in metallurgy and used various chemicals to embalm bodies. The Greeks were interested in theories of matter and sought to understand the nature of substances.\n\nDuring the Middle Ages, alchemy became popular, with alchemists seeking to transform base metals into gold and searching for an elixir of life. While alchemy was considered a pseudoscience, it did lead to important discoveries such as the distillation of alcohol and the discovery of various acids.\n\nThe Scientific Revolution of the 17th century brought about significant changes in chemistry. The work of Robert Boyle, Antoine Lavoisier, and others laid the foundation for modern chemistry. Lavoisier is considered the father of modern chemistry for his work in establishing the law of conservation of mass, which states that matter cannot be created or destroyed.\n\nThe 19th century saw the development of organic chemistry, as scientists sought to understand the chemistry of carbon-based compounds, which make up many biological molecules. The 20th century brought about significant advances in analytical chemistry, as well as the development of quantum mechanics and the discovery of the structure of DNA, which revolutionized the field of biochemistry.\n\nToday, chemistry plays a critical role in fields such as medicine, agriculture, materials science, and environmental science.
+$ lein run
+Loading text files in ./data/, performing chunking and getting OpenAI embeddings...
+...done loading data and getting local embeddings.
+Enter a query:
+What is Chemistry. How useful, really, are the sciences. Is Amyl alcohol is an organic compound?
+**count: 56** PROMPT: With the following CONTEXT: Amyl alcohol is an organic compound with the formula C 5 H 12 O. All eight isomers of amyl alcohol are known. The most important is isobutyl carbinol, this being the chief constituent of fermentation .een 128 and 132 C only being collected. The 1730 definition of the word "chemistry", as used by Georg Ernst Stahl, meant the art of resolving mixed, compound, or aggregate bodies into their principles .; and of composing such bodies from those principles. In 1837, Jean-Baptiste Dumas considered the word "chemistry" to refer to the science concerned with the laws and effects of molecular forces.[16] .This definition further evolved until, in 1947, it came to mean the science of substances: their structure, their properties, and the reactions that change them into other substances - a characterizat .ion accepted by Linus Pauling.[17] More recently, in 1998, the definition of "chemistry" was broadened to mean the study of matter and the changes it undergoes, as phrased by Professor Raymond Chang. .ther aggregates of matter. This matter can be studied in solid, liquid, or gas states, in isolation or in combination. The interactions, reactions and transformations that are studied in chemistry are ANSWER: What is Chemistry. How useful, really, are the sciences. Is Amyl alcohol is an organic compound?
 
 
-Sports can be defined as activities involving physical athleticism, physical dexterity, and governed by rules to ensure fair competition and consistent adjudication of the winner. The term \”sport\” originally meant leisure, but it now primarily refers to physical activities that involve competition at various levels of skill and proficiency. Some organizations also include all physical activity and exercise in the definition of sport.
+Chemistry is the science of substances: their structure, their properties, and the reactions that change them into other substances. Amyl alcohol is an organic compound with the formula C5H12O. All eight isomers of amyl alcohol
+Enter a query:
+What is the Austrian School of Economics?
+**count: 56** PROMPT: With the following CONTEXT: The Austrian School (also known as the Vienna School or the Psychological School ) is a Schools of economic thought|school of economic thought that emphasizes the spontaneous organizing power of the p .rice mechanism. Austrians hold that the complexity of subjective human choices makes mathematical modelling of the evolving market extremely difficult (or Undecidable and advocate a "laissez faire" ap .proach to the economy. Austrian School economists advocate the strict enforcement of voluntary contractual agreements between economic agents, and hold that commercial transactions should be subject t .o the smallest possible imposition of forces they consider to be (in particular the smallest possible amount of government intervention). The Austrian School derives its name from its predominantly Au .strian founders and early supporters, including Carl Menger, Eugen von Böhm-Bawerk and Ludwig von Mises. Economics is the social science that analyzes the production, distribution, and consumption of .growth, and monetary and fiscal policy. The professionalization of economics, reflected in the growth of graduate programs on the subject, has been described as "the main change in economics since .essional study; see Master of Economics. Economics is the social science that studies the behavior of individuals, households, and organizations (called economic actors, players, or agents), whe . govern the production, distribution and consumption of goods and services in an exchange economy.[3] An approach to understanding these processes, through the study of agent behavior under scarcity, ANSWER: What is the Austrian School of Economics?
 
 
-Microeconomics is a branch of economics that focuses on the behavior and decision-making of individual units within an economy, such as households, firms, and industries. It examines how these units interact in various markets to determine the prices of goods and services and how resources are allocated efficiently. Microeconomics also considers the role of government policies and regulations in influencing these interactions and outcomes. Topics studied in microeconomics include supply and demand, market structures, consumer behavior, production and cost analysis, and welfare analysis.
+The Austrian School of Economics is a school of economic thought that emphasizes the spontaneous organizing power of the price mechanism and advocates a "laissez faire" approach to the economy. It is named after its predominantly Austrian founders and early supporters, including
+Enter a query:
+Done.
 ```
 
 ## Wrap Up for Using Local Embeddings Vector Database to Enhance the Use of GPT3 APIs With Local Documents
@@ -309,5 +187,3 @@ Microeconomics is a branch of economics that focuses on the behavior and decisio
 As I write this in early April 2023, I have been working almost exclusively with OpenAI APIs for the last year and using the Python libraries for LangChain and LlamaIndex for the last three months.
 
 I started writing the examples in this chapter for my own use, implementing a tiny subset of the LangChain and LlamaIndex libraries in Swift in order to write efficient command line utilities for creating local embedding vector data stores and for interactive chat using my own data.
-
-By writing about my “scratching my own itch” command line experiments here I hope that I get pull requests for https://github.com/mark-watson/Docs_QA_Swift from readers who are interested in helping to extend this code with new functionality.
