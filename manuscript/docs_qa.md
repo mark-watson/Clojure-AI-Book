@@ -1,18 +1,12 @@
 # Documents Question Answering Using OpenAI GPT3 APIs and a Local Embeddings Vector Database
 
-COPIED FROM SWIFT BOOK - REWRITE
+The examples in this chapter are inspired by the Python LangChain and LlamaIndex projects, with just the parts I need for my projects written from scratch in Clojure. I wrote a Python book “LangChain and LlamaIndex Projects Lab Book: Hooking Large Language Models Up to the Real World Using GPT-3, ChatGPT, and Hugging Face Models in Applications” in March 2023: [https://leanpub.com/langchain](https://leanpub.com/langchain) that you might also be interested in.
 
-The examples in this chapter are inspired by the Python LangChain and LlamaIndex projects, with just the parts I need for my projects written from scratch in Common Lisp. I wrote a Python book “LangChain and LlamaIndex Projects Lab Book: Hooking Large Language Models Up to the Real World Using GPT-3, ChatGPT, and Hugging Face Models in Applications” in March 2023: https://leanpub.com/langchain that you might also be interested in.
-
-The GitHub repository for this example can be found here: TBD.
+The GitHub repository for this example can be found here: [https://github.com/mark-watson/Clojure-AI-Book-Code/tree/main/docs_qa](https://github.com/mark-watson/Clojure-AI-Book-Code/tree/main/docs_qa). We will be using an OpenAI API wrapper from the last chapter that you should have installed with **lein install** on your local system.
 
 We use two models in this example: a vector embedding model
-and a chatgpt-3.5turbo conversation model (see bottom of this file).
-The vector embedding model is used to generate a vector embedding.
-The chatgpt-3.5turbo model is used to generate a response to a prompt.
-The vector embedding model is used to compare the similarity of two
-prompts.
-
+and a text completion model (see bottom of this file).
+The vector embedding model is used to generate a vector embeddings for "chunks" of input documents. Here we break documents into 200 character chunks and calculate a vector embedding for each chunk. A vector dot product between two embedding vectors tells us how semantically similar two chunks of text are. We will also calculate embedding vectors for user queries and use those to find chunks that might be useful for answering the query. Useful chunks are concatenated to for a prompt for a GPT text completion model.
 
 
 ## Implementing a Local Vector Database for Document Embeddings
@@ -21,35 +15,8 @@ For interactive development we will read all text files in the **data** director
 
 When we want to query the documents in the **data** directory, we then calculate an embedding vector for the query and using a dot product calculation, efficiently find all chunks that are semantically similar to the query. The original text for these matching chunks is then combined with the user's query and passed to an OpenAI API for text completion.
 
-```clojure
+For this example, we use an in-memory store of embedding vectors and chunk text. A text document is broken into smaller chunks of text. Each chunk is embedded and stored in the embeddingsStore. The chunk text is stored in the chunks array. The embeddingsStore and chunks array are used to find the most similar chunk to a prompt. The most similar chunk is used to generate a response to the prompt.
 
-
-```
-
-The source file contains example code for creating embeddings and using dot product work to find semantic similarity:
-
-```clojure
-
-
-```
-
-The output is:
-
-```Console
-
-
-```
-
-For this example, we use an in-memory store of embedding vectors and chunk text.
-A text document is broken into smaller chunks of text. Each chunk is embedded
-and stored in the embeddingsStore. The chunk text is stored in the chunks array.
-The embeddingsStore and chunks array are used to find the most similar chunk
-to a prompt. The most similar chunk is used to generate a response to the prompt.
-
-```clojure
-
-
-```
 
 
 ## Create Local Embeddings Vectors From Local Text Files With OpenAI GPT APIs
@@ -98,7 +65,20 @@ The code in this project example is located in **src/docs_qa/vectordb.clj**:
 ;;(clojure.pprint/pprint (first embeddings-with-chunk-texts))
 ```
 
+If we uncomment the print statement in the last line of code, we see the first embedding vector and its corresponding chunk text:
 
+```
+[[-0.011284076
+  -0.0110755935
+  -0.011531647
+  -0.0374746
+  -0.0018975098
+  -0.0024985236
+  0.0057560513 ...
+  ]
+ "Amyl alcohol is an organic compound with the formula C 5 H 12 O. All eight isomers of amyl alcohol are known. The most important is isobutyl carbinol, this being the chief constituent of fermentation "]
+]
+```
 
 
 ## Using Local Embeddings Vector Database With OpenAI GPT APIs
@@ -169,7 +149,6 @@ Loading text files in ./data/, performing chunking and getting OpenAI embeddings
 Enter a query:
 What is Chemistry. How useful, really, are the sciences. Is Amyl alcohol is an organic compound?
 **count: 56** PROMPT: With the following CONTEXT: Amyl alcohol is an organic compound with the formula C 5 H 12 O. All eight isomers of amyl alcohol are known. The most important is isobutyl carbinol, this being the chief constituent of fermentation .een 128 and 132 C only being collected. The 1730 definition of the word "chemistry", as used by Georg Ernst Stahl, meant the art of resolving mixed, compound, or aggregate bodies into their principles .; and of composing such bodies from those principles. In 1837, Jean-Baptiste Dumas considered the word "chemistry" to refer to the science concerned with the laws and effects of molecular forces.[16] .This definition further evolved until, in 1947, it came to mean the science of substances: their structure, their properties, and the reactions that change them into other substances - a characterizat .ion accepted by Linus Pauling.[17] More recently, in 1998, the definition of "chemistry" was broadened to mean the study of matter and the changes it undergoes, as phrased by Professor Raymond Chang. .ther aggregates of matter. This matter can be studied in solid, liquid, or gas states, in isolation or in combination. The interactions, reactions and transformations that are studied in chemistry are ANSWER: What is Chemistry. How useful, really, are the sciences. Is Amyl alcohol is an organic compound?
-
 
 Chemistry is the science of substances: their structure, their properties, and the reactions that change them into other substances. Amyl alcohol is an organic compound with the formula C5H12O. All eight isomers of amyl alcohol
 Enter a query:
