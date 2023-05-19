@@ -2,7 +2,7 @@
 
 
 
-In the last ten years Deep Learning has been so successful for solving difficult problems in areas like image understanding and natural language processing (NLP) that many people now equate Deep Learning with AI. While I think this is a false equivalence, I have often used plain old fashioned neural networks and Deep Learning models in my work.
+In the last ten years Deep Learning has been so successful for solving difficult problems in areas like image understanding and natural language processing (NLP) that many people now equate Deep Learning with AI. While I think this is a false equivalence, I have often used both plain old fashioned neural networks and Deep Learning models in my work. In this chapter we implement a fairly simple feed forward using the general purpose  Deeplearning4j (DL4J) library. I implement neural networks "from scratch" in Java and Common Lisp in other books that you can read free online at [https://leanpub.com/u/markwatson](https://leanpub.com/u/markwatson).
 
 One limitation of conventional back propagation neural networks is that they are limited to the number of neuron layers that can be efficiently trained (the vanishing gradients problem).
 

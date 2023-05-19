@@ -4,8 +4,6 @@ If you read through the optional background material in the last chapter you hav
 
 When querying remote SPARQL endpoints like DBPedia and WikiData I often find that I repeatedly make some of the same queries many times, especially during development and testing. I have found that by caching SPARQL query results that I can greatly improve my developer experience. We will use the Apache Derby relational database (pure Java code and easy to embed in applications) for query caching.
 
-One of the examples in the chapter [Python/Clojure Interoperation Using the libpython-clj Library](#libpython) performed SPARQL queries using simple pure Clojure code. The Jena libraries used here provide more functionality but I use both approaches in my own work.
-
 We declare both Jena and the Derby relational database libraries as dependencies in our project file:
 
 {lang="clojure",linenos=on}
@@ -19,7 +17,7 @@ We declare both Jena and the Derby relational database libraries as dependencies
   :source-paths      ["src"]
   :java-source-paths ["src-java"]
   :javac-options     ["-target" "1.8" "-source" "1.8"]
-  :dependencies [[org.clojure/clojure "1.10.1"]
+  :dependencies [[org.clojure/clojure "1.11.1"]
                  [org.apache.derby/derby "10.15.2.0"]
                  [org.apache.derby/derbytools "10.15.2.0"]
                  [org.apache.derby/derbyclient

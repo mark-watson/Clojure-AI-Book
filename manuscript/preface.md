@@ -8,14 +8,16 @@ Please visit the [author's website](http://markwatson.com).
 
 # Preface
 
-I have been developing commercial Artificial Intelligence (AI) tools and applications since the 1980s and I usually use the Lisp languages Common Lisp, Clojure, Racket Scheme, and Gambit Scheme. This book contains code that I wrote for myself and I am wrapping it in a book in the hopes that my code and this book will also be useful to you, dear reader.
+I have been developing commercial Artificial Intelligence (AI) tools and applications since the 1980s and I usually use the Lisp languages Common Lisp, Clojure, Racket Scheme, and Gambit Scheme. The exception to my Lisp language preferences is that I use Python for my deep learning work. This book contains code that I wrote for myself and I am wrapping it in a book in the hopes that my code and this book will also be useful to you, dear reader.
+
+The latest update to this book (May 2023) features more using OpenAI API examples using Large Language Models (LLMs) and local document search using local text embedding data stores. I removed the chapter on Clojure/Python interoperation because of reported difficulties in configuring a Linux system to get the examples working. I copied the entire text for this deleted chapter to the README file [https://github.com/mark-watson/Clojure-AI-Book-Code/nlp_libpython](https://github.com/mark-watson/Clojure-AI-Book-Code/tree/main/nlp_libpython) if you would like to use this material.
 
 {width: "60%"}
 ![Mark Watson](images/Mark.png)
 
 I wrote this book for both professional programmers and home hobbyists who already know how to program in Clojure and who want to learn practical AI programming and information processing techniques. I have tried to make this an enjoyable book to work through. In the style of a “cook book,” the chapters can be studied in any order. 
 
-This book uses two of the examples in my Java AI book that is also available for purchase at [Leanpub.com](https://leanpub.com/javaai) and as a free download from my personal web site. I replicate these two bits of Java code in the GitHub repository for this book:
+This book uses two of the examples in my Java AI book that is also available to read free online or for purchase at [Leanpub.com](https://leanpub.com/javaai). I replicate these two bits of Java code in the GitHub repository for this book:
 
 [https://github.com/mark-watson/Clojure-AI-Book-Code](https://github.com/mark-watson/Clojure-AI-Book-Code)
 
@@ -29,9 +31,9 @@ Using the Java ecosystem is an important aspect of Clojure development and in th
 
 ## Personal Artificial Intelligence Journey: or, Life as a Lisp Developer
 
-I have been interested in AI since reading Bertram Raphael’s excellent book *Thinking Computer: Mind Inside Matter* in the early 1980s. I have also had the good fortune to work on many interesting AI projects including the development of commercial expert system tools for the Xerox LISP machines and the Apple Macintosh, development of commercial neural network tools, application of natural language and expert systems technology, medical information systems, application of AI technologies to Nintendo and PC video games, and the application of AI technologies to the financial markets. I have also applied statistical natural language processing techniques to analyzing social media data from Twitter and Facebook. I worked at Google on their Knowledge Graph and I managed a deep learning team at Capital One where I was awarded 55 US patents.
+I have been interested in AI since reading Bertram Raphael’s excellent book *Thinking Computer: Mind Inside Matter* in the early 1980s. I have also had the good fortune to work on many interesting AI projects including the development of commercial expert system tools for the Xerox LISP machines and the Apple Macintosh, development of commercial neural network tools, application of natural language and expert systems technology, medical information systems, application of AI technologies to Nintendo and PC video games, and the application of AI technologies to the financial markets. I have also applied statistical natural language processing techniques to analyzing social media data from Twitter and Facebook. I worked at Google on their Knowledge Graph and I managed a deep learning team at Capital One where I was awarded 55 US patents. In recent years most of my work has been centered around creating deep learning models for specific applications and the use of Large Language Models for Natural Language Processing (NLP) and extracting semantic information from text.
 
-I enjoy AI programming, and hopefully this enthusiasm will also infect you.
+I enjoy AI programming, and hopefully this enthusiasm will also infect you dear reader.
 
 
 ## Acknowledgements
@@ -45,4 +47,3 @@ Thanks to Alex Ott who rewrote a few of the example programs with a better Cloju
 
 Thanks to the following people who found typos in this and earlier book editions: Roger Erens
 
-Thanks to the following people who suggested improvements in this and earlier book editions: non so far.

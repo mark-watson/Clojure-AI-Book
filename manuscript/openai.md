@@ -2,15 +2,20 @@
 
 I have been working as an artificial intelligence practitioner since 1982 and the capability of the beta OpenAI APIs is the most impressive thing that I have seen (so far!) in my career. These APIs use the GPT-3 model.
 
-I recommend reading the online documentation for the [online documentation for the APIs](https://beta.openai.com/docs/introduction/key-concepts) to see all the capabilities of the beta OpenAI APIs. 
+I recommend reading the [online documentation for the APIs](https://platform.openai.com/docs/introduction/key-concepts) to see all the capabilities of the OpenAI APIs. 
 
-**Note:** I implemented client code from scratch in earlier editions of this book. That code is still in the GitHub repository for this book in the directory **openai_api_mw**. The latest code that uses Werner Kok's library https://github.com/wkok/openai-clojure/ is in the directory **openai_api**. I haven't changed the APIs in my wrapper code, just the underlying implementation.
+**Note:** I implemented client code from scratch in earlier editions of this book. That code is still in the GitHub repository in the directory **openai_api_mw**. The latest code that uses Werner Kok's library https://github.com/wkok/openai-clojure/ is in the directory **openai_api**. I haven't changed the APIs in my wrapper code, just the underlying implementation.
 
 Let's start by jumping into the example code.
 
-The library that I wrote for this chapter supports three functions: for completing text, summarizing text, and answering general questions. The single OpenAI model that the beta OpenAI APIs use is fairly general purpose and can generate cooking directions when given an ingredient list, grammar correction, write an advertisement from a product description, generate spreadsheet data from data descriptions in English text, etc. 
+The library that I wrote for this chapter supports three functions: completing text, summarizing text, and answering general questions. The single OpenAI model that the OpenAI APIs use is fairly general purpose and can perform tasks like:
 
-Given the examples from [https://beta.openai.com](https://beta.openai.com) and the Clojure examples here, you should be able to modify my example code to use any of the functionality that OpenAI documents.
+- Generate cooking directions when given an ingredient list.
+- Grammar correction.
+- Write an advertisement from a product description.
+- Generate spreadsheet data from data descriptions in English text. 
+
+Given the examples from [https://platform.openai.com](https://platform.openai.com) (will require you to login) and the Clojure examples here, you should be able to modify my example code to use any of the functionality that OpenAI documents.
 
 We will look closely at the function **completions** and then just look at the small differences to the other two example functions. The definitions for all three exported functions are kept in the file **src/openai_api/core.clj***. You need to request an API key (I had to wait a few weeks to recieve my key) and set the value of the environment variable **OPENAI_KEY** to your key. You can add a statement like:
 
@@ -116,21 +121,14 @@ The file **src/openai_api/core.clj** contains the implementation of our wrapper 
             :presence_penalty 0.0})]
       ((first (response :choices)) :text)))
 
-
-(defn embeddings_DOES_NOT_WORK [text]
-  (let [response
-        (api/create-embedding
-         {:model "text-embedding-ada-002"
-          :input text})]
-    response))
-
 (defn embeddings [text]
   (try
     (let* [body
            (str
             "{\"input\": \""
             (clojure.string/replace
-             (clojure.string/replace text #"[\" \n :]" " ")
+             (clojure.string/replace
+               text #"[\" \n :]" " ")
              #"\s+" " ")
             "\", \"model\": \"text-embedding-ada-002\"}")
            json-results
@@ -139,9 +137,15 @@ The file **src/openai_api/core.clj** contains the implementation of our wrapper 
             {:accept :json
              :headers
              {"Content-Type"  "application/json"
-              "Authorization" (str "Bearer " (System/getenv "OPENAI_KEY"))}
+              "Authorization"
+              (str
+                "Bearer "
+                (System/getenv "OPENAI_KEY"))}
              :body   body})]
-          ((first ((json/read-str (json-results :body)) "data")) "embedding"))
+          ((first
+            ((json/read-str
+              (json-results :body)) "data"))
+              "embedding"))
     (catch Exception e
       (println "Error:" (.getMessage e))
       "")))
@@ -169,7 +173,7 @@ openai-api.core=> (openai-api.core/completions "He walked to the river" 24)
 " every day. The salty air puffed through their pores. He had enjoyed her company. Maybe he did need a companion"
 ~~~~~~~~
 
-The function **summarize** is very similar to the function **completions** except the JSON data passed to the API has a few additional parameters that let the API know that we want a text summary:
+The function **summarize** is very similar to the function **completions** except the JSON data passed to the API has a few additional parameters that lets the API know that we want a text summary:
 
 - presence_penalty - penalize words found in the original text (we set this to zero)
 - temperature - higher values the randomness used to select output tokens. If you set this to zero, then the same prompt text will always yield the same results (I never use a zero value).
@@ -197,7 +201,7 @@ openai-api.core=> (openai-api.core/summarize some-text 150)
 openai-api.core=> 
 ~~~~~~~~
 
-The function **answer-question** is very similar to the function **summarize** except the JSON data passed to the API has one additional parameter that let the API know that we want a question answered:
+The function **answer-question** is very similar to the function **summarize** except the JSON data passed to the API has one additional parameter that lets the API know that we want a question answered:
 
 - stop - The OpenAI API examples use the value: **[\n]**, which is what I use here.
 
