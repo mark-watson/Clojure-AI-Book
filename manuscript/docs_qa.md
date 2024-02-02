@@ -120,8 +120,7 @@ The main application code is in the file **src/docs_qa/core.clj**:
 
 (defn answer-prompt [prompt]
   (openai-api.core/answer-question
-   prompt
-   50))
+   prompt))
 
 (defn -main
   []
