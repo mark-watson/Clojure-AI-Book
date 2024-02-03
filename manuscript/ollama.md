@@ -6,7 +6,7 @@ You need to install Ollama on your system: https://ollama.ai
 
 You then need to install the Mistral model (this takes a while the first time, but the model file is cached so future startups are fast):
 
-    ollama run mistral
+**ollama run mistral**
 
 
 ## Running the Example Tests
@@ -15,11 +15,11 @@ Before we look at the code, you might want to run the example tests first:
 
 In one console, run the Ollama REST API service:
 
-    ollama serve
+**ollama serve**
 
 Then run the tests in another window:
 
-    lein test
+**lein test**
 
 ## Clojure Client Library for the Ollama Service REST APIs
 
@@ -117,10 +117,10 @@ Here are the unit tests:
       (println results))))
 ```
 
-The output will change each time you run the tests. Large Language Models (LLMs) like myself can indeed change each time you run the same tests or prompts. This variability stems from several key factors:
+The output will change each time you run the tests. The output from Large Language Models (LLMs) usually change each time you run the same tests or prompts. This variability stems from several key factors:
 
-- Stochasticity: At their core, LLMs are complex neural networks trained on massive datasets. During training, these networks develop internal representations and probabilistic weights that influence their outputs. When generating text, LLMs sample from these weights, introducing an inherent element of randomness. This means even with identical inputs and identical LLM weights the same prompt used repeatedly can lead to slightly different outputs.
-- Temperature: Many LLMs use a temperature parameter to control the "randomness" of their outputs. A higher temperature encourages exploration of less likely but potentially more creative responses, while a lower temperature leads to more deterministic and consistent outputs.
+- Stochasticity: LLMs are complex neural networks trained on massive datasets. During training these networks develop internal representations and probabilistic weights that influence their outputs. When generating text LLMs sample from these weights, introducing an inherent element of randomness. This means even with identical inputs and identical LLM weights the same prompt used repeatedly can lead to slightly different outputs.
+- Temperature: Some LLMs use a temperature parameter to control the "randomness" of their outputs. A higher temperature encourages exploration of less likely but potentially more creative responses, while a lower temperature leads to more deterministic and consistent outputs.
 - Beam Search vs. Sampling: Different decoding strategies can also impact output variability. Beam search focuses on the most likely sequences, gradually refining them, while sampling explores a wider range of possibilities. Beam search typically leads to less variation compared to sampling, but even within beam search, there can be randomness in how ties are broken when choosing the next word.
 
 I edited the following output shortening the output from the text completion test and by adding labels for each test:
