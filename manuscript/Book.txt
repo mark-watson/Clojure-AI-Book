@@ -8,4 +8,5 @@ jena_wrapper.md
 kgn.md
 openai.md
 docs_qa.md
+ollama.md
 conclusion.md

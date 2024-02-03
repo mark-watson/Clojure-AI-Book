@@ -1,11 +1,1 @@
-preface.md
-deeplearning.md
-opennlp.md
-anomaly_detection.md
-webscrape.md
-semantic_web.md
-jena_wrapper.md
-kgn.md
-openai.md
-docs_qa.md
-conclusion.md
+ollama.md
