@@ -44,7 +44,7 @@ RDF data is the bedrock of the Semantic Web and Knowledge Graphs.
 
 Previously for Java-based semantic web projects I used the open source Sesame library for managing and querying RDF Data. Sesame is now called RDF4J and is part of the Eclipse organization's projects.
 
-I decided to use the Apache Jena project in this new edition because I think Jena is slightly easier to set up a light weight development environment. If you need to set up an RDF server I recommend using the open source [Fuseki](https://jena.apache.org/documentation/fuseki2/) server which is part of the Apache Jena project. For experimenting with local Knowledge Graphs I also use the [free version of GraphDB](https://www.ontotext.com/try-graphdb-se). For client applications, in the next chapter we will use a Clojure wrapper for the Jena library that works with RDF and performing SPARQL queries.
+I decided to use the Apache Jena project in this new edition because I think Jena is slightly easier to set up a lightweight development environment. If you need to set up an RDF server I recommend using the open source [Fuseki](https://jena.apache.org/documentation/fuseki2/) server which is part of the Apache Jena project. For experimenting with local Knowledge Graphs I also use the [free version of GraphDB](https://www.ontotext.com/try-graphdb-se). For client applications, in the next chapter we will use a Clojure wrapper for the Jena library that works with RDF and performing SPARQL queries.
 
 ## RDF: The Universal Data Format
 

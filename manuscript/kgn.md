@@ -301,7 +301,7 @@ SELECT DISTINCT ?p {
 } LIMIT 5
 ~~~~~~~~
 
-There are three things to note here. The DISTINCT keyword removes duplicate results, In SPARQL queries URIs are enclosed in **<** **>** angle brackets but the brackets are not included in SPARQL query results so the example code adds them. Also, we are looking for all properties that link the two subject/object entity URIs except we don't want any property URIs that provides human readable results ("follow your nose" to dereference URIs to a human readable format); these property names contain the string "wikiPage" so we filter them out of the results.
+There are three things to note here. The DISTINCT keyword removes duplicate results, In SPARQL queries URIs are enclosed in **<** **>** angle brackets but the brackets are not included in SPARQL query results so the example code adds them. Also, we are looking for all properties that link the two subject/object entity URIs except we don't want any property URIs that provide human readable results ("follow your nose" to dereference URIs to a human readable format); these property names contain the string "wikiPage" so we filter them out of the results.
 
 The **map** call on lines 13-16 is used to discard the first SPARQL query result that is a list of variable bindings from the SPARQL query.
 

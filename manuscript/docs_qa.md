@@ -19,7 +19,7 @@ For this example, we use an in-memory store of embedding vectors and chunk text.
 
 
 
-## Create Local Embeddings Vectors From Local Text Files With OpenAI GPT APIs
+## Create Local Embeddings Vectors From Local Text Files with OpenAI GPT APIs
 
 The code for handling OpenAI API calls is in the library **openai_api** in the GitHub repository for this book. You need to install that example project locally using:
 
@@ -90,7 +90,7 @@ If we uncomment the print statement in the last two lines of code, we see the fi
 ```
 
 
-## Using Local Embeddings Vector Database With OpenAI GPT APIs
+## Using Local Embeddings Vector Database with OpenAI GPT APIs
 
 The main application code is in the file **src/docs_qa/core.clj**:
 
@@ -148,7 +148,7 @@ The main application code is in the file **src/docs_qa/core.clj**:
           (recur))))))
 ```
 
-The main example function reads the text files in **./data/**, chunks the files, and uses the OpenAI APIs to get embeddings for each chunk. The main function then has an infinite loop where you can enter a question about your local documents. The most relevant chunks are identified and turned into a prompt along with your question, the the generated prompt and answer to the question are printed. You can enter a control-D to stop the example program:
+The main example function reads the text files in **./data/**, chunks the files, and uses the OpenAI APIs to get embeddings for each chunk. The main function then has an infinite loop where you can enter a question about your local documents. The most relevant chunks are identified and turned into a prompt along with your question, the generated prompt and answer to the question are printed. You can enter a control-D to stop the example program:
 
 ```Console
 $ lein run
@@ -169,7 +169,7 @@ Enter a query:
 Done.
 ```
 
-## Wrap Up for Using Local Embeddings Vector Database to Enhance the Use of GPT3 APIs With Local Documents
+## Wrap Up for Using Local Embeddings Vector Database to Enhance the Use of GPT3 APIs with Local Documents
 
 As I write this in May 2023, I have been working almost exclusively with OpenAI APIs for the last year and using the Python libraries for LangChain and LlamaIndex for the last three months.
 

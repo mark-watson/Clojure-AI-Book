@@ -1,6 +1,6 @@
 # Running LLMs Locally Using Ollama
 
-In the last two chapters we used cloud services to run LLMs. For my personal research and experimentation I prefer running smaller models locally on my Mac Mini that has 32G of memory. We will use the Ollama system that runs on macOS and Linux (and Windows support is coming soon). Here we use the Mistral 7B LLM. If you don’t have at least 16G of memory on your system then you should consider substitution the model “mistral” in the following examples with Stable LM 2 1.6B that is a state-of-the-art 1.6 billion parameter small language model trained on multilingual data in English, Spanish, German, Italian, French, Portuguese, and Dutch. Use the model file name “stablelm2” in the following examples instead of “mistral”.
+In the last two chapters we used cloud services to run LLMs. For my personal research and experimentation I prefer running smaller models locally on my Mac Mini that has 32G of memory. We will use the Ollama system that runs on macOS and Linux (and Windows support is coming soon). Here we use the Mistral 7B LLM. If you don’t have at least 16G of memory on your system then you should consider substituting the model “mistral” in the following examples with Stable LM 2 1.6B that is a state-of-the-art 1.6 billion parameter small language model trained on multilingual data in English, Spanish, German, Italian, French, Portuguese, and Dutch. Use the model file name “stablelm2” in the following examples instead of “mistral”.
 
 You need to install Ollama on your system: https://ollama.ai
 
@@ -17,7 +17,7 @@ In one console, run the Ollama REST API service:
 
 **ollama serve**
 
-Then run the tests in another window:
+Then run the tests in another console:
 
 **lein test**
 

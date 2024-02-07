@@ -118,6 +118,6 @@ Output might look like (most of the output is not shown):
 ... )}
 ~~~~~~~~
 
-For training data for machine learning it is useful to just grab all text on a web page and assume that common phrases dealing with web navigation, etc. will be dropped from learned models because they occur in many different training examples for different classifications.
+For training data for machine learning it is useful to just grab all text on a web page and assume that common phrases dealing with web navigation, etc., will be dropped from learned models because they occur in many different training examples for different classifications.
 
-I find the **jsoup** library to be robust for fetching and parsing HTML data from web pages. As we have seen it is straightforward to use **jsoup** in Clojure projects.
+I find the **jsoup** library to be robust for fetching and parsing HTML data from web pages. As we have seen, it is straightforward to use **jsoup** in Clojure projects.

@@ -176,7 +176,7 @@ openai-api.core=> (openai-api.core/completions "He walked to the river")
 " every day. The salty air puffed through their pores. He had enjoyed her company. Maybe he did need a companion"
 ~~~~~~~~
 
-The function **summarize** is very similar to the function **completions** I changed the system prompt string. Here is some example output:
+The function **summarize** is very similar to the function **completions** except I changed the system prompt string. Here is some example output:
 
 {lang="clojure",linenos=on}
 ~~~~~~~~

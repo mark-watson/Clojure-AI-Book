@@ -145,7 +145,7 @@ Here is a listing of text code that loads RDF data from a file and does a SPARQL
         "select * where { ?subject ?property ?object . } limit 10"))))
 ~~~~~~~~
 
-You might question line 11: we are checking that the return values as a **seq** of length six while the SPARQL statement limits the returned results to five results on line 9. The "extra" result" of the first element in the **seq** that is a list of variable names from the SPARQL query.
+You might question line 11: We are checking that the return values as a **seq** of length six while the SPARQL statement limits the returned results to five results on line 9. The "extra" result" of the first element in the **seq** that is a list of variable names from the SPARQL query.
 
 Output will look like (reformatted for readability and most output is not shown):
 
