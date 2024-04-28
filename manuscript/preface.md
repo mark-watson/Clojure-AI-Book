@@ -10,6 +10,8 @@ Please visit the [author's website](http://markwatson.com).
 
 I have been developing commercial Artificial Intelligence (AI) tools and applications since the 1980s and I usually use the Lisp languages Common Lisp, Clojure, Racket Scheme, and Gambit Scheme. The exception to my Lisp language preferences is that I use Python for my deep learning work. This book contains code that I wrote for myself and I am wrapping it in a book in the hopes that my code and this book will also be useful to you, dear reader.
 
+If you read my eBooks free online then please consider tipping me [https://markwatson.com/#tip](https://markwatson.com/#tip).
+
 The latest update to this book (May 2023) features more OpenAI API examples using Large Language Models (LLMs) and local document search using local text embedding data stores. I removed the chapter on Clojure/Python interoperation because of reported difficulties in configuring a Linux system to get the examples working. I copied the entire text for this deleted chapter to the README file [https://github.com/mark-watson/Clojure-AI-Book-Code/nlp_libpython](https://github.com/mark-watson/Clojure-AI-Book-Code/tree/main/nlp_libpython) if you would like to use this material.
 
 {width: "60%"}
