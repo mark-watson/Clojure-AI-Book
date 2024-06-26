@@ -3,6 +3,7 @@ deeplearning.md
 opennlp.md
 anomaly_detection.md
 webscrape.md
+brave.md
 semantic_web.md
 jena_wrapper.md
 kgn.md
