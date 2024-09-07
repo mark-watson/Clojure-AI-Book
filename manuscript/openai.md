@@ -4,8 +4,6 @@ I have been working as an artificial intelligence practitioner since 1982 and th
 
 I recommend reading the [online documentation for the APIs](https://platform.openai.com/docs/introduction/key-concepts) to see all the capabilities of the OpenAI APIs. 
 
-**Note:** I implemented client code from scratch in earlier editions of this book. The latest code that uses Werner Kok's library https://github.com/wkok/openai-clojure/ is in the directory **openai_api**. I haven't changed the APIs in my wrapper code, just the underlying implementation.
-
 Let's start by jumping into the example code.
 
 The library that I wrote for this chapter supports three functions: completing text, summarizing text, and answering general questions. The single OpenAI model that the OpenAI APIs use is fairly general purpose and can perform tasks like:
@@ -21,12 +19,12 @@ We will look closely at the function **completions** and then just look at the s
 
 {linenos=off}
 ~~~~~~~~
-export OPENAI_KEY=sa-hdffds7&dhdhsdgffd
+export OPENAI_API_KEY=sa-hdffds7&dhdhsdgffd
 ~~~~~~~~
 
 to your **.profile** or other shell resource file. Here the API token "sa-hdffds7&dhdhsdgffd" is made up - that is not my API token.
 
-When experimenting with OpenAI APIs it is often start by using the **curl** utility. An example **curl** command line call to the beta OpenAI APIs is:
+When experimenting with OpenAI APIs it is often start by using the **curl** utility. An example **curl** command line call to the beta OpenAI APIs is (note: this CURL example uses an earlier API):
 
 {lang="bash",linenos=on}
 ~~~~~~~~
@@ -74,7 +72,7 @@ Output might look like this:
 ```
 
 
- All of the OpenAI APIs expect JSON data with query parameters. To use the completion API, we set values for **prompt** and **max_tokens**. The value of **max_tokens** is the requested number of returns words or tokens. We will look at several examples later.
+ All of the OpenAI APIs expect JSON data with query parameters. To use the completion API, we set values for **prompt**. We will look at several examples later.
 
 The file **src/openai_api/core.clj** contains the implementation of our wrapper library using Werner Kok's library:
 
@@ -82,73 +80,53 @@ The file **src/openai_api/core.clj** contains the implementation of our wrapper 
 ~~~~~~~~
 (ns openai-api.core
   (:require
-    [wkok.openai-clojure.api :as api])
+   [wkok.openai-clojure.api :as api])
   (:require [clj-http.client :as client])
   (:require [clojure.data.json :as json]))
 
-;; We are using Werner Kok's library https://github.com/wkok/openai-clojure/
+(def model2 "gpt-4o-mini")
 
-;; define the environment variable "OPENAI_KEY" with the value of your OpenAI API key
+(def api-key (System/getenv "OPENAI_API_KEY"))
 
-(defn completions
-  "Use the OpenAI API for question answering"
-  [prompt-text]
-  (((first ((api/create-chat-completion
-              {:model    "gpt-3.5-turbo"
-               :messages [{:role "system" :content "You are a helpful assistant. You complete the user's prompt text."}
-                          {:role "user" :content prompt-text}
-                          ]})
-            :choices))
-    :message)
-   :content))
+(defn completions [prompt]
+  (let [url "https://api.openai.com/v1/chat/completions"
+        headers {"Authorization" (str "Bearer " api-key)
+                 "Content-Type" "application/json"}
+        body {:model model2
+              :messages [{:role "user" :content prompt}]}
+        response (client/post url {:headers headers
+                                   :body (json/write-str body)})]
+    ;;(println (:body response))
+    (get
+     (get
+      (first
+       (get
+        (json/read-str (:body response)  :key-fn keyword)
+        :choices))
+      :message)
+     :content)))
 
-(defn summarize
-  "Use the OpenAI API for question answering"
-  [prompt-text]
-  (((first ((api/create-chat-completion
-              {:model    "gpt-3.5-turbo"
-               :messages [{:role "system" :content "You are a helpful assistant."}
-                          {:role "user"
-                           :content
-                           (clojure.string/join
-                             ""
-                             ["Summarize this for a second-grade student:\n\n"
-                              prompt-text])}
-                          ]})
-            :choices))
-    :message)
-   :content))
-
-(defn answer-question
-  "Use the OpenAI API for question answering"
-  [prompt-text]
-  (((first ((api/create-chat-completion
-              {:model    "gpt-3.5-turbo"
-               :messages [{:role "system" :content "You are a helpful assistant. You answer questions."}
-                          {:role "user" :content prompt-text}
-                          ]})
-            :choices))
-    :message)
-   :content))
+(defn summarize [text]
+  (completions (str "Summarize the following text:\n\n" text)))
 
 (defn embeddings [text]
   (try
     (let* [body
            (str
-             "{\"input\": \""
-             (clojure.string/replace
-               (clojure.string/replace text #"[\" \n :]" " ")
-               #"\s+" " ")
-             "\", \"model\": \"text-embedding-ada-002\"}")
+            "{\"input\": \""
+            (clojure.string/replace
+             (clojure.string/replace text #"[\" \n :]" " ")
+             #"\s+" " ")
+            "\", \"model\": \"text-embedding-ada-002\"}")
            json-results
            (client/post
-             "https://api.openai.com/v1/embeddings"
-             {:accept :json
-              :headers
-              {"Content-Type"  "application/json"
-               "Authorization" (str "Bearer " (System/getenv "OPENAI_KEY"))}
-              :body   body})]
-      ((first ((json/read-str (json-results :body)) "data")) "embedding"))
+            "https://api.openai.com/v1/embeddings"
+            {:accept :json
+             :headers
+             {"Content-Type"  "application/json"
+              "Authorization" (str "Bearer " api-key)}
+             :body   body})]
+          ((first ((json/read-str (json-results :body)) "data")) "embedding"))
     (catch Exception e
       (println "Error:" (.getMessage e))
       "")))
@@ -188,20 +166,5 @@ openai-api.core=> (openai-api.core/summarize some-text openai-api.core=> (openai
 "Jupiter is classified as a gas giant along with Saturn, Uranus, and Neptune. Jupiter is composed primarily of gaseous and liquid matter.[21] It is the largest of the four giant planets in the Solar System and hence its largest planet. It has a diameter of 142,984 km at its equator, which is 0.11 times the diameter of Earth. Jupiter is a gas giant because the mass of the planet"
 ~~~~~~~~
 
-The function **answer-question** is very similar to the other functions except I changed the system prompt.
-
-Let's look at a few question answering examples and we will discuss possible problems and workarounds. The first two examples ask the same question and get back different, but reasonable answers. The third example asks a general question. The GPT-3 model is trained using a massive amount of text from the web which is why it can generate reasonable answers:
-
-{lang="clojure",linenos=on}
-~~~~~~~~
-openai-api.core=> (openai-api.core/answer-question "Where is the Valley of Kings?")
-"It's in Egypt."
-
-openai-api.core=> (openai-api.core/answer-question "Who is Bill Clinton's wife?")
-" Hillary Clinton."
-
-openai-api.core=> (openai-api.core/answer-question "What rivers are in Arizona?")
-" The Colorado, Verde, Salt, Gila, San Pedro, Little Colorado, and the San Francisco."
-~~~~~~~~
 
 In addition to reading the OpenAI API documentation you might want to read general material on the use of OpenAI's GPT-4 model.
