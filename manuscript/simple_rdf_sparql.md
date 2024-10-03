@@ -1,8 +1,8 @@
 # Chapter 7: Simple RDF Datastore and Partial SPARQL Query Processor
 
-# Overview
-
 In this chapter, we'll explore how to build a basic RDF (Resource Description Framework) datastore and implement a partial SPARQL (SPARQL Protocol and RDF Query Language) query processor using Clojure. The goal is to provide a simple but effective demonstration of RDF data manipulation and querying in a functional programming context.
+
+The Clojure code for this example can be found at [https://github.com/mark-watson/Clojure-AI-Book-Code/tree/main/simple_rdf_sparql](https://github.com/mark-watson/Clojure-AI-Book-Code/tree/main/simple_rdf_sparql).
 
 RDF is a widely-used standard for representing knowledge graphs and linked data, which makes it a valuable tool for applications that need to model complex relationships between entities. SPARQL is the accompanying query language designed to extract and manipulate RDF data, similar to how SQL works with relational databases.
 
@@ -20,9 +20,6 @@ By the end of this chapter, you'll have a good grasp of how to handle RDF data a
 Let’s begin by creating a simple in-memory RDF datastore using Clojure. An RDF triple is a fundamental data structure composed of a subject, predicate, and object. We will define a Triple record to represent these triples and store them in an atom.
 
 ```clojure
-;; Simple RDF SPARQL. Copyright 2024 Mark Watson. All rights reserved.
-;; GNU AFFERO GENERAL PUBLIC LICENSE Version 3
-                       
 (ns simple-rdf-sparql.core
   (:require [clojure.string :as str]))
 
@@ -70,9 +67,12 @@ Next, we need a way to query the datastore to find specific triples. We’ll sta
 
 (defn query-triples [subject predicate object]
   (filter (fn [triple]
-            (and (or (nil? subject) (variable? subject) (= (:subject triple) subject))
-                 (or (nil? predicate) (variable? predicate) (= (:predicate triple) predicate))
-                 (or (nil? object) (variable? object) (= (:object triple) object))))
+            (and (or (nil? subject) (variable? subject)
+                     (= (:subject triple) subject))
+                 (or (nil? predicate) (variable? predicate)
+                     (= (:predicate triple) predicate))
+                 (or (nil? object) (variable? object)
+                     (= (:object triple) object))))
           @*rdf-store*))
 ```
 
@@ -80,7 +80,9 @@ This code allows us to extract specific triples from the RDF datastore using pat
 
 ## Implementing a Partial SPARQL Query Processor
 
-Now, let's implement a basic SPARQL query processor. We’ll define a simple query structure and create functions to parse and execute these queries.
+Now, let's implement a basic SPARQL query processor. We’ll define a simple query structure and create functions to parse and execute these queries. We need to parse SPARQL queries like:
+
+    select * where { ?name age ?age . ?name likes ?food }
 
 ```clojure
 ;; SPARQL query structure
@@ -129,7 +131,9 @@ Next, we’ll define functions to execute the WHERE patterns in a SPARQL query:
       (if (empty? remaining-patterns)
         bindings
         (mapcat (fn [binding]
-                  (let [results (execute-where-patterns-with-bindings remaining-patterns binding)]
+                  (let [results
+                        (execute-where-patterns-with-bindings
+                            remaining-patterns binding)]
                     (map #(merge-bindings binding %) results)))
                 bindings)))))
 ```
@@ -148,7 +152,11 @@ Finally, let’s test our partial SPARQL query processor with some example queri
   (add-triple "Mary" "likes" "sushi")
   (add-triple "Bob" "age" "35")
   (add-triple "Bob" "likes" "burger")
+```
 
+Next we print all triples in the datastore and execute three sample SPARQL queries:
+
+```clojure
   (print-all-triples)
   (print-query-results
     "select * where { ?name age ?age . ?name likes ?food }")
@@ -160,5 +168,5 @@ Finally, let’s test our partial SPARQL query processor with some example queri
 
 ## Summary
 
-This chapter demonstrated a minimalistic RDF datastore and a partial SPARQL query processor. We built the foundation to manage RDF triples and run basic pattern-based queries. This simple example can serve as a springboard for more advanced features like full SPARQL support, optimization techniques, and complex query structures. I hope, dear reader, that you have fun with this example.
+This chapter demonstrated a minimalistic RDF datastore and a partial SPARQL query processor. We built the foundation to manage RDF triples and run basic pattern-based queries. This simple example can serve as a minimal embedded RDF data store for larger applications or as springboard for more advanced features like full SPARQL support, optimization techniques, and complex query structures. I hope, dear reader, that you have fun with this example.
 
