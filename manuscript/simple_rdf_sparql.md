@@ -1,4 +1,4 @@
-# Chapter 7: Simple RDF Datastore and Partial SPARQL Query Processor
+# Simple RDF Datastore and Partial SPARQL Query Processor
 
 In this chapter, we'll explore how to build a basic RDF (Resource Description Framework) datastore and implement a partial SPARQL (SPARQL Protocol and RDF Query Language) query processor using Clojure. The goal is to provide a simple but effective demonstration of RDF data manipulation and querying in a functional programming context.
 
