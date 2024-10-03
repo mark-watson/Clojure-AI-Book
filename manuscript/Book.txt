@@ -6,6 +6,7 @@ webscrape.md
 brave.md
 semantic_web.md
 jena_wrapper.md
+simple_rdf_sparql.md
 kgn.md
 openai.md
 docs_qa.md
