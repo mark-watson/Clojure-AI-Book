@@ -27,7 +27,7 @@ Git pull requests with code improvements will be appreciated by me and the reade
 
 ## Requests from the Author
 
-This book will always be available to read free online at [https://leanpub.com/clojureai/read](https://leanpub.com/ollama/read).
+This book will always be available to read free online at [https://leanpub.com/clojureai/read](https://leanpub.com/clojureai/read).
 
 That said, I appreciate it when readers purchase my books because the income enables me to spend more time writing.
 
