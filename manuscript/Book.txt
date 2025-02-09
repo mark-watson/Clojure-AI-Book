@@ -9,6 +9,7 @@ jena_wrapper.md
 simple_rdf_sparql.md
 kgn.md
 openai.md
+gemini_llm.md
 docs_qa.md
 ollama.md
 conclusion.md
