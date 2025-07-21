@@ -11,4 +11,5 @@ kgn.md
 openai.md
 docs_qa.md
 ollama.md
+moonshot.md
 conclusion.md
