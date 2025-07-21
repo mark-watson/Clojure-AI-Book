@@ -1,10 +1,10 @@
 # Using Moonshot's Kimi K2 Model with Built In $web_search Tool Support
 
-Moonshot AI (月之暗面, or "Dark Side of the Moon") is a prominent Chinese artificial intelligence startup founded in March 2023. The company quickly achieved a multi-billion dollar valuation, notably securing a $1 billion funding round led by Alibaba. Founded by a team with strong academic roots from institutions like Tsinghua University and Carnegie Mellon, Moonshot AI has established itself as one of China's leading "AI Tigers." The company's primary strategic focus is on developing large language models (LLMs) capable of handling exceptionally long context windows, aiming to push the boundaries of what AI can process and comprehend in a single prompt.
+Moonshot AI (or "Dark Side of the Moon") is a prominent Chinese artificial intelligence startup founded in March 2023. The company quickly achieved a multi-billion dollar valuation, notably securing a $1 billion funding round led by Alibaba. Founded by a team with strong academic roots from institutions like Tsinghua University and Carnegie Mellon, Moonshot AI has established itself as one of China's leading "AI Tigers." The company's primary strategic focus is on developing large language models (LLMs) capable of handling exceptionally long context windows, aiming to push the boundaries of what AI can process and comprehend in a single prompt.
 
 Their flagship model, Kimi K2, is a state-of-the-art, open-weight language model that has drawn significant attention. It is built on a Mixture-of-Experts (MoE) architecture with one trillion total parameters, of which 32 billion are active during inference, making it both powerful and efficient. Kimi K2 is specifically designed as an "agentic" AI, meaning it's optimized not just for conversation but for performing complex, multi-step tasks, using tools, and executing code autonomously. With a 128k token context window and benchmark performance that rivals or exceeds leading proprietary models in coding and reasoning tasks, Kimi K2 represents a major milestone for open-source AI.
 
-Kimi K2 has built in support for web searching, as the follwoing code example shows. You will need a Moonshot API key from the Moonshot console [https://login.moonshot.ai](https://login.moonshot.ai) and the model documentation can be found here [https://platform.moonshot.ai/docs](https://platform.moonshot.ai/docs). If you don't want to use servers in China, the Kimi K2 model is open source and several US-based providers offer inference services.
+Kimi K2 has built in support for web searching, as the following code example shows. You will need a Moonshot API key from the Moonshot console [https://login.moonshot.ai](https://login.moonshot.ai) and the model documentation can be found here [https://platform.moonshot.ai/docs](https://platform.moonshot.ai/docs). If you don't want to use servers in China, the Kimi K2 model is open source and several US-based providers offer inference services.
 
 ## Clojure Library Moonshot.ai's Kimi K2 Model (Including Web Search Tool)
 
@@ -38,17 +38,19 @@ The following Clojure code defines a client for interacting with the Moonshot AI
             ;; Make the POST request
             response (client/post url {:headers headers
                                        :body    (json/write-str body)
-                                       ;; Throw an exception for non-2xx response codes
+                                       ;; Throw an exception for non-2xx response
                                        :throw-exceptions false})
             ;; Parse the JSON response body
             parsed-body (json/read-str (:body response) :key-fn keyword)]
 
         (if (= (:status response) 200)
           ;; Extract the content from the response using the -> (thread-first) macro
-          ;; This is equivalent to: (get (get (first (get parsed-body :choices)) :message) :content)
+          ;; This is equivalent to:
+          ;;   (get (get (first (get parsed-body :choices)) :message) :content)
           (-> parsed-body :choices first :message :content)
           ;; Handle potential errors from the API
-          (str "Error: Received status " (:status response) ". Body: " (:body response))))
+          (str "Error: Received status " (:status response)
+               ". Body: " (:body response))))
       (catch Exception e
         (str "An exception occurred: " (.getMessage e))))))
 
@@ -69,7 +71,8 @@ The following Clojure code defines a client for interacting with the Moonshot AI
         parsed-body (json/read-str (:body response) :key-fn keyword)]
     (if (= (:status response) 200)
       (-> parsed-body :choices first)
-      (throw (Exception. (str "Error: Received status " (:status response) ". Body: " (:body response)))))))
+      (throw (Exception. (str "Error: Received status " (:status response)
+                              ". Body: " (:body response)))))))
 
 (defn search
   "Performs a Kimi 2 completion with web search."
@@ -85,18 +88,27 @@ The following Clojure code defines a client for interacting with the Moonshot AI
             (let [assistant-message (:message choice)
                   tool-calls (-> assistant-message :tool_calls)
                   tool-messages (map (fn [tool-call]
-                                       (let [tool-call-name (-> tool-call :function :name)]
+                                       (let [tool-call-name
+                                             (-> tool-call :function :name)]
                                          (if (= tool-call-name "$web_search")
-                                           (let [tool-call-args (json/read-str (-> tool-call :function :arguments) :key-fn keyword)]
+                                           (let [tool-call-args
+                                                 (json/read-str
+                                                   (-> tool-call
+                                                       :function :arguments)
+                                                   :key-fn keyword)]
                                              {:role "tool"
                                               :tool_call_id (:id tool-call)
                                               :name tool-call-name
                                               :content (json/write-str tool-call-args)})
-                                           (let [error-message (str "Error: unable to find tool by name '" tool-call-name "'")]
+                                           (let [error-message
+                                                 (str
+                                                  "Error: unable to find tool by name '"
+                                                  tool-call-name "'")]
                                              {:role "tool"
                                               :tool_call_id (:id tool-call)
                                               :name tool-call-name
-                                              :content (json/write-str error-message)}))))
+                                              :content
+                                              (json/write-str error-message)}))))
                                      tool-calls)]
               (recur (concat messages [assistant-message] tool-messages)))
             (-> choice :message :content))))
@@ -151,3 +163,7 @@ Right now in Flagstaff, Arizona it is **76 °F (24 °C)** under **partly cloudy*
 
 Today’s high will reach about **77-78 °F** and tonight’s low will drop to around **52 °F**. There is a slight chance of an isolated shower or thunderstorm later in the day.
 ```
+
+## Wrap Up for Moonshot.ai Kimi K2 Model
+
+The Kimi K2 model is very efficient making it one of the least expensive commercial APIs to use. The model is at the same time powerful and is excellent at tool use and as a software assitant. As I write this chapter on July 21, 2025 almost all of my commercial LLM API use is either Google Gemini 2.5 Flash and Pro, and the Kimi K2 model.
