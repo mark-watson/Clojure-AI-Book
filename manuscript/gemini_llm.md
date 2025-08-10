@@ -147,8 +147,8 @@ Here is the library implementation:
 (def google-api-key (System/getenv "GOOGLE_API_KEY")) ; Make sure to set this env variable
 
 (defn generate-content
-  "Sends a prompt to the Gemini API using the specified model and returns the text response.
-  Handles basic API errors."
+  "Sends a prompt to the Gemini API using the specified model and returns
+   the text response."
   [prompt]
   (let [client (Client.)
         ^GenerateContentResponse resp
@@ -174,4 +174,6 @@ I used the previous REST interface library implementation for over one year but 
 
 ## Gemini APIs Wrap Up
 
-The Gemini APIs also support a message-based API for optionally adding extra context data, configuration data, and AI safety settings. The example code provides a simple completion style of interacting with the Gemini models.
+The Gemini APIs also support a message-based API for optionally adding extra context data, configuration data, and AI safety settings. The example code using the REST interface provides a simple completion style of interacting with the Gemini models.
+
+If you use my Java SDK example library you can clone it in your own projects and optionally use those features of the Java SDK that you might find useful. Reference: [https://github.com/googleapis/java-genai](https://github.com/googleapis/java-genai).
