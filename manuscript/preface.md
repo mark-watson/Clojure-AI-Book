@@ -74,6 +74,14 @@ Install from MELPA:
 
 If you are using Emacs to edit any example program for this book you can start Cider using **M-x cider-jack-in** to start a nREPL.
 
+Commonly used Cider commands:
+
+- Eval defun: C-M-x
+- Eval region: C-c C-r
+- Jump to def / back: M-. / M-,
+- Docs / source: C-c C-d C-d, C-c M-.
+
+
 ## Acknowledgements
 
 I produced the manuscript for this book using the [leanpub.com](http://leanpub.com) publishing system and I recommend leanpub.com to other authors.
