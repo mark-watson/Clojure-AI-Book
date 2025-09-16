@@ -1,6 +1,6 @@
 # Cover Material, Copyright, and License
 
-Copyright 2020-2023 Mark Watson. All rights reserved. This book may be shared using the Creative Commons "share and share alike, no modifications, no commercial reuse" license.
+Copyright 2020-2025 Mark Watson. All rights reserved. This book may be shared using the Creative Commons "share and share alike, no modifications, no commercial reuse" license.
 
 This eBook will be updated occasionally so please check the [leanpub.com web page for this book](https://leanpub.com/clojureai) periodically for updates.
 
@@ -48,6 +48,31 @@ I have been interested in AI since reading Bertram Raphael’s excellent book *T
 
 I enjoy AI programming, and hopefully this enthusiasm will also infect you, dear reader.
 
+## Notes for Setting Up Clojure, Emacs, and Cider
+
+Assuming that you have Java JDK version 17 or greater installer install the Clojure toolchain on macOS using:
+
+```
+brew install clojure/tools/clojure
+```
+
+### Emacs packages
+
+Install from MELPA:
+- cider (nREPL client, jack-in, debugger)
+- clojure-mode
+- Optional: flycheck + flycheck-clj-kondo (linting), or use clojure-lsp if you prefer LSP. 
+	
+	Here is a snipper of Elisp code you can add to your ~/.emacs file:
+	
+```
+(use-package clojure-mode :ensure t)
+(use-package cider :ensure t :hook (clojure-mode . cider-mode))
+(use-package flycheck :ensure t :init (global-flycheck-mode))
+(use-package flycheck-clj-kondo :ensure t)
+```
+
+If you are using Emacs to edit any example program for this book you can start Cider using **M-x cider-jack-in** to start a nREPL.
 
 ## Acknowledgements
 
