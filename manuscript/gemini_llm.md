@@ -1,10 +1,12 @@
-# Using the Google Gemini 2.0 Flash APIs
+# Using the Google Gemini 2.5 Flash APIs
 
-We used the OpenAI LLM APIs in the last chapter and now we provide a similar example using Google's **gemini-2.0-flash** model.
+**August 10, 2025 note: I added an example client using Google’s Java Gemini SDK in the last section of this chapter. The earlier example uses the Gemini REST interface using only low-level Clojure libraries.**
+
+We used the OpenAI LLM APIs in the last chapter and now we provide a similar example using Google's **gemini-2.5-flash** model.
 
 I recommend reading Google's [online documentation for the APIs](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference) to see all the capabilities of the OpenAI APIs. 
 
-## Test Code and Sample Test Output
+## Test Code for REST Interface and Sample Test Output
 
 Before we look at the example code, let's look at an example code running it and later sample output:
 
@@ -76,7 +78,7 @@ Jupiter, the fifth planet from the Sun, is the largest planet in our solar syste
 The Valley of the Kings is located on the west bank of the Nile River, near the city of Luxor (ancient Thebes) in Egypt.
 ```
 
-## Gemini API Library Implementation
+## Gemini API Library Implementation for REST Interface
 
 Here is the library implementation, we will discuss the code after the listing:
 
@@ -126,6 +128,52 @@ This Clojure code is designed to interact with Google's Gemini API to generate t
 
 The core of the functionality lies in the **generate-content** function. This function takes a text prompt as input, constructs the API request URL with the chosen model and your API key, and then sends this request to Google's servers.  It handles the API response, parsing the JSON result to extract the generated text content. The code also checks for potential errors, both in the API request itself and in the structure of the response, providing informative error messages if something goes wrong.  Building on this, the function **summarize** offers a higher-level interface, taking text as input and using generate-content to send a "summarize" prompt to the API, effectively providing a convenient way to get text summaries using the Gemini models.
 
+## (New) Gemini Client Library Using Google’s Java SDK for Gemini
+
+The code for this section can be found in the directory ** Clojure-AI-Book-Code/gemini_java_api**.
+
+We test code that is almost identical to that used earlier for the REST interface library so we don’t list the test code here.
+
+Here is the library implementation:
+
+```clojure
+(ns gemini-java-api.core
+  (:import (com.google.genai Client)
+           (com.google.genai.types GenerateContentResponse)))
+
+(def DEBUG false)
+
+(def model "gemini-2.5-flash") ; or gemini-2.5-pro, etc.
+(def google-api-key (System/getenv "GOOGLE_API_KEY")) ; Make sure to set this env variable
+
+(defn generate-content
+  "Sends a prompt to the Gemini API using the specified model and returns
+   the text response."
+  [prompt]
+  (let [client (Client.)
+        ^GenerateContentResponse resp
+        (.generateContent (.models client)
+                          model
+                          prompt
+                          nil)]
+    (when DEBUG
+      (println (.text resp))
+      (when-let [headers
+                 (some-> resp
+                     .sdkHttpResponse (.orElse nil)
+                     .headers        (.orElse nil))]
+        (println "Response headers:" headers)))
+    (.text resp)))
+
+(defn summarize [text]
+  (generate-content (str "Summarize the following text:\n\n" text)))
+```
+
+I used the previous REST interface library implementation for over one year but now I have switched to using this shorter implementation that uses interop with the Java Gemini SDK.
+
+
 ## Gemini APIs Wrap Up
 
-The Gemini APIs also support a message-based API for optionally adding extra context data, configuration data, and AI safety settings. The example code provides a simple completion style of interacting with the Gemini models.
+The Gemini APIs also support a message-based API for optionally adding extra context data, configuration data, and AI safety settings. The example code using the REST interface provides a simple completion style of interacting with the Gemini models.
+
+If you use my Java SDK example library you can clone it in your own projects and optionally use those features of the Java SDK that you might find useful. Reference: [https://github.com/googleapis/java-genai](https://github.com/googleapis/java-genai).
