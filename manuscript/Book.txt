@@ -10,6 +10,7 @@ simple_rdf_sparql.md
 kgn.md
 openai.md
 gemini_llm.md
+LiteLLM.llm
 docs_qa.md
 ollama.md
 moonshot.md

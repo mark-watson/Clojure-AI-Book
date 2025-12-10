@@ -132,7 +132,7 @@ The core of the functionality lies in the **generate-content** function. This fu
 
 The code for this section can be found in the directory ** Clojure-AI-Book-Code/gemini_java_api**.
 
-We test code that is almost identical to that used earlier for the REST interface library so we don’t list the test code here.
+Here we test code that is almost identical to that used earlier for the REST interface library so we don’t list the test code here.
 
 Here is the library implementation:
 
