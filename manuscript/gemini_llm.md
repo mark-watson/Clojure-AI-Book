@@ -1,10 +1,13 @@
-# Using the Google Gemini 2.5 Flash APIs
-
-**August 10, 2025 note: I added an example client using Google’s Java Gemini SDK in the last section of this chapter. The earlier example uses the Gemini REST interface using only low-level Clojure libraries.**
+# Using the Google Gemini 2.5 Flash and Gemini 3.0 Pro APIs
 
 We used the OpenAI LLM APIs in the last chapter and now we provide a similar example using Google's **gemini-2.5-flash** model.
 
-I recommend reading Google's [online documentation for the APIs](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference) to see all the capabilities of the OpenAI APIs. 
+I recommend reading Google's [online documentation for the APIs](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference) to see all the capabilities of the OpenAI APIs.
+
+We first use a REST interface and write a Gemini access library from scratch using only low-level Clojure libraries. Later we use the Google Java Gemini SDK.
+
+In all examples you may substitute the model **gemini-3.0-pro** for **gemini-2.5-flash**.
+
 
 ## Test Code for REST Interface and Sample Test Output
 
@@ -87,7 +90,7 @@ Here is the library implementation, we will discuss the code after the listing:
   (:require [clj-http.client :as client])
   (:require [clojure.data.json :as json]))
 
-(def model "gemini-2.0-flash") ; or gemini-1.5-pro, etc.
+(def model "gemini-2.5-flash")
 
 (def google-api-key (System/getenv "GOOGLE_API_KEY"))
 
