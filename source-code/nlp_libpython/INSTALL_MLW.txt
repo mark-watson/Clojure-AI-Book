@@ -1,0 +1,31 @@
+On a fresh Ubuntu GCP instance:
+
+export CLOJURE_TOOLS_VERSION=1.10.1.507
+sudo apt-get -qq update
+sudo apt-get -qq -y install curl wget bzip2 openjdk-8-jdk-headless python3.8 libpython3.8 python3-pip
+sudo apt-get -qq -y install aptitude
+aptitude search python
+sudo apt-get -qq -y install curl wget bzip2 openjdk-8-jdk-headless python3.7 libpython3.7 python3-pip
+aptitude search openjdk
+sudo apt-get -qq -y install curl wget bzip2 openjdk-11-jdk-headless python3.7 libpython3.7 python3-pip
+curl -o install-clojure https://download.clojure.org/install/linux-install-${CLOJURE_TOOLS_VERSION}.sh
+chmod +x install-clojure
+sudo ./install-clojure
+mkdir bin
+cd bin
+wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+chmod +x lein
+cd
+vi .profile # edit to add: export PATH=$PATH:~/bin
+lein
+python3 -m pip install numpy nltk spacy
+rm install-clojure
+# install Carin Meier's excellent examples for using many Python libraries:
+git clone https://github.com/gigasquid/libpython-clj-examples.git
+sudo apt-get install git emacs-nox
+cd libpython-clj-examples/
+lein repl
+python3 -m pip install -U pip setuptools wheel
+python3 -m pip install -U spacy
+python3 -m spacy download en_core_web_sm
+
