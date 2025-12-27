@@ -14,16 +14,14 @@ If you read my eBooks free online then please consider tipping me [https://markw
 
 The latest updates to this book (August and December 2025) features more Large Language Models (LLMs) examples for Gemini, Gemini via the Gogle Java Gemini SDK, and the universal LLM interface library LiteLLM for accessing many models from many providers.
 
-I removed the chapter on Clojure/Python interoperation because of reported difficulties in configuring a Linux system to get the examples working. I copied the entire text for this deleted chapter to the README file [https://github.com/mark-watson/Clojure-AI-Book-Code/nlp_libpython](https://github.com/mark-watson/Clojure-AI-Book-Code/tree/main/nlp_libpython) if you would like to use this material.
-
 {width: "60%"}
 ![Mark Watson](images/Mark.png)
 
 I wrote this book for both professional programmers and home hobbyists who already know how to program in Clojure and who want to learn practical AI programming and information processing techniques. I have tried to make this an enjoyable book to work through. In the style of a “cook book,” the chapters can be studied in any order. 
 
-This book uses two of the examples in my Java AI book that is also available to read free online or for purchase at [Leanpub.com](https://leanpub.com/javaai). I replicate these two bits of Java code in the GitHub repository:
+This book uses two of the examples in my Java AI book that is also available to read free online or for purchase at [Leanpub.com](https://leanpub.com/javaai). I replicate these two bits of Java code in the GitHub repository for both this book manuscript and source code examples:
 
-[https://github.com/mark-watson/Clojure-AI-Book-Code](https://github.com/mark-watson/Clojure-AI-Book-Code)
+[https://github.com/mark-watson/Clojure-AI-Book](https://github.com/mark-watson/Clojure-AI-Book)
 
 Git pull requests with code improvements will be appreciated by me and the readers of this book.
 
