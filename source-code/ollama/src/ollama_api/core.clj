@@ -21,7 +21,7 @@
     [body
      (json/write-str
        {:prompt prompt-text
-        :model "mistral-small"
+        :model "mistral:v0.3"
         :stream false})]
     (ollama-helper body)))
 
