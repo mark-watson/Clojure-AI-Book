@@ -1,8 +1,6 @@
 # Using the Google Gemini APIs
 
-We used the OpenAI LLM APIs in the last chapter and now we provide a similar example using Google's **gemini-2.5-flash** model.
-
-**Note: Added Tool Use and Search API support to the REST API code March 7, 2026.**
+We used the OpenAI LLM APIs in the last chapter and now we provide a similar example using Google's **gemini-3-flash-preview** model.
 
 I recommend reading Google's [online documentation for the APIs](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference) to see all the capabilities of the OpenAI APIs.
 
