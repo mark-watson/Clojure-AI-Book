@@ -11,7 +11,7 @@ We develop two parallel implementations of  simple text generation and tool use 
 
 These implementations are similar and could have been generalized into a single code base. To reduce the lines of code listings here, we will first look at the Gemini implementation of a simple text generation example and look at the local Ollama implementation of a multiple tool use example. You can read through the Gemini tool use and the Ollama simple generative text examples in the GitHub repository.
 
-In case his is confusing, here are the parallel files:
+In case this is confusing, here are the parallel files:
 
 ```
 source-code $ tree AgentScope_gemini/src AgentScope_ollama/src
@@ -72,7 +72,8 @@ Here is a listing of **Clojure-AI-Book/source-code/AgentScope_gemini/src/agentsc
           ;; Send a message and block for the response
           response (-> (.call agent
                               (-> (Msg/builder)
-                                  (.textContent "Hello! Tell me a fun fact about Java programming.")
+                                  (.textContent
+								   "Hello. Fun fact about Java programming.")
                                   (.build)))
                        (.block))]
 
