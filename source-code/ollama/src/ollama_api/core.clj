@@ -20,16 +20,31 @@
 
 (defn completions
   "Use the Ollama API for text completions.
-   Options can include :model, :stream, etc."
+   Options can include :model, :stream, etc.
+   Throws ExceptionInfo on validation or API errors."
   ([prompt-text]
    (completions prompt-text {}))
   ([prompt-text opts]
-   (let [body (merge {:model *default-model*
-                      :prompt prompt-text
-                      :stream false}
-                     opts)
-         result (ollama-helper "/api/generate" body)]
-     (:response result))))
+   (when (or (nil? prompt-text) (not (string? prompt-text)))
+     (throw (ex-info "Invalid prompt: must be a non-nil string"
+                     {:prompt-text prompt-text})))
+   (try
+     (let [body (merge {:model *default-model*
+                        :prompt prompt-text
+                        :stream false}
+                       opts)
+           result (ollama-helper "/api/generate" body)]
+       (if (contains? result :response)
+         (:response result)
+         (throw (ex-info "Unexpected response format from Ollama API"
+                         {:result result}))))
+     (catch clojure.lang.ExceptionInfo e
+       (throw e))
+     (catch Exception e
+       (throw (ex-info "Failed to generate completions"
+                       {:prompt-text prompt-text
+                        :opts opts}
+                       e))))))
 
 (defn chat
   "Use the Ollama API for chat conversations.
