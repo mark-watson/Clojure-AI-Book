@@ -1,8 +1,6 @@
 # Using the OpenAI APIs
 
-I have been working as an artificial intelligence practitioner since 1982 and the capability of the beta OpenAI APIs is the most impressive thing that I have seen (so far!) in my career. These APIs use the GPT-5-nano model.
-
-I recommend reading the [online documentation for the APIs](https://platform.openai.com/docs/introduction/key-concepts) to see all the capabilities of the OpenAI APIs. 
+I have been working as an artificial intelligence practitioner since 1982 and most of my early use of LLMs was using ChatGPT and the OpenAI APIs. I now in 2026 mostly use the Google Gemini APIs and local models, but I still also frequently use the small, fast, and inexpensive OpenAI gpt-5-nano model, which we will also use here.
 
 Let's start by jumping into the example code.
 
