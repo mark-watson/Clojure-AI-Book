@@ -6,12 +6,12 @@ The GitHub repository for this example can be found here: [https://github.com/ma
 
 We use two models in this example: a vector embedding model
 and a text completion model (see bottom of this file).
-The vector embedding model is used to generate a vector embeddings for "chunks" of input documents. Here we break documents into 200 character chunks and calculate a vector embedding for each chunk. A vector dot product between two embedding vectors tells us how semantically similar two chunks of text are. We will also calculate embedding vectors for user queries and use those to find chunks that might be useful for answering the query. Useful chunks are concatenated to for a prompt for a GPT text completion model.
+The vector embedding model is used to generate a vector embeddings for "chunks" of input documents. Here we break documents into 200 character chunks and calculate a vector embedding for each chunk. A vector dot product between two embedding vectors tells us how semantically similar two chunks of text are. We will also calculate embedding vectors for user queries and use those to find chunks that might be useful for answering the query. Useful chunks are concatenated to for a prompt for a GPT text completion model (we use the gpt-5-nano model).
 
 
 ## Implementing a Local Vector Database for Document Embeddings
 
-For interactive development we will read all text files in the **data** directory, create a global variable **doc-strings** containing the string contents of each file, and then create another global variable **doc-chunks** where each document string has been broken down into smaller chunks. For each chunk, we will call the OpenAI API for calculating document embeddings and store the embeddings for each chunk in the global variable **embeddings**.
+For interactive development we will read all text files in the **data** directory, create a global variable **doc-strings** containing the string contents of each file, and then create another global variable **doc-chunks** where each document string has been broken down into smaller chunks. For each chunk, we will call the OpenAI API for calculating document embeddings and store the embeddings for each chunk in the global variable **embeddings**. Note that we wrap the embeddings calculations in a Clojure **delay** form so that the embeddings are calculated lazily -- only when they are first dereferenced with the **@** operator.
 
 When we want to query the documents in the **data** directory, we then calculate an embedding vector for the query and using a dot product calculation, efficiently find all chunks that are semantically similar to the query. The original text for these matching chunks is then combined with the user's query and passed to an OpenAI API for text completion.
 
@@ -65,13 +65,12 @@ The code using text embeddings is located in **src/docs_qa/vectordb.clj**:
     (document-texts-to-chunks doc-strings)))
 
 (def chunk-embeddings
-  (map #(openai-api.core/embeddings %) doc-chunks))
+  (delay (doall (map #(openai-api.core/embeddings %) doc-chunks))))
 
 (def embeddings-with-chunk-texts
-  (map vector chunk-embeddings doc-chunks))
+  (delay (doall (map vector @chunk-embeddings doc-chunks))))
 
-;;(clojure.pprint/pprint
-;;  (first embeddings-with-chunk-texts))
+;;(clojure.pprint/pprint (first embeddings-with-chunk-texts))
 ```
 
 If we uncomment the print statement in the last two lines of code, we see the first embedding vector and its corresponding chunk text:
@@ -92,7 +91,7 @@ If we uncomment the print statement in the last two lines of code, we see the fi
 
 ## Using Local Embeddings Vector Database with OpenAI GPT APIs
 
-The main application code is in the file **src/docs_qa/core.clj**:
+The main application code is in the file **src/docs_qa/core.clj**. Note that the **best-vector-matches** function prints a count of the embeddings (using the dereferenced delayed value **@docs-qa.vectordb/embeddings-with-chunk-texts**) for debugging purposes:
 
 ```clojure
 (ns docs-qa.core
@@ -102,10 +101,10 @@ The main application code is in the file **src/docs_qa/core.clj**:
   (:gen-class))
 
 (defn best-vector-matches [query]
+  (print "**count:" (count @docs-qa.vectordb/embeddings-with-chunk-texts))
   (clojure.string/join
    " ."
-   (let [query-embedding
-         (openai-api.core/embeddings query)]
+   (let [query-embedding (openai-api.core/embeddings query)]
     (map
      second
      (filter
@@ -116,7 +115,7 @@ The main application code is in the file **src/docs_qa/core.clj**:
               query-embedding
               emb)
              0.79)))
-      docs-qa.vectordb/embeddings-with-chunk-texts)))))
+      @docs-qa.vectordb/embeddings-with-chunk-texts)))))
 
 (defn answer-prompt [prompt]
   (openai-api.core/answer-question
@@ -125,7 +124,7 @@ The main application code is in the file **src/docs_qa/core.clj**:
 (defn -main
   []
   (println "Loading text files in ./data/, performing chunking and getting OpenAI embeddings...")
-  (answer-prompt "do nothing")n ;; force initiation
+  (answer-prompt " do nothiing ")
   (print "...done loading data and getting local embeddings.\n")
   (loop []
   (println "Enter a query:")
@@ -169,7 +168,7 @@ Enter a query:
 Done.
 ```
 
-## Wrap Up for Using Local Embeddings Vector Database to Enhance the Use of GPT3 APIs with Local Documents
+## Wrap Up for Using Local Embeddings Vector Database to Enhance the Use of GPT-5-nano APIs with Local Documents
 
 As I write this in May 2023, I have been working almost exclusively with OpenAI APIs for the last year and using the Python libraries for LangChain and LlamaIndex for the last three months.
 

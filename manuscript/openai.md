@@ -1,12 +1,12 @@
 # Using the OpenAI APIs
 
-I have been working as an artificial intelligence practitioner since 1982 and the capability of the beta OpenAI APIs is the most impressive thing that I have seen (so far!) in my career. These APIs use the GPT-4 model.
+I have been working as an artificial intelligence practitioner since 1982 and the capability of the beta OpenAI APIs is the most impressive thing that I have seen (so far!) in my career. These APIs use the GPT-5-nano model.
 
 I recommend reading the [online documentation for the APIs](https://platform.openai.com/docs/introduction/key-concepts) to see all the capabilities of the OpenAI APIs. 
 
 Let's start by jumping into the example code.
 
-The library that I wrote for this chapter supports three functions: completing text, summarizing text, and answering general questions. The single OpenAI model that the OpenAI APIs use is fairly general purpose and can perform tasks like:
+The library that I wrote for this chapter supports four functions: completing text, summarizing text, answering general questions, and calculating embeddings. The single OpenAI model that the OpenAI APIs use is fairly general purpose and can perform tasks like:
 
 - Generate cooking directions when given an ingredient list.
 - Grammar correction.
@@ -15,7 +15,7 @@ The library that I wrote for this chapter supports three functions: completing t
 
 Given the examples from [https://platform.openai.com](https://platform.openai.com) (will require you to login) and the Clojure examples here, you should be able to modify my example code to use any of the functionality that OpenAI documents.
 
-We will look closely at the function **completions** and then just look at the small differences to the other two example functions. The definitions for all three exported functions are kept in the file **src/openai_api/core.clj***. You need to request an API key (I had to wait a few weeks to receive my key) and set the value of the environment variable **OPENAI_KEY** to your key. You can add a statement like:
+We will look closely at the function **completions** and then just look at the small differences to the other example functions. The definitions for all four exported functions are kept in the file **src/openai_api/core.clj***. You need to request an API key (I had to wait a few weeks to receive my key) and set the value of the environment variable **OPENAI_KEY** to your key. You can add a statement like:
 
 {linenos=off}
 ~~~~~~~~
@@ -29,7 +29,7 @@ When experimenting with OpenAI APIs it is often start by using the **curl** util
 {lang="bash",linenos=on}
 ~~~~~~~~
 curl https://api.openai.com/v1/chat/completions -H "Content-Type: application/json" -H "Authorization: Bearer $OPENAI_API_KEY"   -d '{
-    "model": "gpt-3.5-turbo",
+    "model": "gpt-5-nano",
     "messages": [
       {
         "role": "system",
@@ -50,7 +50,7 @@ Output might look like this:
   "id": "chatcmpl-8nqUrlNsCPQgUkSIjW7ytvN5GlH3C",
   "object": "chat.completion",
   "created": 1706890561,
-  "model": "gpt-3.5-turbo-0613",
+  "model": "gpt-5-nano",
   "choices": [
     {
       "index": 0,
@@ -74,17 +74,15 @@ Output might look like this:
 
  All of the OpenAI APIs expect JSON data with query parameters. To use the completion API, we set values for **prompt**. We will look at several examples later.
 
-The file **src/openai_api/core.clj** contains the implementation of our wrapper library using Werner Kok's library:
+The file **src/openai_api/core.clj** contains the implementation of our wrapper library:
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
 (ns openai-api.core
-  (:require
-   [wkok.openai-clojure.api :as api])
   (:require [clj-http.client :as client])
   (:require [clojure.data.json :as json]))
 
-(def model2 "gpt-4o-mini")
+(def model2 "gpt-5-nano")
 
 (def api-key (System/getenv "OPENAI_API_KEY"))
 
@@ -108,6 +106,11 @@ The file **src/openai_api/core.clj** contains the implementation of our wrapper 
 
 (defn summarize [text]
   (completions (str "Summarize the following text:\n\n" text)))
+
+(defn answer-question
+  "Use the OpenAI API for question answering"
+  [text]
+  (completions (str "Answer the following question:\n\n" text)))
 
 (defn embeddings [text]
   (try
@@ -154,7 +157,7 @@ openai-api.core=> (openai-api.core/completions "He walked to the river")
 " every day. The salty air puffed through their pores. He had enjoyed her company. Maybe he did need a companion"
 ~~~~~~~~
 
-The function **summarize** is very similar to the function **completions** except I changed the system prompt string. Here is some example output:
+The function **summarize** is very similar to the function **completions** except I changed the system prompt string. The function **answer-question** is similarly structured, using a prompt that asks the model to answer a question. Here is some example output:
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -167,4 +170,4 @@ openai-api.core=> (openai-api.core/summarize some-text openai-api.core=> (openai
 ~~~~~~~~
 
 
-In addition to reading the OpenAI API documentation you might want to read general material on the use of OpenAI's GPT-4 model.
+In addition to reading the OpenAI API documentation you might want to read general material on the use of OpenAI's GPT-5 models.
