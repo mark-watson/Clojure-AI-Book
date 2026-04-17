@@ -5,7 +5,7 @@
   (:gen-class))
 
 (defn best-vector-matches [query]
-  (print "**count:" (count docs-qa.vectordb/embeddings-with-chunk-texts))
+  (print "**count:" (count @docs-qa.vectordb/embeddings-with-chunk-texts))
   (clojure.string/join
    " ."
    (let [query-embedding (openai-api.core/embeddings query)]
@@ -19,7 +19,7 @@
               query-embedding
               emb)
              0.79)))
-      docs-qa.vectordb/embeddings-with-chunk-texts)))))
+      @docs-qa.vectordb/embeddings-with-chunk-texts)))))
 
 (defn answer-prompt [prompt]
   (openai-api.core/answer-question

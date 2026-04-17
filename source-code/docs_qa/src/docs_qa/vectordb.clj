@@ -27,9 +27,9 @@
   (filter #(> (count %) 40) (document-texts-to-chunks doc-strings)))
 
 (def chunk-embeddings
-  (map #(openai-api.core/embeddings %) doc-chunks))
+  (delay (doall (map #(openai-api.core/embeddings %) doc-chunks))))
 
 (def embeddings-with-chunk-texts
-  (map vector chunk-embeddings doc-chunks))
+  (delay (doall (map vector @chunk-embeddings doc-chunks))))
 
 ;;(clojure.pprint/pprint (first embeddings-with-chunk-texts))

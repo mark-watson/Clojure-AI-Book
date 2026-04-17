@@ -2,7 +2,7 @@
   (:require [clj-http.client :as client])
   (:require [clojure.data.json :as json]))
 
-(def model2 "gpt-4o-mini")
+(def model2 "gpt-5-nano")
 
 (def api-key (System/getenv "OPENAI_API_KEY"))
 
