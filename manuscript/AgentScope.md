@@ -105,7 +105,7 @@ Here is a listing of **Clojure-AI-Book/source-code/AgentScope_gemini/src/agentsc
           response (-> (.call agent
                               (-> (Msg/builder)
                                   (.textContent
-								   "Hello. Fun fact about Java programming.")
+                                   "Hello. Fun fact about Java programming.")
                                   (.build)))
                        (.block))]
 
