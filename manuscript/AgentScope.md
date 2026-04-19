@@ -29,11 +29,43 @@ AgentScope_ollama/src
 
 ## Overview of AgentScope
 
-TBD
+AgentScope is a developer-centric, production-ready framework for building LLM-powered agent applications. While the original AgentScope SDK is written in Python, it also provides a Java implementation that we can call directly from Clojure via Java interop. The key abstractions in AgentScope are:
+
+- **ReActAgent** — an agent that implements the ReAct (Reason + Act) loop. Given a user message, the agent reasons about what to do, optionally calls tools, observes the results, and continues reasoning until it can produce a final answer. This is the core agent type we use in both examples.
+
+- **Model** — a pluggable chat model interface. AgentScope ships with built-in model implementations including `GeminiChatModel` (for Google Gemini) and `OllamaChatModel` (for any model served by a local Ollama instance). You construct a model using its builder, then hand it to an agent.
+
+- **Msg** — the message abstraction. You build a `Msg` with a text content (and optionally images or other modalities), pass it to the agent via `.call()`, and receive a response `Msg` back. The `.block()` call unwraps the reactive (Project Reactor `Mono`) return value into a synchronous result.
+
+- **AgentTool and Toolkit** — the tool-use subsystem. Each tool implements the `AgentTool` interface with four methods: `getName`, `getDescription`, `getParameters` (a JSON-schema map), and `callAsync` (which returns a Reactor `Mono<ToolResultBlock>`). Tools are registered into a `Toolkit`, which is then attached to a `ReActAgent`. When the LLM decides it needs a tool, the agent framework handles the function-call lifecycle automatically.
+
+The beauty of this design is that tool definitions live entirely in Clojure — we use `reify` to implement the `AgentTool` interface inline, with no companion Java classes or annotation processing required. The LLM sees the tool names, descriptions, and parameter schemas; the agent runtime dispatches to our Clojure functions when the LLM requests a tool call.
+
+For more information on AgentScope, see the [AgentScope documentation](https://doc.agentscope.io/) and the [AgentScope GitHub repository](https://github.com/agentscope-ai/agentscope).
 
 ## Generating Completions With AgentScope: Gemini Example
 
-TBD
+Our first example demonstrates the simplest use case: creating a `GeminiChatModel`, wrapping it in a `ReActAgent`, and sending a single prompt. This is the "Hello World" of AgentScope — no tools, just a straight question-and-response cycle.
+
+The flow is straightforward:
+
+1. Read the `GEMINI_API_KEY` from the environment and exit with an error if it is missing.
+2. Build a `GeminiChatModel` using its builder, specifying the API key and the model name `gemini-2.5-flash`.
+3. Build a `ReActAgent` with a name, a system prompt, and the model.
+4. Construct a `Msg` with the user's text content, call `.call()` on the agent, and block for the result with `.block()`.
+5. Print the text content of the response `Msg`.
+
+You will need a Google Gemini API key, which you can obtain from [Google AI Studio](https://aistudio.google.com/app/apikey). Set it as an environment variable before running:
+
+    export GEMINI_API_KEY=your-key-here
+
+The project depends on three Leiningen artifacts:
+
+| Artifact | Version | Purpose |
+|----------|---------|---------|
+| `io.agentscope/agentscope` | 1.0.9 | AgentScope core (agents, messaging, tools) |
+| `com.google.genai/google-genai` | 1.44.0 | Google GenAI SDK (Gemini models) |
+| `org.slf4j/slf4j-simple` | 2.0.13 | Logging |
 
 Here is a listing of **Clojure-AI-Book/source-code/AgentScope_gemini/src/agentscope/main.clj**:
 
@@ -104,6 +136,33 @@ The team then renamed it **Java**, inspired by Java coffee, which was a favorite
 
 ## Multiple Tool Use with AgentScope: Ollama Example
 
+Our second example is far more interesting: we give the agent five tools and let it decide which ones to call based on the user's question. This example uses the `OllamaChatModel` with the small local model `nemotron-3-nano:4b`, so no API key is needed — just a locally running Ollama server on `http://localhost:11434`.
+
+Before running the example, start Ollama and pull the model:
+
+    ollama serve
+    ollama pull nemotron-3-nano:4b
+
+The project dependencies are simpler than the Gemini version since we do not need the Google GenAI SDK:
+
+| Artifact | Version | Purpose |
+|----------|---------|---------|
+| `io.agentscope/agentscope` | 1.0.9 | AgentScope core (agents, messaging, tools) |
+| `org.slf4j/slf4j-simple` | 2.0.13 | Logging |
+
+We define five tools, each implemented as a Clojure function that returns a `reify` of the `AgentTool` interface:
+
+1. **getWeather** — a stub that returns "Sunny, 25°C" for any city. In a real application you would call a weather API.
+2. **list_dir** — lists files and subdirectories at a given path using `java.io.File`.
+3. **read_file** — reads the contents of a file, with an optional `max_lines` parameter to limit output.
+4. **recursive-file-search** — recursively searches for files whose names contain a search string.
+5. **math-eval** — evaluates simple arithmetic expressions (integers with `+`, `*`, `/`) using a safe left-to-right evaluator.
+
+Each tool follows the same pattern: implement `getName`, `getDescription`, `getParameters` (a JSON-schema object), and `callAsync` (which receives the parameters and returns a `Mono<ToolResultBlock>`). The `callAsync` method extracts the input parameters from the `param` object via `.getInput`, performs its logic in pure Clojure, and wraps the result string with `ToolResultBlock/text` inside `Mono/just`.
+
+All five tools are registered into a `Toolkit`, which is then attached to the `ReActAgent` via its builder. When the agent receives a prompt, the ReAct loop inspects the available tools and their descriptions, decides which tools to call (if any), calls them, observes the results, and iterates until it can produce a final answer. The agent may call multiple tools in a single turn — for example, when asked about weather in two cities, it calls `getWeather` twice.
+
+The `-main` function runs four example queries in sequence: a weather query for two cities, a request to list and read markdown files, a recursive file search, and a math evaluation.
 
 Here is a listing of **Clojure-AI-Book/source-code/AgentScope_ollama/src/agentscope/tool_use.clj**:
 
@@ -376,3 +435,14 @@ These appear to be Clojure configuration, project management, and module file ex
 The value of `15 + 27 * 3` is **126**. (Multiplication takes precedence over addition.)
 [HttpTransportFactory-ShutdownHook] INFO io.agentscope.core.model.transport.HttpTransportFactory - Shutting down 1 managed HttpTransport(s)
 ```
+
+Notice how the agent autonomously chains tool calls. For the markdown files query, it first calls `list_dir` to discover the files, then calls `read_file` with `max_lines=5` for each `.md` file it finds. For the weather query it calls `getWeather` twice (once for Tokyo, once for Paris). The ReAct loop handles all of this orchestration — your code simply registers the tools and sends the prompt.
+
+## Summary
+
+In this chapter we used the AgentScope Java SDK from Clojure to build two kinds of LLM-powered agents:
+
+- A **simple completion agent** that wraps a Gemini model in a `ReActAgent` and sends a prompt with no tools.
+- A **tool-using agent** that wraps an Ollama model, registers five Clojure-implemented tools via the `AgentTool` interface and `Toolkit`, and lets the ReAct loop decide which tools to call.
+
+The key takeaway is that AgentScope's builder pattern and `reify`-based tool definitions map naturally to Clojure idioms. You get the full power of the ReAct reasoning loop — automatic tool selection, multi-turn tool calling, and result synthesis — without writing any orchestration code yourself. The same pattern scales to more tools, different models, or multi-agent workflows using AgentScope's `MsgHub` for agent-to-agent communication.
