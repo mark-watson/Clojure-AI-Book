@@ -4,7 +4,7 @@ AgentScope is an agent oriented programming framework for building LLM powered a
 
 Here we only write Clojure examples using a subset of the Java implementation of AgentScope. For reference this is the [home web page for Agentscope](https://agentscope.io).
 
-We develop two parallel implementations of  simple text generation and tool use examples in this chapter:
+We develop two parallel implementations of simple text generation and tool use examples in this chapter:
 
 - Using the local model `nemotron-3-nano:4b` running with a local Ollama server. Source code: **Clojure-AI-Book/source-code/AgentScope_ollama**.
 - Using the Google Gemini model `gemini-3-flash-preview`. Source code: **Clojure-AI-Book/source-code/AgentScope_gemini**.
