@@ -1,4 +1,4 @@
-# AgentScope Agent Oriented Framework.
+# AgentScope Agent Oriented Framework
 
 AgentScope is an agent oriented programming framework for building LLM powered applications that has components for ReAct reasoning, tool calling, memory management, and multi agent collaboration.
 
