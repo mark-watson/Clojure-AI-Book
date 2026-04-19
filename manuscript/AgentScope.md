@@ -29,11 +29,11 @@ AgentScope_ollama/src
 
 ## Overview of AgentScope
 
-AgentScope is a developer-centric, production-ready framework for building LLM-powered agent applications. While the original AgentScope SDK is written in Python, it also provides a Java implementation that we can call directly from Clojure via Java interop. The key abstractions in AgentScope are:
+AgentScope is a developer friendly and production ready framework for building LLM powered agent applications. While the original AgentScope SDK is written in Python, it also provides a Java implementation that we can call directly from Clojure via Java interop. The key abstractions in AgentScope are:
 
 - **ReActAgent** — an agent that implements the ReAct (Reason + Act) loop. Given a user message, the agent reasons about what to do, optionally calls tools, observes the results, and continues reasoning until it can produce a final answer. This is the core agent type we use in both examples.
 
-- **Model** — a pluggable chat model interface. AgentScope ships with built-in model implementations including `GeminiChatModel` (for Google Gemini) and `OllamaChatModel` (for any model served by a local Ollama instance). You construct a model using its builder, then hand it to an agent.
+- **Model** — a pluggable chat model interface. AgentScope ships with built-in model implementations including the two we use here: `GeminiChatModel` (for Google Gemini) and `OllamaChatModel` (for any model served by a local Ollama instance). You construct a model using its builder, then hand it to an agent.
 
 - **Msg** — the message abstraction. You build a `Msg` with a text content (and optionally images or other modalities), pass it to the agent via `.call()`, and receive a response `Msg` back. The `.block()` call unwraps the reactive (Project Reactor `Mono`) return value into a synchronous result.
 
@@ -52,7 +52,7 @@ The flow is straightforward:
 1. Read the `GEMINI_API_KEY` from the environment and exit with an error if it is missing.
 2. Build a `GeminiChatModel` using its builder, specifying the API key and the model name `gemini-2.5-flash`.
 3. Build a `ReActAgent` with a name, a system prompt, and the model.
-4. Construct a `Msg` with the user's text content, call `.call()` on the agent, and block for the result with `.block()`.
+4. Construct a `Msg` with the user's text content, call `.call()` on the agent, and wait for the result with `.block()`.
 5. Print the text content of the response `Msg`.
 
 You will need a Google Gemini API key, which you can obtain from [Google AI Studio](https://aistudio.google.com/app/apikey). Set it as an environment variable before running:
@@ -138,11 +138,11 @@ The team then renamed it **Java**, inspired by Java coffee, which was a favorite
 
 Our second example is far more interesting: we give the agent five tools and let it decide which ones to call based on the user's question. This example uses the `OllamaChatModel` with the small local model `nemotron-3-nano:4b`, so no API key is needed — just a locally running Ollama server on `http://localhost:11434`.
 
-Before running the example, start Ollama and pull the model:
+Before running the example, start Ollama after pulling the model:
 
-    ollama serve
     ollama pull nemotron-3-nano:4b
-
+    ollama serve
+ 
 The project dependencies are simpler than the Gemini version since we do not need the Google GenAI SDK:
 
 | Artifact | Version | Purpose |
@@ -414,11 +414,11 @@ I found 1 markdown file in the current directory: **README.md**
 
 Here are the first 5 lines of README.md:
 
-```
-# AgentScope + Gemini — Clojure Edition
+``
+ # AgentScope + Gemini — Clojure Edition
 This directory contains Clojure examples for using the **AgentScope SDK** directly via Java interop.
 > See [`README.md`](README.md) for background on AgentScope and the Gemini model.
-```
+``
 
 Other files and directories in the current directory are: `.DS_Store`, `Makefile`, `project.clj`, `src/`, and `target/`.
 
@@ -443,6 +443,6 @@ Notice how the agent autonomously chains tool calls. For the markdown files quer
 In this chapter we used the AgentScope Java SDK from Clojure to build two kinds of LLM-powered agents:
 
 - A **simple completion agent** that wraps a Gemini model in a `ReActAgent` and sends a prompt with no tools.
-- A **tool-using agent** that wraps an Ollama model, registers five Clojure-implemented tools via the `AgentTool` interface and `Toolkit`, and lets the ReAct loop decide which tools to call.
+- A **tool-using agent** that wraps an Ollama model, registers five tools written in Clojure via the `AgentTool` interface and `Toolkit`, and lets the ReAct loop decide which tools to call.
 
-The key takeaway is that AgentScope's builder pattern and `reify`-based tool definitions map naturally to Clojure idioms. You get the full power of the ReAct reasoning loop — automatic tool selection, multi-turn tool calling, and result synthesis — without writing any orchestration code yourself. The same pattern scales to more tools, different models, or multi-agent workflows using AgentScope's `MsgHub` for agent-to-agent communication.
+The key takeaway is that AgentScope's builder pattern and `reify` based tool definitions map naturally to Clojure idioms. You get the full power of the ReAct reasoning loop with automatic tool selection, multi-turn tool calling, and result synthesis without writing any orchestration code yourself. The same pattern scales to more tools, different models, or multi-agent workflows using AgentScope's `MsgHub` for agent-to-agent communication.
