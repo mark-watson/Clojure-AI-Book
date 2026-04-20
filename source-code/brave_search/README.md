@@ -11,6 +11,8 @@ from scratch. That old code is now in the directory **../openai_api_mw**. The co
 
 ## Code for my book "Practical Artificial Intelligence Programming With Clojure"
 
+**Book Chapter:** [Using the Brave Search APIs](https://leanpub.com/read/clojureai/leanpub-auto-using-the-brave-search-apis) — free to read online.
+
 You read my eBooks for free, see my
 website [https://markwatson.com](https://markwatson.com). If you would like to pay me for a copy then please visit [https://leanpub.com/clojureai](https://leanpub.com/clojureai).
 

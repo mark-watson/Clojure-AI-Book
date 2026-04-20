@@ -1,5 +1,7 @@
 # python_interop_deeplearning - THIS CHAPTER IS NO LONGER IN MY BOOK (chapter included here)
 
+> **Note:** This chapter was removed from *Practical Artificial Intelligence Programming With Clojure* due to complex Linux/Python setup requirements. The full chapter text is included below in this README. You can browse the rest of the book for free at [https://leanpub.com/clojureai/read](https://leanpub.com/clojureai/read).
+
 #### I appended the NLP_libpython chapter to the README file and removed it from my book. The reason I did this is because the required Linux and Python setup is difficult.
 
 

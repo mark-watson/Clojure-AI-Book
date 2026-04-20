@@ -1,6 +1,6 @@
 # simple_rdf_sparql
 
-TBD
+**Book Chapter:** [Simple RDF Datastore and Partial SPARQL Query Processor](https://leanpub.com/read/clojureai/leanpub-auto-simple-rdf-datastore-and-partial-sparql-query-processor) — *Practical Artificial Intelligence Programming With Clojure* (free to read online).
 
 ## License
 

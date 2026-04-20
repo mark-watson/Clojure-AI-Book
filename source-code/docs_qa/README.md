@@ -2,6 +2,8 @@
 
 # docs_qa: a Clojure app for Documents Question Answering Using OpenAI GPT3 APIs and a Local Embeddings Vector Database
 
+**Book Chapter:** [Question Answering Using OpenAI APIs and a Local Embeddings Vector Database](https://leanpub.com/read/clojureai/leanpub-auto-question-answering-using-openai-apis-and-a-local-embeddings-vector-database) — free to read online.
+
 This project is inspired by the Python LangChain and LlamaIndex projects, with the parts I need written from scratch in Common Lisp. I wrote a Python book "LangChain and LlamaIndex Projects Lab Book: Hooking Large Language Models Up to the Real World
 Using GPT-3, ChatGPT, and Hugging Face Models in Applications" in March 2023: [https://leanpub.com/langchain](https://leanpub.com/langchain) that you might also be interested in.
 

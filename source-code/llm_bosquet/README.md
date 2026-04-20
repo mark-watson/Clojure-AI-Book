@@ -1,5 +1,7 @@
 # Try the Clojure LLM library Bosquet
 
+> **Note:** This example is a work-in-progress and is not yet part of *Practical Artificial Intelligence Programming With Clojure*. You can browse the book for free at [https://leanpub.com/clojureai/read](https://leanpub.com/clojureai/read).
+
 Currently uses Bosquet's defaults:
 
 - Model: mistral-small

@@ -11,6 +11,8 @@ Note: May 2025: I just modified the OpenAI client code using Gemini and OpenAI.
 
 ## Code for my book "Practical Artificial Intelligence Programming With Clojure"
 
+**Book Chapter:** [Using the OpenAI APIs](https://leanpub.com/read/clojureai/leanpub-auto-using-the-openai-apis) — free to read online.
+
 You can read the book for this example code for free online: [https://leanpub.com/clojureai/read](https://leanpub.com/clojureai/read).
 
 If you would like to pay me for a copy of this book then please visit [https://leanpub.com/clojureai](https://leanpub.com/clojureai).

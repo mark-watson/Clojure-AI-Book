@@ -8,6 +8,8 @@ A Clojure library designed to use the Java Jena RDF and SPARQL library.
 
 ## Code for my book "Practical Artificial Intelligence Programming With Clojure"
 
+**Book Chapter:** [Clojure Wrapper for the Jena RDF and SPARQL Library](https://leanpub.com/read/clojureai/leanpub-auto-clojure-wrapper-for-the-jena-rdf-and-sparql-library) — free to read online.
+
 You read my eBooks for free, see my
 website [https://markwatson.com](https://markwatson.com). If you would like to pay me for a copy then please visit [https://leanpub.com/clojureai](https://leanpub.com/clojureai).
 

@@ -2,6 +2,8 @@
 
 This directory contains Clojure examples for using the **AgentScope SDK** directly via Java interop.
 
+> **Book Chapter:** [AgentScope Agent Oriented Framework](https://leanpub.com/read/clojureai/leanpub-auto-agentscope-agent-oriented-framework) — *Practical Artificial Intelligence Programming With Clojure* (free to read online)
+
 > See [`README.md`](README.md) for background on AgentScope and the Gemini model.
 
 ## Prerequisites

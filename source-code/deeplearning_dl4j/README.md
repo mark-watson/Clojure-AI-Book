@@ -2,6 +2,8 @@
 
 # Code for my book "Practical Artificial Intelligence Programming With Clojure"
 
+**Book Chapter:** [Deep Learning Using Deeplearning4j](https://leanpub.com/read/clojureai/dl4j) — free to read online.
+
 Documentation for this example is in the first chapter of my book that can be read for free online, or purchased: [https://leanpub.com/clojureai](https://leanpub.com/clojureai)
 
 Please also visit my website [https://markwatson.com](https://markwatson.com).

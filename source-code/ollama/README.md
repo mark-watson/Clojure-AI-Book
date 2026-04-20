@@ -21,6 +21,8 @@ Then run the tests in another window:
 
 ## Code for my book "Practical Artificial Intelligence Programming With Clojure"
 
+**Book Chapter:** [Running LLMs Locally Using Ollama](https://leanpub.com/read/clojureai/leanpub-auto-running-llms-locally-using-ollama) — free to read online.
+
 You read my eBooks for free, see my
 website [https://markwatson.com](https://markwatson.com). If you would like to pay me for a copy then please visit [https://leanpub.com/clojureai](https://leanpub.com/clojureai).
 

@@ -8,6 +8,8 @@ A Clojure library for using the Moonshot Kimi 2 APIs
 
 ## Code for my book "Practical Artificial Intelligence Programming With Clojure"
 
+**Book Chapter:** [Using Moonshot's Kimi Model](https://leanpub.com/read/clojureai/leanpub-auto-using-moonshots-kimi-k2-model-with-built-in-websearch-tool-support) — free to read online.
+
 You can read the book for this example code for free online: [https://leanpub.com/clojureai/read](https://leanpub.com/clojureai/read).
 
 If you would like to pay me for a copy of this book then please visit [https://leanpub.com/clojureai](https://leanpub.com/clojureai).

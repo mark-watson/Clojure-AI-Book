@@ -10,6 +10,8 @@ Similar to the example in ../gemini_api that uses the REST Gemini API interface
 
 ## Code for my book "Practical Artificial Intelligence Programming With Clojure"
 
+**Book Chapter:** [Using the Google Gemini APIs](https://leanpub.com/read/clojureai/leanpub-auto-using-the-google-gemini-apis) — free to read online.
+
 You can read the book for this example code for free online: [https://leanpub.com/clojureai/read](https://leanpub.com/clojureai/read).
 
 If you would like to pay me for a copy of this book then please visit [https://leanpub.com/clojureai](https://leanpub.com/clojureai).
