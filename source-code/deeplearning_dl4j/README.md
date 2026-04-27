@@ -1,28 +1,26 @@
-# deeplearning_dl4j_clj
+# Deep Learning Using Deeplearning4j — Example for "Practical Artificial Intelligence Programming With Clojure"
 
-# Code for my book "Practical Artificial Intelligence Programming With Clojure"
+> **Book Chapter:** [Deep Learning Using Deeplearning4j](https://leanpub.com/read/clojureai/dl4j) — free to read online.
 
-**Book Chapter:** [Deep Learning Using Deeplearning4j](https://leanpub.com/read/clojureai/dl4j) — free to read online.
+This example demonstrates deep learning in Clojure using the [Deeplearning4j](https://deeplearning4j.konduit.ai/) Java library via interop. DL4J provides GPU-accelerated neural network training and inference on the JVM without leaving the Clojure ecosystem.
 
-Documentation for this example is in the first chapter of my book that can be read for free online, or purchased: [https://leanpub.com/clojureai](https://leanpub.com/clojureai)
+## Prerequisites
 
-Please also visit my website [https://markwatson.com](https://markwatson.com).
+| Tool | Version |
+|------|---------|
+| Java | 11+ |
+| [Leiningen](https://leiningen.org) | 2.9+ |
 
-## Running the Example
+## Run
 
     lein run
 
-## License
+## Book and License
 
-Copyright © 2021-2023 Mark Watson
+Book URI: https://leanpub.com/clojureai — you can read the book for free online at https://leanpub.com/clojureai/read
+
+Copyright © 2021-2026 Mark Watson. All rights reserved.
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at
 http://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.

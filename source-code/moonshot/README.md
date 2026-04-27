@@ -1,32 +1,31 @@
-# moonshot_api
+# Moonshot Kimi — Example for "Practical Artificial Intelligence Programming With Clojure"
 
-A Clojure library for using the Moonshot Kimi 2 APIs
+> **Book Chapter:** [Using Moonshot's Kimi Model](https://leanpub.com/read/clojureai/leanpub-auto-using-moonshots-kimi-k2-model-with-built-in-websearch-tool-support) — free to read online.
 
-## Usage
+This example calls the [Moonshot AI](https://www.moonshot.ai/) Kimi K2 chat completions API from Clojure using `clj-http`. Kimi K2 is notable for its built-in web-search tool support — the model can autonomously search the web to ground its answers.
+
+## Prerequisites
+
+| Tool | Version |
+|------|---------|
+| Java | 11+ |
+| [Leiningen](https://leiningen.org) | 2.9+ |
+| `MOONSHOT_API_KEY` | [Get one here](https://platform.moonshot.ai/) |
+
+Set your API key before running:
+
+    export MOONSHOT_API_KEY=your_key_here
+
+## Run
 
     lein test
 
-## Code for my book "Practical Artificial Intelligence Programming With Clojure"
+## Book and License
 
-**Book Chapter:** [Using Moonshot's Kimi Model](https://leanpub.com/read/clojureai/leanpub-auto-using-moonshots-kimi-k2-model-with-built-in-websearch-tool-support) — free to read online.
+Book URI: https://leanpub.com/clojureai — you can read the book for free online at https://leanpub.com/clojureai/read
 
-You can read the book for this example code for free online: [https://leanpub.com/clojureai/read](https://leanpub.com/clojureai/read).
-
-If you would like to pay me for a copy of this book then please visit [https://leanpub.com/clojureai](https://leanpub.com/clojureai).
-
-Please visit see my website [https://markwatson.com](https://markwatson.com).
-
-## License
-
-Copyright © 2021-2024 Mark Watson
+Copyright © 2021-2026 Mark Watson. All rights reserved.
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at
 http://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.

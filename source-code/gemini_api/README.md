@@ -1,40 +1,39 @@
-# gemini_api
+# Google Gemini REST API — Example for "Practical Artificial Intelligence Programming With Clojure"
 
-A Clojure library for using the gemini REST APIs
+> **Book Chapter:** [Using the Google Gemini APIs](https://leanpub.com/read/clojureai/leanpub-auto-using-the-google-gemini-apis) — free to read online.
 
-This code is similar to the code in ../gemini_java_api that uses Google's Java Gemini SDK.
+This example calls the Google Gemini generative AI REST API from Clojure using `clj-http`. It provides functions for text generation (`generate-content`) and summarization (`summarize`). See also `../gemini_java_api` for an alternative approach using Google's Java SDK.
 
-Run the Code:
-(require '[gemini-api.core :as gemini])
+## Prerequisites
 
-(println (gemini/generate-content "Write a short poem about the ocean."))
-(println (gemini/summarize "The quick brown fox jumps over the lazy dog."))
+| Tool | Version |
+|------|---------|
+| Java | 11+ |
+| [Leiningen](https://leiningen.org) | 2.9+ |
+| `GOOGLE_API_KEY` | [Get one here](https://aistudio.google.com/app/apikey) |
 
-## Usage
+Set your API key before running:
+
+    export GOOGLE_API_KEY=your_key_here
+
+## Run
 
     lein test
 
-## Code for my book "Practical Artificial Intelligence Programming With Clojure"
+### REPL Usage
 
-**Book Chapter:** [Using the Google Gemini APIs](https://leanpub.com/read/clojureai/leanpub-auto-using-the-google-gemini-apis) — free to read online.
+```clojure
+(require '[gemini-api.core :as gemini])
+(println (gemini/generate-content "Write a short poem about the ocean."))
+(println (gemini/summarize "The quick brown fox jumps over the lazy dog."))
+```
 
-You can read the book for this example code for free online: [https://leanpub.com/clojureai/read](https://leanpub.com/clojureai/read).
+## Book and License
 
-If you would like to pay me for a copy of this book then please visit [https://leanpub.com/clojureai](https://leanpub.com/clojureai).
+Book URI: https://leanpub.com/clojureai — you can read the book for free online at https://leanpub.com/clojureai/read
 
-Please visit see my website [https://markwatson.com](https://markwatson.com).
-
-## License
-
-Copyright © 2021-2024 Mark Watson
+Copyright © 2021-2026 Mark Watson. All rights reserved.
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at
 http://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.

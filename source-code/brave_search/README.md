@@ -1,32 +1,31 @@
-# openai_api
+# Brave Search — Example for "Practical Artificial Intelligence Programming With Clojure"
 
-A Clojure library for using the OpenAI APIs (GPT-3 based)
+> **Book Chapter:** [Using the Brave Search APIs](https://leanpub.com/read/clojureai/leanpub-auto-using-the-brave-search-apis) — free to read online.
 
-Note: in previous editions of my book, I implemented low level client code
-from scratch. That old code is now in the directory **../openai_api_mw**. The code here now is just a thin wrapper for Werner Kok's library [https://github.com/wkok/openai-clojure](https://github.com/wkok/openai-clojure).
+This example shows how to call the [Brave Search API](https://brave.com/search/api/) from Clojure using `clj-http`. Given a query string, it returns a vector of `[title url description]` results. Brave Search is a privacy-focused alternative to Google for programmatic web search.
 
-## Usage
+## Prerequisites
+
+| Tool | Version |
+|------|---------|
+| Java | 11+ |
+| [Leiningen](https://leiningen.org) | 2.9+ |
+| `BRAVE_SEARCH_API_KEY` | [Get one here](https://brave.com/search/api/) |
+
+Set your API key before running:
+
+    export BRAVE_SEARCH_API_KEY=your_key_here
+
+## Run
 
     lein test
 
-## Code for my book "Practical Artificial Intelligence Programming With Clojure"
+## Book and License
 
-**Book Chapter:** [Using the Brave Search APIs](https://leanpub.com/read/clojureai/leanpub-auto-using-the-brave-search-apis) — free to read online.
+Book URI: https://leanpub.com/clojureai — you can read the book for free online at https://leanpub.com/clojureai/read
 
-You read my eBooks for free, see my
-website [https://markwatson.com](https://markwatson.com). If you would like to pay me for a copy then please visit [https://leanpub.com/clojureai](https://leanpub.com/clojureai).
-
-## License
-
-Copyright © 2021 Mark Watson
+Copyright © 2021-2026 Mark Watson. All rights reserved.
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at
 http://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.

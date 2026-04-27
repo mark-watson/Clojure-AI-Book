@@ -1,35 +1,33 @@
-# docs_qa
+# Document Question Answering — Example for "Practical Artificial Intelligence Programming With Clojure"
 
-# docs_qa: a Clojure app for Documents Question Answering Using OpenAI GPT3 APIs and a Local Embeddings Vector Database
+> **Book Chapter:** [Question Answering Using OpenAI APIs and a Local Embeddings Vector Database](https://leanpub.com/read/clojureai/leanpub-auto-question-answering-using-openai-apis-and-a-local-embeddings-vector-database) — free to read online.
 
-**Book Chapter:** [Question Answering Using OpenAI APIs and a Local Embeddings Vector Database](https://leanpub.com/read/clojureai/leanpub-auto-question-answering-using-openai-apis-and-a-local-embeddings-vector-database) — free to read online.
+This project implements a Retrieval-Augmented Generation (RAG) pipeline in Clojure. It reads text files from a `data/` directory, splits them into chunks, generates OpenAI embeddings for each chunk, and stores them in a local vector database (SQLite). At query time it finds the most relevant chunks via dot-product similarity and sends them as context to the OpenAI completions API to answer your question.
 
-This project is inspired by the Python LangChain and LlamaIndex projects, with the parts I need written from scratch in Common Lisp. I wrote a Python book "LangChain and LlamaIndex Projects Lab Book: Hooking Large Language Models Up to the Real World
-Using GPT-3, ChatGPT, and Hugging Face Models in Applications" in March 2023: [https://leanpub.com/langchain](https://leanpub.com/langchain) that you might also be interested in.
+Inspired by the Python LangChain and LlamaIndex ecosystems, but written from scratch in Clojure.
 
-## Installation
+## Prerequisites
 
-In the directory ../openai_api run:
+| Tool | Version |
+|------|---------|
+| Java | 11+ |
+| [Leiningen](https://leiningen.org) | 2.9+ |
+| `OPENAI_API_KEY` | [Get one here](https://platform.openai.com/api-keys) |
 
-    lein install
+You must first install the local `openai_api` dependency:
 
-Then in this directory just run: lein test
+    cd ../openai_api && lein install
 
-## Usage
+## Run
 
     lein test
 
-## License
+## Book and License
 
-Copyright © 2023-2025 Mark Watson
+Book URI: https://leanpub.com/clojureai — you can read the book for free online at https://leanpub.com/clojureai/read
+
+Copyright © 2023-2026 Mark Watson. All rights reserved.
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at
 http://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.

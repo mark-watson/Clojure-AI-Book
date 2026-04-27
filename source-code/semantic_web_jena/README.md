@@ -1,29 +1,28 @@
-# semantic_web_jena_clj
+# Clojure Wrapper for Apache Jena — Example for "Practical Artificial Intelligence Programming With Clojure"
 
-A Clojure library designed to use the Java Jena RDF and SPARQL library.
+> **Book Chapter:** [Clojure Wrapper for the Jena RDF and SPARQL Library](https://leanpub.com/read/clojureai/leanpub-auto-clojure-wrapper-for-the-jena-rdf-and-sparql-library) — free to read online.
 
-## Usage
+This project wraps the [Apache Jena](https://jena.apache.org/) Java library for working with RDF data and SPARQL queries from Clojure. Jena is the standard JVM library for semantic web technologies — it can parse RDF/XML, Turtle, and N-Triples files and execute SPARQL queries against local or remote endpoints.
+
+## Prerequisites
+
+| Tool | Version |
+|------|---------|
+| Java | 11+ |
+| [Leiningen](https://leiningen.org) | 2.9+ |
+
+No API keys are required.
+
+## Run
 
     lein test
 
-## Code for my book "Practical Artificial Intelligence Programming With Clojure"
+## Book and License
 
-**Book Chapter:** [Clojure Wrapper for the Jena RDF and SPARQL Library](https://leanpub.com/read/clojureai/leanpub-auto-clojure-wrapper-for-the-jena-rdf-and-sparql-library) — free to read online.
+Book URI: https://leanpub.com/clojureai — you can read the book for free online at https://leanpub.com/clojureai/read
 
-You read my eBooks for free, see my
-website [https://markwatson.com](https://markwatson.com). If you would like to pay me for a copy then please visit [https://leanpub.com/clojureai](https://leanpub.com/clojureai).
-
-## License
-
-Copyright © 2021 FIXME
+Copyright © 2021-2026 Mark Watson. All rights reserved.
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at
 http://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.

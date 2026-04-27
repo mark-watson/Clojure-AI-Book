@@ -1,10 +1,10 @@
-# AgentScope + Gemini — Clojure Edition
+# AgentScope + Ollama — Example for "Practical Artificial Intelligence Programming With Clojure"
 
-This directory contains Clojure examples for using the **AgentScope SDK** directly via Java interop.
+> **Book Chapter:** [AgentScope Agent Oriented Framework](https://leanpub.com/read/clojureai/leanpub-auto-agentscope-agent-oriented-framework) — free to read online.
 
-> **Book Chapter:** [AgentScope Agent Oriented Framework](https://leanpub.com/read/clojureai/leanpub-auto-agentscope-agent-oriented-framework) — *Practical Artificial Intelligence Programming With Clojure* (free to read online)
+This directory contains Clojure examples for using the [AgentScope SDK](https://github.com/modelscope/agentscope) directly via Java interop with a **local Ollama** model as the backing LLM. No cloud API key is required — everything runs on your own hardware.
 
-> See [`README.md`](README.md) for background on AgentScope and the Gemini model.
+See also `../AgentScope_gemini` for the cloud-based Gemini variant.
 
 ## Prerequisites
 
@@ -12,63 +12,43 @@ This directory contains Clojure examples for using the **AgentScope SDK** direct
 |------|---------|
 | Java | 17+ |
 | [Leiningen](https://leiningen.org) | 2.11+ |
-| `GEMINI_API_KEY` | [Get one here](https://aistudio.google.com/app/apikey) |
+| [Ollama](https://ollama.ai) | Latest |
 
-Set your API key before running the examples:
-```bash
-export GEMINI_API_KEY=your_key_here
-```
+Pull the model used by the example:
 
-## Project Structure
+    ollama pull nemotron-3-nano:4b
 
-```
-.
-├── project.clj                          # Leiningen build file
-└── src/
-    └── main/
-        └── clojure/agentscope/
-            ├── main.clj                 # Basic ReActAgent demo
-            └── tool_use.clj             # Tool-use demo
-```
+Make sure Ollama is running:
+
+    ollama serve
 
 ## Running the Examples
 
-### Basic Agent Demo
+**Basic Agent Demo** — builds an `OllamaChatModel`, wraps it in a `ReActAgent`, sends a prompt, and prints the response:
 
-Builds a `GeminiChatModel`, wraps it in a `ReActAgent`, sends a prompt, and prints the response.
+    lein run
 
-```bash
-# Basic agent demo
-lein run
-```
+**Tool-Use Demo** — registers tools (weather lookup, file operations, math eval), attaches them to the agent, and lets the LLM invoke them automatically:
 
-### Tool-Use Demo
-
-Registers a weather tool, attaches it to the agent, and asks about the weather in Tokyo and Paris. The agent invokes the tool automatically.
-
-```bash
-# Tool-use demo
-lein run -m agentscope.tool-use
-```
-
-### Build an Uberjar
-
-```bash
-lein uberjar
-java -jar target/agentscope-gemini-standalone.jar
-```
-
-## Key Dependencies
-
-| Artifact | Version | Purpose |
-|----------|---------|---------|
-| `io.agentscope/agentscope` | 1.0.9 | AgentScope core (agents, messaging, tools) |
-| `com.google.genai/google-genai` | 1.44.0 | Google GenAI SDK (Gemini models) |
-| `org.slf4j/slf4j-simple` | 2.0.13 | Logging |
+    lein run -m agentscope.tool-use
 
 ## How It Works
 
-1. **`GeminiChatModel`** is constructed with your API key.
-2. **`ReActAgent`** wraps the model with a system prompt and optional `Toolkit`.
-3. A **`Msg`** is passed to `.call()` on the agent.
-4. The reactive response is collected with `.block()` and printed.
+1. `OllamaChatModel` is constructed pointing at `http://localhost:11434`.
+2. `ReActAgent` wraps the model with a system prompt and optional `Toolkit`.
+3. Tools are defined in pure Clojure by implementing the `AgentTool` interface with `reify`.
+4. A `Msg` is passed to `.call()` on the agent and the response is collected with `.block()`.
+
+## Key Dependencies
+
+| Artifact | Purpose |
+|----------|---------|
+| `io.agentscope/agentscope` | AgentScope core (agents, messaging, tools) |
+
+## Book and License
+
+Book URI: https://leanpub.com/clojureai — you can read the book for free online at https://leanpub.com/clojureai/read
+
+Copyright © 2021-2026 Mark Watson. All rights reserved.
+
+Licensed under the Apache License 2.0.

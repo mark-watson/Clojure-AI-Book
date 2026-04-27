@@ -1,34 +1,31 @@
-# gemini_java_api
+# Google Gemini Java SDK — Example for "Practical Artificial Intelligence Programming With Clojure"
 
-A Clojure library for using the gemini Java APIs
+> **Book Chapter:** [Using the Google Gemini APIs](https://leanpub.com/read/clojureai/leanpub-auto-using-the-google-gemini-apis) — free to read online.
 
-Similar to the example in ../gemini_api that uses the REST Gemini API interface
+This example uses Google's official Java Gemini SDK (`com.google.genai`) from Clojure via Java interop. It demonstrates text generation and summarization. See also `../gemini_api` for an alternative approach using the REST API directly with `clj-http`.
 
-## Usage
+## Prerequisites
+
+| Tool | Version |
+|------|---------|
+| Java | 11+ |
+| [Leiningen](https://leiningen.org) | 2.9+ |
+| `GOOGLE_API_KEY` | [Get one here](https://aistudio.google.com/app/apikey) |
+
+Set your API key before running:
+
+    export GOOGLE_API_KEY=your_key_here
+
+## Run
 
     lein test
 
-## Code for my book "Practical Artificial Intelligence Programming With Clojure"
+## Book and License
 
-**Book Chapter:** [Using the Google Gemini APIs](https://leanpub.com/read/clojureai/leanpub-auto-using-the-google-gemini-apis) — free to read online.
+Book URI: https://leanpub.com/clojureai — you can read the book for free online at https://leanpub.com/clojureai/read
 
-You can read the book for this example code for free online: [https://leanpub.com/clojureai/read](https://leanpub.com/clojureai/read).
-
-If you would like to pay me for a copy of this book then please visit [https://leanpub.com/clojureai](https://leanpub.com/clojureai).
-
-Please visit see my website [https://markwatson.com](https://markwatson.com).
-
-## License
-
-Copyright © 2021-2024 Mark Watson
+Copyright © 2021-2026 Mark Watson. All rights reserved.
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at
 http://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.
