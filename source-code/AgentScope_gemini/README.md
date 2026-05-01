@@ -33,6 +33,10 @@ Set your API key before running:
 3. A `Msg` is passed to `.call()` on the agent.
 4. The reactive response is collected with `.block()` and printed.
 
+## Architecture
+
+![Generated image](architecture.png)
+
 ## Key Dependencies
 
 | Artifact | Purpose |

@@ -28,6 +28,10 @@ Set your API key before running:
 (println (gemini/summarize "The quick brown fox jumps over the lazy dog."))
 ```
 
+## Architecture
+
+![Generated image](architecture.png)
+
 ## Book and License
 
 Book URI: https://leanpub.com/clojureai — you can read the book for free online at https://leanpub.com/clojureai/read

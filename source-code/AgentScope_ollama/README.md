@@ -39,6 +39,10 @@ Make sure Ollama is running:
 3. Tools are defined in pure Clojure by implementing the `AgentTool` interface with `reify`.
 4. A `Msg` is passed to `.call()` on the agent and the response is collected with `.block()`.
 
+## Architecture
+
+![Generated image](architecture.png)
+
 ## Key Dependencies
 
 | Artifact | Purpose |

@@ -45,6 +45,10 @@ This example wraps the [Apache OpenNLP](https://opennlp.apache.org/) Java librar
 | VBP | Verb, non-3rd person singular present |
 | VBZ | Verb, 3rd person singular present |
 
+## Architecture
+
+![Generated image](architecture.png)
+
 ## Book and License
 
 Book URI: https://leanpub.com/clojureai — you can read the book for free online at https://leanpub.com/clojureai/read

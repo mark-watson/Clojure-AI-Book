@@ -26,6 +26,10 @@ Run the tests in another terminal:
 
     lein test
 
+## Architecture
+
+![Generated image](architecture.png)
+
 ## Book and License
 
 Book URI: https://leanpub.com/clojureai — you can read the book for free online at https://leanpub.com/clojureai/read

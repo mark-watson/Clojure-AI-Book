@@ -15,6 +15,10 @@ This example demonstrates deep learning in Clojure using the [Deeplearning4j](ht
 
     lein run
 
+## Architecture
+
+![Generated image](architecture.png)
+
 ## Book and License
 
 Book URI: https://leanpub.com/clojureai — you can read the book for free online at https://leanpub.com/clojureai/read

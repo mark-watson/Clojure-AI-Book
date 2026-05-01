@@ -4,6 +4,10 @@
 
 This directory contains an experimental example using [Datomic Local](https://blog.datomic.com/2023/08/datomic-local-is-released.html), Cognitect's embedded Datalog database for Clojure. Datomic Local runs in-process with no separate server, making it ideal for prototyping knowledge-base applications.
 
+## Architecture
+
+![Generated image](architecture.png)
+
 ## Book and License
 
 Book URI: https://leanpub.com/clojureai — you can read the book for free online at https://leanpub.com/clojureai/read
