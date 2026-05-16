@@ -60,6 +60,9 @@ $ tree
         └── core_test.clj
 ~~~~~~~~
 
+{width: "80%"}
+![Architecture for Jena RDF/SPARQL wrapper](images/FIG_semantic_web_jena.jpg)
+
 While I expect that you will just use the Java code as is, there is one modification that you might want to make for your applications: I turned on OWL reasoning by default. If you don't need OWL reasoning and you will be working with large numbers of RDF triples (tens of millions should fit nicely in-memory on your laptop), then you might want to change the following two lines of code in **JenaApis.java** by uncommenting line 2 and commenting line 4:
 
 {lang="java",linenos=on}

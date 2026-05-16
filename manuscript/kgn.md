@@ -1,6 +1,5 @@
 # Knowledge Graph Navigator {#kgn}
 
-
 The Knowledge Graph Navigator (which I will often refer to as KGN) is a tool for processing a set of entity names and automatically explores the public Knowledge Graph [DBPedia](http://dbpedia.org) using SPARQL queries. I started to write KGN for my own use to automate some things I used to do manually when exploring Knowledge Graphs, and later thought that KGN might be also useful for educational purposes. KGN shows the user the auto-generated SPARQL queries so hopefully the user will learn by seeing examples. KGN uses the Clojure Jena wrapper
 example code from the last chapter as well the two Java classes **JenaAPis** and **QueryResults** (which wrap the Apache Jena library) that were also included in the example for the previous chapter.
 
@@ -39,6 +38,10 @@ select ?p ?o where {
 For the rest of this chapter we will just use DBPedia or data copied from DBPedia.
 
 After looking an interactive session using the example program for this chapter we will look at the implementation.
+
+
+{width: "80%"}
+![Architecture for Knowledge Graph Navigator example](images/FIG_knowledge_graph_navigator.jpg)
 
 ## Entity Types Handled by KGN
 

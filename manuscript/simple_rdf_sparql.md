@@ -15,6 +15,9 @@ This chapter will cover:
 
 By the end of this chapter, you'll have a good grasp of how to handle RDF data and implement a lightweight SPARQL engine that can process simple queries.
 
+{width: "80%"}
+![Architecture for Simple RDF/SPARQL example](images/FIG_simple_rdf_sparql.jpg)
+
 ## Implementing a Simple RDF Datastore
 
 Let’s begin by creating a simple in-memory RDF datastore using Clojure. An RDF triple is a fundamental data structure composed of a subject, predicate, and object. We will define a Triple record to represent these triples and store them in an atom.

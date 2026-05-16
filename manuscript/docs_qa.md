@@ -18,6 +18,10 @@ When we want to query the documents in the **data** directory, we then calculate
 For this example, we use an in-memory store of embedding vectors and chunk text. A text document is broken into smaller chunks of text. Each chunk is embedded and stored in the embeddingsStore. The chunk text is stored in the chunks array. The embeddingsStore and chunks array are used to find the most similar chunk to a prompt. The most similar chunk is used to generate a response to the prompt.
 
 
+{width: "80%"}
+![Architecture for document QA example](images/FIG_docs_qa.jpg)
+
+
 
 ## Create Local Embeddings Vectors From Local Text Files with OpenAI GPT APIs
 

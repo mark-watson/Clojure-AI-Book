@@ -48,6 +48,9 @@ The **project.clj** file shows the setup for incorporating Java code into a Cloj
 
 Note the use of **:java-source-paths** to specify where the Java codes are stored in the project. When you use **lein run** to try the example, both the Java and Clojure code are compiled. When I first wrote this example, I used the maven output target for the OpenNLP example in my Java AI book. I left the dependency in this **project.clj** file commented out and instead added the two Java source files to this project. Copying the code into this project should make it easier for you to run this example.
 
+{width: "80%"}
+![Architecture for OpenNLP example](images/FIG_nlp_opennlp.jpg)
+
 In the following listing, notice that I have two versions of tokenization functions:**tokenize->java** returns Java data structures and**tokenize->seq** returns a Clojure **seq**. The other example wrapper functions take a Java array of tokens as an argument.
 
 {lang="clojure",linenos=on}

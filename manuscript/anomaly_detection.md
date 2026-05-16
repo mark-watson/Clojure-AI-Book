@@ -45,6 +45,10 @@ The class **AnomalyDetection** (from my Java AI book) in the directory **src-jav
 
 To be clear: we separate the input examples into three separate sets of training, cross validation, and testing data. We use the training data to set the model parameters, use the cross validation data to learn an epsilon value, and finally use the testing data to get precision, recall, and F1 scores that indicate how well the model detects anomalies in data not used for training and cross validation.
 
+
+{width: "80%"}
+![Architecture for anomaly detection example](images/FIG_anomaly_detection.jpg)
+
 If you are interested in the Java implementation either read the source code or for more detail read the code description in my Java AI book.
 
 ## Clojure Experiment for the University of Wisconsin Cancer Data Using Java Anomaly Detection Code

@@ -96,6 +96,10 @@ Before we look at the example code, let's look at an example code running it and
         (is (re-find #"Paris" (:result result)))))))
 ```
 
+
+{width: "80%"}
+![Architecture for Gemini REST API example](images/FIG_gemini_api.jpg)
+
 The output (edited for brevity) looks like this:
 
 ```text
@@ -381,6 +385,11 @@ The core of the functionality lies in the **generate-content** function. This fu
 The code for this section can be found in the directory ** Clojure-AI-Book-Code/gemini_java_api**.
 
 Here we test code that is almost identical to that used earlier for the REST interface library so we don’t list the test code here.
+
+
+{width: "80%"}
+![Architecture for Gemini Java SDK example](images/FIG_gemini_java_api.jpg)
+
 
 Here is the library implementation:
 

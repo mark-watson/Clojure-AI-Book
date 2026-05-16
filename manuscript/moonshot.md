@@ -116,6 +116,9 @@ The following Clojure code defines a client for interacting with the Moonshot AI
         (str "An exception occurred: " (.getMessage e))))))
 ```
 
+{width: "80%"}
+![Architecture for Moonshot Kimi K2 example](images/FIG_moonshot.jpg)
+
 ## Test code for the Moonshot.ai Kimi K2 API Client Library
 
 The test code for this library has two examples: a simple text completion augmented by the text completion with the web search tool. Here is the test code to simple text completion:

@@ -1,7 +1,6 @@
 # Deep Learning Using Deeplearning4j {#dl4j}
 
 
-
 In the last ten years Deep Learning has been so successful for solving difficult problems in areas like image understanding and natural language processing (NLP) that many people now equate Deep Learning with AI. While I think this is a false equivalence, I have often used both plain old-fashioned neural networks and Deep Learning models in my work. In this chapter we implement a fairly simple feed forward using the general purpose  Deeplearning4j (DL4J) library. I implement neural networks "from scratch" in Java and Common Lisp in other books that you can read free online at [https://leanpub.com/u/markwatson](https://leanpub.com/u/markwatson).
 
 One limitation of conventional back propagation neural networks is that they are limited to the number of neuron layers that can be efficiently trained (the vanishing gradients problem).
@@ -13,6 +12,9 @@ Modern deep learning frameworks like DeepLearning4j, TensorFlow, and PyTorch are
 I have used GAN (generative adversarial networks) models for synthesizing numeric spreadsheet data, LSTM (long short term memory) models to synthesize highly structured text data like nested JSON, and for NLP (natural language processing). Several of my 55 US patents use neural network and Deep Learning technology.
 
 The [Deeplearning4j.org](http://deeplearning4j.org/) Java library supports many neural network algorithms. We will look at one simple example so you will feel comfortable integrating Deeplearning4j with your Clojure projects, and a later optional-reading section details other available types of models.  Note that I will often refer to Deeplearning4j as DL4J. 
+
+{width: "80%"}
+![Architecture for Deeplearning4j example](images/FIG_deeplearning_dl4j.jpg)
 
 We start with a simple example of a feed forward network using the same University of Wisconsin cancer database that we will also use later in the chapter on anomaly detection.
 

@@ -21,6 +21,9 @@ Then run the tests in another console:
 
 **lein test**
 
+{width: "80%"}
+![Architecture for Ollama example](images/FIG_ollama.jpg)
+
 ## Clojure Client Library for the Ollama Service REST APIs
 
 The following Clojure code (**ollama/src/ollama_api/core.clj**) defines a simple API client for interacting with the Ollama REST API text generation service. Here's a breakdown of its functionality:

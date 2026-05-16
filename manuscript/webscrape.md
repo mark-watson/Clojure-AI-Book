@@ -24,6 +24,9 @@ We need to require the **jsoup** dependency in the project file:
   :repl-options {:init-ns webscraping.core})
 ~~~~~~~~
 
+{width: "80%"}
+![Architecture for web scraping example](images/FIG_webscraping.jpg)
+
 The example code for this chapter uses **jsoup** to get the complete plain text and also the anchor (**<a href=...**) data for a web page. In reading the following code let's start at the end: lines 28-35 where we fetch data from a web site as a **jsoup** document object. Once we have this document object, we use the Java method **text** on to get plain text. On line 37 we use the utility function **get-html-anchors** that is defined in lines 6-23. On line 8 we search for all anchor patterns "a[href]". For each anchor, we construct the full target URI. Lines 17-21 handle the corner case of URIs like:
 
     https://example/com#faq

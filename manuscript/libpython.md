@@ -15,6 +15,9 @@ I suggest bookmarking the **libpython-clj** GitHub repository for reference and 
 
 **spaCy** is a great library that is likely all you need for processing text and NLP. **spaCy** is written in Python and in the past for accessing **spaCy** I have used the Hy language (Clojure syntax Lisp that sits on top of Python), used the **py4cl** library with Common Lisp, or I just used Python. The **libpython-clj** library now gives me a great fourth option.
 
+{width: "80%"}
+![Architecture for libpython-clj NLP example](images/FIG_nlp_libpython.jpg)
+
 Let's start by looking at example code in a REPL session and output for this example (we will implement the code later). I reformatted the following output to fit the page width:
 
 {lang=text,linenos=on}
