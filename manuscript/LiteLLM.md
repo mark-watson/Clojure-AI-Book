@@ -1,6 +1,6 @@
 # Using the LiteLLM-CLJ Library as a Universal LLM Interface
 
-In the earlier LLM chapters we wrote separate Clojure wrapper libraries for OpenAI, Google Gemini, and Ollama. Each wrapper had its own HTTP plumbing, JSON parsing, and response-extraction logic. While this approach is instructive — it teaches you how the REST APIs work at a low level — it also means that switching between providers requires learning a new API surface and maintaining separate code paths.
+In the earlier LLM chapters we wrote separate Clojure wrapper libraries for OpenAI, Google Gemini, and Ollama. Each wrapper had its own HTTP plumbing, JSON parsing, and response-extraction logic. While this approach is instructive (it teaches you how the REST APIs work at a low level) it also means that switching between providers requires learning a new API surface and maintaining separate code paths.
 
 The [litellm-clj](https://github.com/unravel-team/litellm-clj) library by the Unravel team solves this problem by providing a single, unified Clojure interface that works with multiple LLM providers. It is a Clojure port inspired by the popular Python [LiteLLM](https://github.com/BerriAI/litellm) project. You register a named model configuration once — specifying the provider, model name, and API key — and then call the same `router/completion` function regardless of whether the backend is OpenAI, Google Gemini, Anthropic, Mistral, Ollama, or OpenRouter. The library handles the provider-specific HTTP details, request formatting, and response normalization behind the scenes.
 
