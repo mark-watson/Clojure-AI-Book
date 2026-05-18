@@ -8,6 +8,10 @@ qa = pipeline(
 )
 
 def answer (query_text,context_text):
+  if not context_text or not context_text.strip():
+    result = {'score': 0.0, 'start': 0, 'end': 0, 'answer': ''}
+    print(result)
+    return result
   answer = qa({
                 "question": query_text,
                 "context": context_text

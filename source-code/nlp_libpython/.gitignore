@@ -12,4 +12,6 @@ pom.xml.asc
 .hgignore
 .hg/
 __pycache__
+.venv
+*.log
 

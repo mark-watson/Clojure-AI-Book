@@ -5,17 +5,11 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :jvm-opts ["-Djdk.attach.allowAttachSelf"
              "-XX:+UnlockDiagnosticVMOptions"
-             "-XX:+DebugNonSafepoints"]
-    :plugins [[lein-tools-deps "0.4.5"]]
-    :middleware [lein-tools-deps.plugin/resolve-dependencies-with-deps-edn]
-      :lein-tools-deps/config {:config-files [:project]
-                                 :resolve-aliases []}
-
-    :mvn/repos {"central" {:url "https://repo1.maven.org/maven2/"}
-                "clojars" {:url "https://clojars.org/repo"}}
+             "-XX:+DebugNonSafepoints"
+             "-Dlibpython_clj.python_executable=.venv/bin/python"]
 
    :dependencies [[org.clojure/clojure "1.11.1"]
-                  [clj-python/libpython-clj "1.37"]
+                  [clj-python/libpython-clj "2.026"]
                   [clj-http "3.10.3"]
                   [com.cemerick/url "0.1.1"]
                   [org.clojure/data.csv "1.0.0"]

@@ -1,7 +1,10 @@
 (ns nlp-libpython-spacy.core
-  (:require [libpython-clj.require :refer [require-python]]
-            [libpython-clj.python :as py :refer [py. py.-]])
+  (:require [libpython-clj2.require :refer [require-python]]
+            [libpython-clj2.python :as py :refer [py. py.-]])
   (:require [knowledge-graph-navigator-clj.entity-text-by-uri :as kgn]))
+
+(py/initialize! :python-executable
+                (str (System/getProperty "user.dir") "/.venv/bin/python"))
 
 (require-python '[spacy :as sp])
 (require-python '[QA :as qa])                               ;; loads the local file QA.py

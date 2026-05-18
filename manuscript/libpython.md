@@ -1,8 +1,17 @@
-# Python/Clojure Interoperation Using the libpython-clj Library {#libpython}
+# Using uv and Python/Clojure Interoperation Using the libpython-clj Library {#libpython}
 
-In the last chapter we used the Java OpenNLP library for natural language processing (NLP). Here we take an alternative approach of using the **libpython-clj** library to access the [spaCy](https://spacy.io) NLP library implemented in Python (and the embedded compiled code written in FORTRAN and C/C++). The **libpython-clj** library can also be used to tap into the wealth of deep learning and numerical computation libraries written in Python. See the file **INSTALL_MLW.txt** for project dependencies.
+In the last chapter we used the Java OpenNLP library for natural language processing (NLP). Here we take an alternative approach of using the **libpython-clj** library to access the [spaCy](https://spacy.io) NLP library implemented in Python (and the embedded compiled code written in FORTRAN and C/C++). The **libpython-clj** library can also be used to tap into the wealth of deep learning and numerical computation libraries written in Python. 
 
 This example also uses the [Hugging Face Transformer models](https://huggingface.co/transformers/) for NLP question answering.
+
+**Note: I had removed this chapter from this book because of the difficulties getting the Python and Clojure interop setup correctly. Using the **uv** Python package and runtime manager tool, I now find this interop to be much simpler.**
+
+This project intentionally pairs **two** Python NLP libraries to illustrate different AI capabilities accessed from Clojure via **libpython-clj**:
+
+- **spaCy** provides fast, statistical linguistic analysis: tokenization, part-of-speech tagging, and named-entity recognition (NER).
+- **Hugging Face Transformers** provides deep learning inference: extractive question answering using a pre-trained BERT model.
+
+The two libraries are combined in the `spacy-qa-demo` function: spaCy extracts named entities from a question, DBPedia SPARQL queries fetch context text about those entities, and the Transformer model answers the question using that context.
 
 To get started using **libpython-clj** I want to direct you toward two resources that you will want to familiarize yourself with:
 
@@ -10,6 +19,48 @@ To get started using **libpython-clj** I want to direct you toward two resources
 - [Carin Meier's libpython-clj examples GitHub repository](https://github.com/gigasquid/libpython-clj-examples)
 
 I suggest bookmarking the **libpython-clj** GitHub repository for reference and treat Carin Meier's **libpython-clj** examples as your main source for using a wide variety of Python libraries with **libpython-clj**.
+
+## Setting Up the Project with uv
+
+We use [uv](https://docs.astral.sh/uv/) to manage the Python virtual environment and dependencies. The project includes a `pyproject.toml` that declares the required Python libraries. The same setup steps work on both macOS and Linux:
+
+{lang="bash",linenos=on}
+~~~~~~~~
+# Install uv if you don't have it
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Install Python deps and download the spaCy model
+uv sync
+uv run python -m spacy download en_core_web_sm
+~~~~~~~~
+
+The `pyproject.toml` file pins the dependencies:
+
+{lang="toml",linenos=on}
+~~~~~~~~
+[project]
+name = "nlp-libpython"
+version = "0.1.0"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "spacy>=3.8.13",
+    "torch>=2.12.0",
+    "transformers>=4.30,<5",
+]
+~~~~~~~~
+
+Note that we pin Python to 3.12–3.13 for compatibility with **libpython-clj**, and Transformers to 4.x because the extractive question-answering pipeline was removed in Transformers 5.x.
+
+To run the project, prefix Leiningen commands with `uv run` so that the Python virtual environment is available:
+
+{lang="bash",linenos=on}
+~~~~~~~~
+# Run the full demo
+uv run lein run
+
+# Or use the REPL interactively
+uv run lein repl
+~~~~~~~~
 
 ## Using spaCy for Natural Language Processing
 
@@ -22,7 +73,7 @@ Let's start by looking at example code in a REPL session and output for this exa
 
 {lang=text,linenos=on}
 ~~~~~~~~
-$ ~/Clojure-AI-Book-Code/nlp_libpython$ lein repl
+$ uv run lein repl
 
 nlp-libpython-spacy.core=> (def test-text "John Smith
   worked for IBM in Mexico last year and earned $1
@@ -111,8 +162,7 @@ This example may take longer to run because the example code is making SPARQL qu
 
 ## Using libpython-clj with the spaCy and Hugging Face Transformer Python NLP Libraries
 
-I combined the three examples we just saw in one project for this chapter. Let's start with the project file which is largely copied from Carin Meier's **libpython-clj** examples GitHub repository.
-
+I combined the three examples we just saw in one project for this chapter. Let's start with the Leiningen project file. Note that we use **libpython-clj** version 2.026, which provides Apple Silicon support and modern Python compatibility. The `py/initialize!` call in the Clojure source code points **libpython-clj** at the **uv**-managed `.venv` Python:
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
@@ -127,17 +177,10 @@ I combined the three examples we just saw in one project for this chapter. Let's
    :url "https://www.eclipse.org/legal/epl-2.0/"}
   :jvm-opts ["-Djdk.attach.allowAttachSelf"
              "-XX:+UnlockDiagnosticVMOptions"
-             "-XX:+DebugNonSafepoints"]
-    :plugins [[lein-tools-deps "0.4.5"]]
-    :middleware
-    [lein-tools-deps.plugin/resolve-dependencies-with-deps-edn]
-    :lein-tools-deps/config {:config-files [:project]
-                             :resolve-aliases []}
-    :mvn/repos
-    {"central" {:url "https://repo1.maven.org/maven2/"}
-     "clojars" {:url "https://clojars.org/repo"}}
-   :dependencies [[org.clojure/clojure "1.10.1"]
-                  [clj-python/libpython-clj "1.37"]
+             "-XX:+DebugNonSafepoints"
+             "-Dlibpython_clj.python_executable=.venv/bin/python"]
+   :dependencies [[org.clojure/clojure "1.11.1"]
+                  [clj-python/libpython-clj "2.026"]
                   [clj-http "3.10.3"]
                   [com.cemerick/url "0.1.1"]
                   [org.clojure/data.csv "1.0.0"]
@@ -153,11 +196,11 @@ I combined the three examples we just saw in one project for this chapter. Let's
 
 Before looking at the example code, let's go back to a REPL session to experiment with **libpython-clj** Python accessor functions. In the following example we call directly into the **spaCy** library and we use a separate Python file **QA.py** to wrap the Hugging Face Transformer mode. This provides you, dear reader, with examples of both techniques I use (direct calls and using separate Python wrappers). We will list the file **QA.py** later.
 
-In lines 1-8 of the example program we set up the Clojure namespace and define  accessor functions for interacting with Python. Before we jump into the example code listing, I want to show you a few things in a REPL:
+In lines 1-7 of the example program we set up the Clojure namespace, define accessor functions for interacting with Python, and initialize the Python runtime pointing at the **uv**-managed virtual environment. Before we jump into the example code listing, I want to show you a few things in a REPL:
 
 {linenos=on}
 ~~~~~~~~
-$ lein repl
+$ uv run lein repl
 nlp-libpython-spacy.core=> (nlp "The cat ran")
 The cat ran
 nlp-libpython-spacy.core=> (type (nlp "The cat ran"))
@@ -185,18 +228,22 @@ nlp-libpython-spacy.core=> (text->tokens-and-pos
 (["the" "DET"] ["cat" "NOUN"] ["ran" "VERB"])
 ~~~~~~~~
 
-Now let's look at the listing of the example project for this chapter. The Python file **QA.py** loaded in line 9 will be seen later. The **spaCy** library requires a model file to be loaded as seen in line 11.
+Now let's look at the listing of the example project for this chapter. In lines 6-7 we initialize the Python runtime, pointing **libpython-clj** at the **uv**-managed `.venv/bin/python`. The Python file **QA.py** loaded in line 10 will be seen later. The **spaCy** library requires a model file to be loaded as seen in line 12.
 
-The combined demo that uses **spaCY**, the transformer model, and queries the public DBPedia Knowledge Graph is implemented in function **spacy-qa-demo** (lines 38-61). In line 49 we call a utility function **dbpedia-get-entity-text-by-name** that is described in a later chapter; for now it is enough to know that it uses the SPARQL query template in the file **get_entity_text.sparql** to get context text for an entity from DBPedia. This code is wrapped in the local function **get-text-fn** that is called for each entity name from in the natural language query.
+The combined demo that uses **spaCY**, the transformer model, and queries the public DBPedia Knowledge Graph is implemented in function **spacy-qa-demo** (lines 39-59). In line 50 we call a utility function **dbpedia-get-entity-text-by-name** that is described in a later chapter; for now it is enough to know that it uses the SPARQL query template in the file **get_entity_text.sparql** to get context text for an entity from DBPedia. This code is wrapped in the local function **get-text-fn** that is called for each entity name from in the natural language query.
 
 {lang="clojure",linenos=on}
 ~~~~~~~~
 (ns nlp-libpython-spacy.core
-    (:require [libpython-clj.require :refer
-                                     [require-python]]
-              [libpython-clj.python :as py
-                                    :refer
-                                    [py. py.-]]))
+  (:require [libpython-clj2.require :refer
+                                    [require-python]]
+            [libpython-clj2.python :as py
+                                   :refer
+                                   [py. py.-]]))
+
+(py/initialize! :python-executable
+  (str (System/getProperty "user.dir")
+       "/.venv/bin/python"))
 
 (require-python '[spacy :as sp])
 (require-python '[QA :as qa]) ;; loads the file QA.py
@@ -265,9 +312,9 @@ The combined demo that uses **spaCY**, the transformer model, and queries the pu
   (spacy-qa-demo "where does Bill Gates Work?"))
 ~~~~~~~~
 
-If you **lein run** to run the test **-main** function in lines 62-75 in the last listing, you will see the sample output that we saw earlier.
+If you run `uv run lein run` to run the test **-main** function in the last listing, you will see the sample output that we saw earlier.
 
-This example also shows how to load (see line 9 in the last listing) the local Python file **QA.py** and call a function defined in the file:
+This example also shows how to load (see line 10 in the last listing) the local Python file **QA.py** and call a function defined in the file:
 
 {lang="python",linenos=on}
 ~~~~~~~~
@@ -280,6 +327,11 @@ qa = pipeline(
 )
 
 def answer (query_text,context_text):
+  if not context_text or not context_text.strip():
+    result = {'score': 0.0, 'start': 0, 'end': 0,
+              'answer': ''}
+    print(result)
+    return result
   answer = qa({
                 "question": query_text,
                 "context": context_text
@@ -288,9 +340,7 @@ def answer (query_text,context_text):
   return answer
 ~~~~~~~~
 
-Lines 5-6 specify names for pre-trained model files that we use. 
-
-In the example repository, the file **INSTALL_MLW.txt** shows how I installed the dependencies for this example on a Google Cloud Platform VPS. While I sometimes use Docker for projects with custom dependencies that I don't want to install on my laptop, I often prefer using a VPS that I can start and stop when I need it.
+Lines 3-7 specify a pre-trained model and tokenizer. The `answer` function includes a guard for empty context text — this can happen when the DBPedia SPARQL query returns no results for a particular entity.
 
 Writing a Python wrapper that is called from your Clojure code is a good approach if, for example, you had existing Python code that uses TensorFlow or PyTorch, or there was a complete application written in Python that you wanted to use from Clojure. While it is possible to do everything in Clojure calling directly into Python libraries it is sometimes simpler to write Python wrappers that define top level functions that you need in your Clojure project.
 
