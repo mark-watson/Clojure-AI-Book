@@ -1,24 +1,23 @@
-# Using uv and Python/Clojure Interoperation Using the libpython-clj Library {#libpython}
+# Using uv and Python/Clojure Interoperation Using the libpython-clj2 Library {#libpython}
 
-In the last chapter we used the Java OpenNLP library for natural language processing (NLP). Here we take an alternative approach of using the **libpython-clj** library to access the [spaCy](https://spacy.io) NLP library implemented in Python (and the embedded compiled code written in FORTRAN and C/C++). The **libpython-clj** library can also be used to tap into the wealth of deep learning and numerical computation libraries written in Python. 
+In the last chapter we used the Java OpenNLP library for natural language processing (NLP). Here we take an alternative approach of using the **libpython-clj2** library to access the [spaCy](https://spacy.io) NLP library implemented in Python (and the embedded compiled code written in FORTRAN and C/C++). The **libpython-clj2** library can also be used to tap into the wealth of deep learning and numerical computation libraries written in Python. 
 
 This example also uses the [Hugging Face Transformer models](https://huggingface.co/transformers/) for NLP question answering.
 
-**Note: I had removed this chapter from this book because of the difficulties getting the Python and Clojure interop setup correctly. Using the **uv** Python package and runtime manager tool, I now find this interop to be much simpler.**
+**Note: I had removed this chapter from this book because of the difficulties getting the Python and Clojure interoperation setup correctly. Using the `uv` Python package and runtime manager tool, I now find this interoperation to be much simpler so this chapter is back in this book with the `uv` specific setup.**
 
-This project intentionally pairs **two** Python NLP libraries to illustrate different AI capabilities accessed from Clojure via **libpython-clj**:
+This project intentionally pairs two Python NLP libraries to illustrate different AI capabilities accessed from Clojure via **libpython-clj2**:
 
 - **spaCy** provides fast, statistical linguistic analysis: tokenization, part-of-speech tagging, and named-entity recognition (NER).
 - **Hugging Face Transformers** provides deep learning inference: extractive question answering using a pre-trained BERT model.
 
 The two libraries are combined in the `spacy-qa-demo` function: spaCy extracts named entities from a question, DBPedia SPARQL queries fetch context text about those entities, and the Transformer model answers the question using that context.
 
-To get started using **libpython-clj** I want to direct you toward two resources that you will want to familiarize yourself with:
+To get started using **libpython-clj2** I want to direct you toward two resources that you will want to familiarize yourself with:
 
 - [libpython-clj GitHub repository](https://github.com/clj-python/libpython-clj)
-- [Carin Meier's libpython-clj examples GitHub repository](https://github.com/gigasquid/libpython-clj-examples)
 
-I suggest bookmarking the **libpython-clj** GitHub repository for reference and treat Carin Meier's **libpython-clj** examples as your main source for using a wide variety of Python libraries with **libpython-clj**.
+I suggest bookmarking the **libpython-clj2** GitHub repository for reference and note that we now use version .
 
 ## Setting Up the Project with uv
 
