@@ -37,4 +37,5 @@
                        (.block))]
 
       (println "Agent response:")
-      (println (.getTextContent response)))))
+      (println (.getTextContent response))
+      (shutdown-agents))))

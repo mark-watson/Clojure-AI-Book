@@ -42,4 +42,5 @@
   (let [results (kgn {:People       ["Bill Gates" "Steve Jobs" "Melinda Gates"]
                       :Organization ["Microsoft"]
                       :Place        ["California"]})]
-    (println " -- results:") (pp/pprint results)))
+    (println " -- results:") (pp/pprint results))
+  (shutdown-agents))

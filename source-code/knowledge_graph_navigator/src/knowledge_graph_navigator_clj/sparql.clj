@@ -43,4 +43,5 @@
 (defn -main
   "SPARQL example"
   [& _]
-  (println (sparql-endpoint "select * { ?s ?p ?o } limit 10")))
+  (println (sparql-endpoint "select * { ?s ?p ?o } limit 10"))
+  (shutdown-agents))

@@ -88,5 +88,6 @@
                     (. predicted getDouble i))
             (format "%1.2f"
                     (. predicted getDouble
-                       (+ i 1))) "]"))))))
+                       (+ i 1))) "]")))))
+  (shutdown-agents))
 

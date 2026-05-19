@@ -15,4 +15,5 @@
 (defn -main
   "SPARQL example"
   [& _]
-  (println (dbpedia "select * { ?s ?p ?o } limit 4")))
+  (println (dbpedia "select * { ?s ?p ?o } limit 4"))
+  (shutdown-agents))

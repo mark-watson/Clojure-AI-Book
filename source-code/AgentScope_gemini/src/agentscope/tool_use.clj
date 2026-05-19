@@ -228,4 +228,5 @@
       (println (.getTextContent search-response))
       (println)
       (println "=== Math Eval Query ===")
-      (println (.getTextContent math-response)))))
+      (println (.getTextContent math-response))
+      (shutdown-agents))))

@@ -34,7 +34,9 @@
   (println "Enter a query:")
   (let [input (read-line)]
     (if (empty? input)
-      (println "Done.")
+      (do
+        (println "Done.")
+        (shutdown-agents))
       (do
         (let [text (best-vector-matches input)
               prompt

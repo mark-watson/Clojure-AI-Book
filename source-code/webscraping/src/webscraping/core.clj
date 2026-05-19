@@ -49,4 +49,5 @@
         (println "\nNo anchors found on the page."))
       (println "\nFetching complete."))
     (catch Exception e
-      (binding [*out* *err*] (println (str "Unexpected error: " (.getMessage e)))))))
+      (binding [*out* *err*] (println (str "Unexpected error: " (.getMessage e))))))
+  (shutdown-agents))

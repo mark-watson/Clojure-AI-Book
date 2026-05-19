@@ -41,5 +41,6 @@
   "dev/test entity relationships code"
   [& _]
   (println "Testing entity-results->relationship-links")
-  (pp/pprint (entity-results->relationship-links ["http://dbpedia.org/resource/Bill_Gates" "http://dbpedia.org/resource/Microsoft"])))
+  (pp/pprint (entity-results->relationship-links ["http://dbpedia.org/resource/Bill_Gates" "http://dbpedia.org/resource/Microsoft"]))
+  (shutdown-agents))
 

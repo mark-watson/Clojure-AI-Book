@@ -169,4 +169,5 @@
 
   (print-query-results "select * where { ?name age ?age . ?name likes ?food }")
   (print-query-results "select ?s ?o where { ?s likes ?o }")
-  (print-query-results "select * where { ?name age ?age . ?name likes pizza }"))
+  (print-query-results "select * where { ?name age ?age . ?name likes pizza }")
+  (shutdown-agents)))

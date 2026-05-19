@@ -69,4 +69,5 @@
   (qa "what does Bill enjoy?"
       "Since last year, Bill lives in Seattle. He likes to skateboard.")
   (spacy-qa-demo "what is the population of Paris?")
-  (spacy-qa-demo "where does Bill Gates Work?"))
+  (spacy-qa-demo "where does Bill Gates Work?")
+  (shutdown-agents))
