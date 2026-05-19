@@ -2,6 +2,7 @@ preface.md
 deeplearning.md
 opennlp.md
 libpython.md
+vectordb_python.md
 anomaly_detection.md
 webscrape.md
 brave.md
