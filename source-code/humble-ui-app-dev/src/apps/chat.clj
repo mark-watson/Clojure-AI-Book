@@ -14,7 +14,7 @@
 
 ;; ── API Helpers ──────────────────────────────────────────────────
 
-(defn gemini-api-key [] (System/getenv "GEMINI_API_KEY"))
+(defn gemini-api-key [] (System/getenv "GOOGLE_API_KEY"))
 (defn openai-api-key [] (System/getenv "OPENAI_API_KEY"))
 (def ^:private http-client (HttpClient/newHttpClient))
 
@@ -34,7 +34,7 @@
 (defn- call-gemini [prompt history]
   (let [api-key (gemini-api-key)]
     (when-not api-key
-      (throw (ex-info "GEMINI_API_KEY environment variable not set" {})))
+      (throw (ex-info "GOOGLE_API_KEY environment variable not set" {})))
     (let [contents (->> (conj history {:role :user :content prompt})
                         (mapv (fn [m]
                                 {:role  (if (= :assistant (:role m)) "model" "user")
@@ -64,7 +64,7 @@
 (defn- call-ollama [prompt history]
   (let [messages (->> (conj history {:role :user :content prompt})
                       (mapv #(select-keys % [:role :content])))
-        body     (json/write-str {:model    "llama3.2"
+        body     (json/write-str {:model    "phi3:latest"
                                   :messages messages
                                   :stream   false})
         resp     (http-post "http://localhost:11434/api/chat"
