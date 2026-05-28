@@ -8,7 +8,7 @@
 ;; ── State ───────────────────────────────────────────────────────
 
 (def *messages  (ui/signal []))
-(def *input     (ui/signal ""))
+(def *input     (ui/signal {:text ""}))
 (def *api       (ui/signal :gemini))
 (def *loading?  (ui/signal false))
 
@@ -74,10 +74,10 @@
     (:message data)))
 
 (defn- send-message []
-  (let [text (str/trim @*input)]
+  (let [text (str/trim (:text @*input))]
     (when (and (not (str/blank? text)) (not @*loading?))
       (swap! *messages conj {:role :user :content text})
-      (reset! *input "")
+      (swap! *input assoc :text "")
       (reset! *loading? true)
       (let [history @*messages
             api     @*api]
@@ -148,7 +148,7 @@
    [ui/padding {:horizontal 8 :vertical 8}
     [ui/row {:gap 8}
      ^{:stretch 1}
-     [ui/text-field {:*value *input}]
+     [ui/text-field {:*state *input}]
      [ui/button {:on-click (fn [_] (send-message))}
       (if @*loading?
         [ui/label {:paint {:fill 0xFF999999}} "Sending..."]
