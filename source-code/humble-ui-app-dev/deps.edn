@@ -1,0 +1,14 @@
+{:paths ["src"]
+ :deps
+ {org.clojure/clojure {:mvn/version "1.12.0"}
+  io.github.humbleui/humbleui
+  {:git/url "https://github.com/HumbleUI/HumbleUI"
+   :git/sha "ca23454728b347152f019f7bacbb2538cecbfa93"
+   :deps/root "."}
+  io.github.humbleui/skija-macos-arm64 {:mvn/version "0.143.13"}
+  org.apache.pdfbox/pdfbox {:mvn/version "3.0.3"}
+  org.clojure/data.json {:mvn/version "2.5.1"}}
+ :aliases
+ {:hello {:main-opts ["-m" "apps.hello"]}
+  :chat  {:main-opts ["-m" "apps.chat"]}
+  :pdf   {:main-opts ["-m" "apps.pdf-viewer"]}}}
