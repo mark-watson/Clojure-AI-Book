@@ -10,6 +10,7 @@ semantic_web.md
 jena_wrapper.md
 simple_rdf_sparql.md
 kgn.md
+datomic-local.md
 openai.md
 gemini_llm.md
 LiteLLM.md
