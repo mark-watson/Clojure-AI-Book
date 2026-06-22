@@ -57,7 +57,21 @@ Output might look like this:
       "index": 0,
       "message": {
         "role": "assistant",
-        "content": "Certainly! Here is a Python function named `foo` that takes two arguments `a` and `b` and returns their sum:\n\n```python\ndef foo(a, b):\n    return a + b\n```\n\nTo use this function, simply call it and pass in two arguments:\n\n```python\nresult = foo(3, 5)\nprint(result)  # Output: 8\n```\n\nIn this example, `result` will store the sum of `3` and `5`, which is `8`. You can change the arguments `a` and `b` to any other numbers to get different results."
+        "content": "Certainly! Here is a Python function named `foo` that takes two arguments `a` and `b` and returns their sum:
+
+```python
+def foo(a, b):
+    return a + b
+```
+
+To use this function, simply call it and pass in two arguments:
+
+```python
+result = foo(3, 5)
+print(result)  # Output: 8
+```
+
+In this example, `result` will store the sum of `3` and `5`, which is `8`. You can change the arguments `a` and `b` to any other numbers to get different results."
       },
       "logprobs": null,
       "finish_reason": "stop"
@@ -106,12 +120,16 @@ The file **src/openai_api/core.clj** contains the implementation of our wrapper 
      :content)))
 
 (defn summarize [text]
-  (completions (str "Summarize the following text:\n\n" text)))
+  (completions (str "Summarize the following text:
+
+" text)))
 
 (defn answer-question
   "Use the OpenAI API for question answering"
   [text]
-  (completions (str "Answer the following question:\n\n" text)))
+  (completions (str "Answer the following question:
+
+" text)))
 
 (defn embeddings [text]
   (try
@@ -119,7 +137,8 @@ The file **src/openai_api/core.clj** contains the implementation of our wrapper 
            (str
             "{\"input\": \""
             (clojure.string/replace
-             (clojure.string/replace text #"[\" \n :]" " ")
+             (clojure.string/replace text #"[\" 
+ :]" " ")
              #"\s+" " ")
             "\", \"model\": \"text-embedding-ada-002\"}")
            json-results
@@ -172,3 +191,9 @@ openai-api.core=> (openai-api.core/summarize some-text openai-api.core=> (openai
 
 
 In addition to reading the OpenAI API documentation you might want to read general material on the use of OpenAI's GPT-5 models.
+
+## Optional Practice Problems
+
+1. **Chat History Management**: Implement a chat history manager in `source-code/openai_api` that appends user and assistant messages to maintain conversational context.
+2. **System Persona Customization**: Modify the system prompt configuration to customize the model's persona (e.g., acting as a strict code reviewer).
+3. **Parameter Overrides**: Expose parameters like `temperature`, `top_p`, and `max_tokens` as optional arguments in the API call interface.

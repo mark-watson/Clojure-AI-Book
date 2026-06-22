@@ -170,3 +170,9 @@ Today’s high will reach about **77-78 °F** and tonight’s low will drop to a
 ## Wrap Up for Moonshot.ai Kimi K2 Model
 
 The Kimi K2 model is very efficient making it one of the least expensive commercial APIs to use. The model is at the same time powerful and is excellent at tool use and as a software assitant. As I write this chapter on July 21, 2025 almost all of my commercial LLM API use is either Google Gemini 2.5 Flash and Pro, and the Kimi K2 model.
+
+## Optional Practice Problems
+
+1. **Evaluation Logging**: Write a script to evaluate prompt variations against the Moonshot API in `source-code/moonshot` and log response characteristics.
+2. **Secure Key Loading**: Modify the code to load the API key from a secure environment variable or a configuration file rather than hardcoding it.
+3. **Translation Agent**: Build a translation agent that takes English text and requests the Moonshot API to translate it into three target languages in parallel.

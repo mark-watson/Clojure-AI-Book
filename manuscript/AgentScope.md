@@ -235,7 +235,8 @@ Here is a listing of **Clojure-AI-Book/source-code/AgentScope_ollama/src/agentsc
                     (->> (.listFiles dir)
                          (sort-by #(.getName %))
                          (map #(if (.isDirectory %) (str (.getName %) "/") (.getName %)))
-                         (clojure.string/join "\n"))
+                         (clojure.string/join "
+"))
                     (str "Error: not a directory: " path))]
         (Mono/just (ToolResultBlock/text names))))))
 
@@ -258,7 +259,8 @@ Here is a listing of **Clojure-AI-Book/source-code/AgentScope_ollama/src/agentsc
             max-lines (get input "max_lines")
             content   (try
                         (let [lines (clojure.string/split-lines (slurp path))]
-                          (clojure.string/join "\n" (if max-lines (take max-lines lines) lines)))
+                          (clojure.string/join "
+" (if max-lines (take max-lines lines) lines)))
                         (catch Exception e
                           (str "Error reading file: " (.getMessage e))))]
         (Mono/just (ToolResultBlock/text content))))))
@@ -292,7 +294,8 @@ Here is a listing of **Clojure-AI-Book/source-code/AgentScope_ollama/src/agentsc
           (let [result (matches (File. start-path))]
             (Mono/just (ToolResultBlock/text (if (empty? result)
                                                (str "No files matching '" search-str "' found.")
-                                               (clojure.string/join "\n" result)))))
+                                               (clojure.string/join "
+" result)))))
           (catch Exception e
             (Mono/just (ToolResultBlock/text (str "Error searching: " (.getMessage e))))))))))
 
@@ -454,3 +457,9 @@ In this chapter we used the AgentScope Java SDK from Clojure to build two kinds 
 - A **tool-using agent** that wraps an Ollama model, registers five tools written in Clojure via the `AgentTool` interface and `Toolkit`, and lets the ReAct loop decide which tools to call.
 
 The key takeaway is that AgentScope's builder pattern and `reify` based tool definitions map naturally to Clojure idioms. You get the full power of the ReAct reasoning loop with automatic tool selection, multi-turn tool calling, and result synthesis without writing any orchestration code yourself. The same pattern scales to more tools, different models, or multi-agent workflows using AgentScope's `MsgHub` for agent-to-agent communication.
+
+## Optional Practice Problems
+
+1. **Multi-Agent Debate**: Build a two-agent debate system in `source-code/AgentScope_gemini` or `source-code/AgentScope_ollama` where one agent argues for functional programming and another argues for object-oriented programming.
+2. **Human-in-the-Loop Feedback**: Add a step where a human agent reviews the discussion and provides feedback before the final answer is generated.
+3. **State Serialization**: Implement state saving/loading so that conversation logs can be saved to disk and resumed at a later point.

@@ -213,7 +213,8 @@ The main source file `src/vectordb_semantic_search_python/core.clj` initialises 
     (add-documents! collection docs metadatas ids)
     (println "Documents inserted successfully.")
 
-    (println "\n--- Query 1: 'neural network architectures' ---")
+    (println "
+--- Query 1: 'neural network architectures' ---")
     (let [results
           (query-documents collection
                            "neural network architectures"
@@ -221,7 +222,8 @@ The main source file `src/vectordb_semantic_search_python/core.clj` initialises 
       (doseq [res results]
         (println "Match:"    (:document res))
         (println "Metadata:" (:metadata res))
-        (println "Distance:" (:distance res) "\n")))
+        (println "Distance:" (:distance res) "
+")))
 
     (println "--- Query 2: 'functional programming language' ---")
     (let [results
@@ -231,7 +233,8 @@ The main source file `src/vectordb_semantic_search_python/core.clj` initialises 
       (doseq [res results]
         (println "Match:"    (:document res))
         (println "Metadata:" (:metadata res))
-        (println "Distance:" (:distance res) "\n")))
+        (println "Distance:" (:distance res) "
+")))
 
     (println "--- Query 3: 'cooking recipes and food' ---")
     (let [results
@@ -240,7 +243,8 @@ The main source file `src/vectordb_semantic_search_python/core.clj` initialises 
       (doseq [res results]
         (println "Match:"    (:document res))
         (println "Metadata:" (:metadata res))
-        (println "Distance:" (:distance res) "\n")))
+        (println "Distance:" (:distance res) "
+")))
     (shutdown-agents)))
 ~~~~~~~~
 
@@ -308,3 +312,9 @@ In this chapter we demonstrated how to use a modern vector database — ChromaDB
 - Call `shutdown-agents` at the end of `-main` to avoid a slow JVM exit when using libpython-clj2.
 
 This same pattern scales to any Python library: wrap it in a thin Python module, initialize the bridge pointing at your uv venv, and call in from idiomatic Clojure code.
+
+## Optional Practice Problems
+
+1. **Metadata Filtering**: Add a new metadata field (e.g., `author` or `publish_date`) to the vector payloads in `source-code/vectordb_semantic_search_python` and perform queries with metadata-filtered criteria.
+2. **Distance Metric Evaluation**: Experiment with a different distance metric (e.g., L2 distance vs. cosine similarity) in your vector database configuration and observe any differences in search results.
+3. **Batch Insertion**: Write a script to batch insert a list of 50 custom text chunks and print the top 3 matches for a target query.

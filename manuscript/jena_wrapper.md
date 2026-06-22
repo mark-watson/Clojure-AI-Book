@@ -167,3 +167,9 @@ Output will look like (reformatted for readability and most output is not shown)
 Data consists of nested lists where the first sub-list is the SPARQL query variable names, in this case: **subject property object**. Subsequent sub-lists are binding values for the query variables.
 
 We will use the Jena wrapper in the next chapter.
+
+## Optional Practice Problems
+
+1. **File-based Query Caching**: Replace the Apache Derby relational database cache in `source-code/semantic_web_jena` with a simpler local file-based cache.
+2. **CONSTRUCT Queries**: Add support for SPARQL `CONSTRUCT` queries to the Clojure Jena wrapper to produce new RDF graphs.
+3. **Query Timer**: Write a utility function that prints the total execution time of a live SPARQL query compared to loading the result from the Derby cache.

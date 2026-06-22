@@ -216,7 +216,9 @@ Here is the library implementation, we will discuss the code after the listing:
 ;; (generate-content "What is 2+2?" :system "You are a concise math tutor.")
 
 (defn summarize [text]
-  (generate-content (str "Summarize the following text:\n\n" text)))
+  (generate-content (str "Summarize the following text:
+
+" text)))
 
 ;;;; ── Token counting ──────────────────────────────────────────────────────────
 
@@ -423,7 +425,9 @@ Here is the library implementation:
     (.text resp)))
 
 (defn summarize [text]
-  (generate-content (str "Summarize the following text:\n\n" text)))
+  (generate-content (str "Summarize the following text:
+
+" text)))
 ```
 
 I used the previous REST interface library implementation for over one year but now I have switched to using this shorter implementation that uses interop with the Java Gemini SDK.
@@ -434,3 +438,9 @@ I used the previous REST interface library implementation for over one year but 
 The Gemini APIs also support a message-based API for optionally adding extra context data, configuration data, and AI safety settings. The example code using the REST interface provides a simple completion style of interacting with the Gemini models.
 
 If you use my Java SDK example library you can clone it in your own projects and optionally use those features of the Java SDK that you might find useful. Reference: [https://github.com/googleapis/java-genai](https://github.com/googleapis/java-genai).
+
+## Optional Practice Problems
+
+1. **Structured JSON Output**: Utilize the structured output configuration options of Gemini in `source-code/gemini_api` to ensure that model responses strictly match a predefined schema.
+2. **Java SDK Wrapper**: Call a Gemini model using the Java SDK wrapper (`source-code/gemini_java_api`) and parse the resulting response into a Clojure map structure.
+3. **Function Calling**: Implement tool/function calling where the Gemini model decides when to execute a custom Clojure math function.

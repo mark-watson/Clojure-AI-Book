@@ -117,14 +117,21 @@ The test code for this project shows how to use these APIs:
           companies (onlp/company-names token-java-array)
           places (onlp/location-names token-java-array)
           people (onlp/person-names token-java-array)]
-      (println "Input text:\n" test-text)
-      (println "Tokens as Java array:\n" token-java-array)
-      (println "Tokens as Clojure seq:\n"
+      (println "Input text:
+" test-text)
+      (println "Tokens as Java array:
+" token-java-array)
+      (println "Tokens as Clojure seq:
+"
                token-clojure-seq)
-      (println "Part of speech tokens:\n" words-pos)
-      (println "Companies:\n" companies)
-      (println "Places:\n" places)
-      (println "People:\n" people)
+      (println "Part of speech tokens:
+" words-pos)
+      (println "Companies:
+" companies)
+      (println "Places:
+" places)
+      (println "People:
+" people)
       (test/is (= (first words-pos) "DT")))))
 ~~~~~~~~
 
@@ -153,3 +160,9 @@ The part of speech tokens like DT (determiner), NN (noun), etc. are defined in t
 **Note:** My Java AI book covers OpenNLP in more depth, including how to train your own classification models.
 
 We take a different approach to NLP in the next chapter: using the **libpython-clj** library to call Python NLP libraries and pre-trained deep learning models. The Python models have more functionality but the OpenNLP library is much easier to setup and use with Clojure.
+
+## Optional Practice Problems
+
+1. **POS Tag Statistics**: Extend the pipeline in `source-code/nlp_opennlp` to extract and count the occurrences of different POS tags (e.g., nouns vs. verbs) in a given input text.
+2. **Custom Regex Tokenizer**: Implement a simple custom tokenizer in Clojure using regular expressions and compare its output directly to the OpenNLP tokenizer results.
+3. **Abbreviation Handling**: Write a sentence detector wrapper that handles edge cases like abbreviations (e.g., "Mr.", "Dr.") without incorrectly splitting sentences.

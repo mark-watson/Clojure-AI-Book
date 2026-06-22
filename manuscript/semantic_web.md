@@ -543,3 +543,9 @@ The World Wide Web Consortium has defined three versions of the OWL language tha
 ## Semantic Web Wrap-up
 
 Writing Semantic Web applications and building Knowledge Graphs is a very large topic, worthy of an entire book. I have covered in this chapter the background material for the next two chapters: writing Clojure wrappers for using the Jena library and the Knowledge Graph Navigator application.
+
+## Optional Practice Problems
+
+1. **Turtle File Creation**: Create a raw Turtle (`.ttl`) file representing a simple knowledge graph of people, properties, and friendships, and parse it in Clojure.
+2. **Class Querying**: Write a SPARQL query to select all entities that belong to a specific class from a local RDF model.
+3. **Optional Patterns**: Modify a query in `source-code/semantic_web_jena` to include an `OPTIONAL` pattern and demonstrate how to handle missing data fields in the results.

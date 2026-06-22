@@ -87,3 +87,9 @@ produces the output (edited for brevity):
 ## Wrap-up
 
 In addition to using automated web scraping to get data for my personal research, I often use automated web search. I find the Brave search APIs are the most convenient to use and I like paying for services that I use. The search engine Duck Duck Go also provides free search APIs but even though I use Duck Duck Go for 90% of my manual web searches, when I build automated systems I prefer to rely on services that I pay for.
+
+## Optional Practice Problems
+
+1. **Parameter Customization**: Update the Brave Search API request function in `source-code/brave_search` to accept optional parameters such as language, region, or result count.
+2. **Result Summary**: Extract and display only the `snippet` and `title` for each search result returned, formatting them cleanly in the console.
+3. **Fallback Search**: Implement a query fallback mechanism that attempts a broader search query if the initial specific search yields no results.

@@ -124,3 +124,9 @@ Output might look like (most of the output is not shown):
 For training data for machine learning it is useful to just grab all text on a web page and assume that common phrases dealing with web navigation, etc., will be dropped from learned models because they occur in many different training examples for different classifications.
 
 I find the **jsoup** library to be robust for fetching and parsing HTML data from web pages. As we have seen, it is straightforward to use **jsoup** in Clojure projects.
+
+## Optional Practice Problems
+
+1. **Hyperlink Classification**: Extend the scraper in `source-code/webscraping` to extract all `href` attributes from the target webpage and filter them into external vs. internal links.
+2. **Resilience & Retries**: Add robust error handling and a retry mechanism (e.g., with exponential backoff) for HTTP requests that fail or timeout.
+3. **Table Parser**: Extract tabular data from a target webpage and parse it into a sequence of Clojure maps with column headers as keys.

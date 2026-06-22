@@ -146,4 +146,9 @@ QUESTION ANSWERING TEST:
 
 The Valley of Kings is located in Egypt, specifically in the region of Giza. It is a valley on the west bank of the Nile River and is known for its abundance of royal tombs dating back to ancient Egypt's New Kingdom period.
  ```
- 
+
+## Optional Practice Problems
+
+1. **Model Switching**: Connect `source-code/ollama` to a different lightweight model (e.g., `phi3` or `gemma2:2b`) and print responses to a series of prompts.
+2. **Token Streaming**: Implement a streaming response handler so that generated tokens are printed to the stdout console in real time.
+3. **Stop Sequence Config**: Customize model parameters such as stop sequences in the request body to force early response termination.

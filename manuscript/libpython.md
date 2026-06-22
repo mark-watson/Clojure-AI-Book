@@ -344,3 +344,9 @@ Lines 3-7 specify a pre-trained model and tokenizer. The `answer` function inclu
 Writing a Python wrapper that is called from your Clojure code is a good approach if, for example, you had existing Python code that uses TensorFlow or PyTorch, or there was a complete application written in Python that you wanted to use from Clojure. While it is possible to do everything in Clojure calling directly into Python libraries it is sometimes simpler to write Python wrappers that define top level functions that you need in your Clojure project.
 
 The material in this chapter is of particular interest to me because I use both NLP and Knowledge Graph technologies in my work. With the ability to access the Python **spaCY** and Hugging Face Transformer models, as well as the Java Jena library for semantic web and Knowledge Graph applications (more on this topic later), Clojure is a nice language to use for my projects.
+
+## Optional Practice Problems
+
+1. **NumPy Integration**: Set up a bridge to the Python `numpy` library using `libpython-clj` in `source-code/nlp_libpython` and perform basic matrix operations like transposition and multiplication.
+2. **Library Version Checker**: Write a helper function in Clojure to retrieve and print the version numbers of all imported Python packages dynamically.
+3. **Python Error Handling**: Implement robust error handling in Clojure to catch and format Python-side exceptions gracefully during data transfer.
