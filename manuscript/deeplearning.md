@@ -186,3 +186,9 @@ As you build more deep learning enabled applications, depending on what requirem
 I first used neural networks in the late 1980s for phoneme (speech) recognition, specifically using time delay neural networks and I gave a talk about it at [IEEE First Annual International Conference on Neural Networks San Diego, California June 21-24, 1987](http://ieeexplore.ieee.org/xpl/articleDetails.jsp?reload=true&arnumber=4307059). In the following year I wrote the Backpropagation neural network code that my company used in a bomb detector that we built for the FAA. Back then, neural networks were not widely accepted but in the present time Google, Microsoft, and many other companies are using deep learning for a wide range of practical problems. Exciting work is also being done in the field of natural language processing.
 
 Later we will look at an example calling directly out to Python code using the **libpython-clj** library to use the spaCy natural language processing library. You can also use the **libpython-clj** library to access libraries like TensorFlow, PyTorch, etc. in your Clojure applications.
+
+## Optional Practice Problems
+
+1. **Iris Dataset Classification**: Modify the feed-forward classifier configuration in `source-code/deeplearning_dl4j` to train on a different CSV dataset and evaluate the training and testing accuracy.
+2. **Hyperparameter Tuning**: Experiment with different numbers of hidden units in the network configuration (`numHidden`) and different batch sizes, then compare the performance metrics.
+3. **Deepening the Network**: Add an additional hidden layer to the `MultiLayerConfiguration` builder and verify that the model compiles and trains successfully.

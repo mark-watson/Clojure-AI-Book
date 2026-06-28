@@ -191,7 +191,8 @@ This example is contained in several source files. We will start at the low-leve
     (catch Exception e
       (do
         (println
-          "WARNING: query failed:\n" sparql-query)
+          "WARNING: query failed:
+" sparql-query)
         (println (.getMessage e))
         (clojure.stacktrace/print-stack-trace e)
         []))))
@@ -453,3 +454,9 @@ Function **kgn** returns a map of summaries and discovered entity relationships 
 This KGN example was hopefully both interesting to you and simple enough in its implementation to use as a jumping off point for your own projects. 
 
 I had the idea for the KGN application because I was spending quite a bit of time manually setting up SPARQL queries for DBPedia (and other public sources like WikiData) and I wanted to experiment with partially automating this process. I have experimented with versions of KGN written in Java, Hy language ([Lisp running on Python that I wrote a short book on](https://leanpub.com/hy-lisp-python/read)), Swift, and Common Lisp and all four implementations take different approaches as I experimented with different ideas.
+
+## Optional Practice Problems
+
+1. **Path Heuristics**: Modify the path search heuristics in `source-code/knowledge_graph_navigator` to prioritize paths traversing specific node types (e.g., people vs. organizations).
+2. **Text-based Tree Visualization**: Format and print the generated paths as a text-based hierarchy tree in the terminal.
+3. **JSON Path Export**: Implement a feature to export search results and paths to a JSON format file.

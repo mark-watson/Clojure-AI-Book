@@ -27,7 +27,8 @@ We will need to calculate the probability of a value **x** given the mean and va
  is the squared variance:
 
 {$$}
-P(x : \mu, \sigma ^2) = \frac{1}{{\sigma \sqrt {2\pi } }}e^{{{ - \left( {x - \mu } \right)^2 } \mathord{\left/ {\vphantom {{ - \left( {x - \mu } \right)^2 } {2\sigma ^2 }}} \right. \kern-\nulldelimiterspace} {2\sigma ^2 }}}
+P(x : \mu, \sigma ^2) = \frac{1}{{\sigma \sqrt {2\pi } }}e^{{{ - \left( {x - \mu } \right)^2 } \mathord{\left/ {\vphantom {{ - \left( {x - \mu } \right)^2 } {2\sigma ^2 }}} \right. \kern-
+ulldelimiterspace} {2\sigma ^2 }}}
 {/$$}
 
 where {$$}x_i{/$$} are the samples and we can calculate the squared variance as:
@@ -236,4 +237,8 @@ How do we evaluate these results? The precision value of 1.0 means that there we
 
 We used a simple approach here that has the benefit of working with small data sets. Ideally, even with highly unbalanced data sets, we would have sufficient positive examples to use deep learning to model features, data transformations, and a classification model. In many real-world problems with unbalanced data sets, sufficient data is not available.
 
+## Optional Practice Problems
 
+1. **Sensitivity Analysis**: Adjust the distance threshold parameters in `source-code/anomaly_detection` to make the anomaly detector more or less sensitive, and display the change in the number of detected anomalies.
+2. **Heuristic Comparison**: Implement a simple statistical anomaly detector (e.g., Z-score based on feature values) in Clojure and compare its output with the current model's output.
+3. **Feature Contribution**: Modify the anomaly detection code to report the specific features that contributed most to the anomaly score of a given data point.

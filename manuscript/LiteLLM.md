@@ -152,3 +152,9 @@ In practice, I find myself using the direct API wrappers for development and exp
 ## Wrap Up
 
 The litellm-clj library demonstrates a powerful pattern in software design: abstracting away implementation differences behind a uniform interface. By registering named model configurations and calling a single `router/completion` function, we can write provider-agnostic LLM code in Clojure. While the library is still in alpha, it already supports the most common use case of chat-style text completions across all major LLM providers. As the library matures, I expect it will become an increasingly attractive option for Clojure developers working with LLMs.
+
+## Optional Practice Problems
+
+1. **Multi-Model Routing**: Configure the LiteLLM proxy in `source-code/litellm_api` to route requests dynamically between a local Ollama model and a cloud API model, measuring latency differences.
+2. **Error Recovery**: Handle rate limits or temporary provider outages by implementing a fallback chain of models in LiteLLM.
+3. **Usage Logging**: Configure LiteLLM proxy to log response tokens, completion details, and model metadata to a local text file.

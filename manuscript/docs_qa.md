@@ -129,7 +129,8 @@ The main application code is in the file **src/docs_qa/core.clj**. Note that the
   []
   (println "Loading text files in ./data/, performing chunking and getting OpenAI embeddings...")
   (answer-prompt " do nothiing ")
-  (print "...done loading data and getting local embeddings.\n")
+  (print "...done loading data and getting local embeddings.
+")
   (loop []
   (println "Enter a query:")
   (let [input (read-line)]
@@ -140,10 +141,17 @@ The main application code is in the file **src/docs_qa/core.clj**. Note that the
               prompt
               (clojure.string/replace
                (clojure.string/join
-                "\n"
-                ["With the following CONTEXT:\n\n"
+                "
+"
+                ["With the following CONTEXT:
+
+"
                 text
-                "\n\nANSWER:\n\n"
+                "
+
+ANSWER:
+
+"
                 input])
                #"\s+" " ")]
           (println "** PROMPT:" prompt)
@@ -177,3 +185,9 @@ Done.
 As I write this in May 2023, I have been working almost exclusively with OpenAI APIs for the last year and using the Python libraries for LangChain and LlamaIndex for the last three months.
 
 I started writing the examples in this chapter for my own use, implementing a tiny subset of the LangChain and LlamaIndex libraries in Clojure for creating local embedding vector data stores and for interactive chat using my own data.
+
+## Optional Practice Problems
+
+1. **PDF Parsing Support**: Extend the document Q&A project in `source-code/docs_qa` to parse and extract text from PDF files in addition to plain text files.
+2. **Chunking Tuning**: Tweak the chunk size and chunk overlap parameters and analyze their effect on retrieval accuracy.
+3. **Result Reranking**: Integrate a reranking step on retrieved document chunks before formatting them for the LLM context.

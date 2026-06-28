@@ -173,3 +173,8 @@ Next we print all triples in the datastore and execute three sample SPARQL queri
 
 This chapter demonstrated a minimalistic RDF datastore and a partial SPARQL query processor. We built the foundation to manage RDF triples and run basic pattern-based queries. This simple example can serve as a minimal embedded RDF data store for larger applications or as springboard for more advanced features like full SPARQL support, optimization techniques, and complex query structures. I hope, dear reader, that you have fun with this example.
 
+## Optional Practice Problems
+
+1. **N-Triples Parser**: Parse and query a local N-Triples file using native Clojure data structures instead of an external database.
+2. **Clojure Map to RDF**: Write a utility to convert simple flat Clojure maps into RDF triple structures.
+3. **Regex Filtering**: Modify the SPARQL query in `source-code/simple_rdf_sparql` to perform a text filter using regex matching on literal values.

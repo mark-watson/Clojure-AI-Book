@@ -634,3 +634,9 @@ The tests cover: database lifecycle, basic entities and queries, entity relation
 - [Transaction Reference](https://docs.datomic.com/cloud/transactions/transaction-data-reference.html)
 
 In the next chapter we'll continue building practical AI tools with Clojure, applying the knowledge graph techniques we've covered across the Jena, SPARQL, and Datomic chapters.
+
+## Optional Practice Problems
+
+1. **Temporal Schema**: Add a new attribute type (e.g., `:db.type/instant`) to the schema in `source-code/datomic_local` to track creation time, and query for entities created after a certain date.
+2. **Nested Pull Queries**: Formulate a Datomic pull query to recursively retrieve nested attributes of related entities.
+3. **Unique Constraints**: Implement transaction functions or uniqueness constraints to prevent duplicate database entries based on an email unique field.
