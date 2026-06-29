@@ -18,4 +18,5 @@ docs_qa.md
 ollama.md
 moonshot.md
 AgentScope.md
+humble-ui.md
 conclusion.md
