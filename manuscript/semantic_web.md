@@ -36,7 +36,7 @@ The following figure shows a layered hierarchy of data models that are used to i
 {#semantic-web-data-models}
 
 {width: "60%"}
-![Semantic Web Data Models](images/semantic_web_data.png)
+![Semantic Web Data Models](semantic_web_data.png)
 
 RDF data is the bedrock of the Semantic Web and Knowledge Graphs.
 

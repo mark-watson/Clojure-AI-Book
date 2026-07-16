@@ -98,7 +98,7 @@ Before we look at the example code, let's look at an example code running it and
 
 
 {width: "80%"}
-![Architecture for Gemini REST API example](images/FIG_gemini_api.jpg)
+![Architecture for Gemini REST API example](FIG_gemini_api.jpg)
 
 The output (edited for brevity) looks like this:
 
@@ -390,7 +390,7 @@ Here we test code that is almost identical to that used earlier for the REST int
 
 
 {width: "80%"}
-![Architecture for Gemini Java SDK example](images/FIG_gemini_java_api.jpg)
+![Architecture for Gemini Java SDK example](FIG_gemini_java_api.jpg)
 
 
 Here is the library implementation:

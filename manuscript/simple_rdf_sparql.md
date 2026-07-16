@@ -16,7 +16,7 @@ This chapter will cover:
 By the end of this chapter, you'll have a good grasp of how to handle RDF data and implement a lightweight SPARQL engine that can process simple queries.
 
 {width: "80%"}
-![Architecture for Simple RDF/SPARQL example](images/FIG_simple_rdf_sparql.jpg)
+![Architecture for Simple RDF/SPARQL example](FIG_simple_rdf_sparql.jpg)
 
 ## Implementing a Simple RDF Datastore
 

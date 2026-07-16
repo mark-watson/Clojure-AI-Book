@@ -14,7 +14,7 @@ I have used GAN (generative adversarial networks) models for synthesizing numeri
 The [Deeplearning4j.org](http://deeplearning4j.org/) Java library supports many neural network algorithms. We will look at one simple example so you will feel comfortable integrating Deeplearning4j with your Clojure projects, and a later optional-reading section details other available types of models.  Note that I will often refer to Deeplearning4j as DL4J. 
 
 {width: "80%"}
-![Architecture for Deeplearning4j example](images/FIG_deeplearning_dl4j.jpg)
+![Architecture for Deeplearning4j example](FIG_deeplearning_dl4j.jpg)
 
 We start with a simple example of a feed forward network using the same University of Wisconsin cancer database that we will also use later in the chapter on anomaly detection.
 

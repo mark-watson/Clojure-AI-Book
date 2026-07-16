@@ -47,7 +47,7 @@ To be clear: we separate the input examples into three separate sets of training
 
 
 {width: "80%"}
-![Architecture for anomaly detection example](images/FIG_anomaly_detection.jpg)
+![Architecture for anomaly detection example](FIG_anomaly_detection.jpg)
 
 If you are interested in the Java implementation either read the source code or for more detail read the code description in my Java AI book.
 
@@ -58,7 +58,7 @@ The example in this section loads the University of Wisconsin data and uses the 
 The Wisconsin data has 9 input features and one target output. Optionally the example program can use Incanter to plot the distribution of input variables. For of these plots are shown here:
 
 {width: "85%"}
-![Distributions for 4 of the 9 input features](images/wisconsin_plots.png)
+![Distributions for 4 of the 9 input features](wisconsin_plots.png)
 
 
 Let's start by looking at the project file **project.clj**:

@@ -59,7 +59,7 @@ It takes very little code to access the Brave search APIs. Here we define a func
 
 
 {width: "80%"}
-![Architecture for Brave Search example](images/FIG_brave_search.jpg)
+![Architecture for Brave Search example](FIG_brave_search.jpg)
 
 You can use search hints like "site:wikidata.org" to only search specific web sites. In the following example I use the search query:
 

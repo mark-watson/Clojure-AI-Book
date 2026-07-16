@@ -117,7 +117,7 @@ The following Clojure code defines a client for interacting with the Moonshot AI
 ```
 
 {width: "80%"}
-![Architecture for Moonshot Kimi K2 example](images/FIG_moonshot.jpg)
+![Architecture for Moonshot Kimi K2 example](FIG_moonshot.jpg)
 
 ## Test code for the Moonshot.ai Kimi K2 API Client Library
 

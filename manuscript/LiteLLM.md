@@ -66,7 +66,7 @@ Our first example registers an OpenAI configuration using the `gpt-4o-mini` mode
 ```
 
 {width: "80%"}
-![Architecture for LiteLLM API example](images/FIG_litellm_api.jpg)
+![Architecture for LiteLLM API example](FIG_litellm_api.jpg)
 
 Let's walk through this code. First, we require `litellm.router` and alias it as `router`. We then call `router/register!` with the keyword `:fast` as a name for this configuration. The configuration map specifies `:openai` as the provider, `"gpt-4o-mini"` as the model, and the API key from the environment. The name `:fast` is arbitrary — you could register multiple configurations (e.g., `:fast` for a small model, `:smart` for a large one) and switch between them in your application logic.
 

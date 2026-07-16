@@ -57,7 +57,7 @@ The flow is straightforward:
 
 
 {width: "80%"}
-![Architecture for AgentScope Gemini example](images/FIG_AgentScope_gemini.jpg)
+![Architecture for AgentScope Gemini example](FIG_AgentScope_gemini.jpg)
 
 
 You will need a Google Gemini API key, which you can obtain from [Google AI Studio](https://aistudio.google.com/app/apikey). Set it as an environment variable before running:
@@ -166,7 +166,7 @@ We define five tools, each implemented as a Clojure function that returns a `rei
 Each tool follows the same pattern: implement `getName`, `getDescription`, `getParameters` (a JSON-schema object), and `callAsync` (which receives the parameters and returns a `Mono<ToolResultBlock>`). The `callAsync` method extracts the input parameters from the `param` object via `.getInput`, performs its logic in pure Clojure, and wraps the result string with `ToolResultBlock/text` inside `Mono/just`.
 
 {width: "80%"}
-![Architecture for AgentScope Ollama example](images/FIG_AgentScope_ollama.jpg)
+![Architecture for AgentScope Ollama example](FIG_AgentScope_ollama.jpg)
 
 All five tools are registered into a `Toolkit`, which is then attached to the `ReActAgent` via its builder. When the agent receives a prompt, the ReAct loop inspects the available tools and their descriptions, decides which tools to call (if any), calls them, observes the results, and iterates until it can produce a final answer. The agent may call multiple tools in a single turn — for example, when asked about weather in two cities, it calls `getWeather` twice.
 

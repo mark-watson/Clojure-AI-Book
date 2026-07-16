@@ -19,7 +19,7 @@ For this example, we use an in-memory store of embedding vectors and chunk text.
 
 
 {width: "80%"}
-![Architecture for document QA example](images/FIG_docs_qa.jpg)
+![Architecture for document QA example](FIG_docs_qa.jpg)
 
 
 

@@ -15,7 +15,7 @@ If you read my eBooks free online then please consider tipping me [https://markw
 The latest updates to this book (August and December 2025) features more Large Language Models (LLMs) examples for Gemini, Gemini via the Gogle Java Gemini SDK, and the universal LLM interface library LiteLLM for accessing many models from many providers.
 
 {width: "60%"}
-![Mark Watson](images/Mark.png)
+![Mark Watson](Mark.png)
 
 I wrote this book for both professional programmers and home hobbyists who already know how to program in Clojure and who want to learn practical AI programming and information processing techniques. I have tried to make this an enjoyable book to work through. In the style of a “cook book,” the chapters can be studied in any order. 
 

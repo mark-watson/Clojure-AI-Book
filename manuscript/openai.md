@@ -23,7 +23,7 @@ export OPENAI_API_KEY=sa-hdffds7&dhdhsdgffd
 to your **.profile** or other shell resource file. Here the API token "sa-hdffds7&dhdhsdgffd" is made up - that is not my API token.
 
 {width: "80%"}
-![Architecture for OpenAI API example](images/FIG_openai_api.jpg)
+![Architecture for OpenAI API example](FIG_openai_api.jpg)
 
 When experimenting with OpenAI APIs it is often start by using the **curl** utility. An example **curl** command line call to the beta OpenAI APIs is (note: this CURL example uses an earlier API):
 

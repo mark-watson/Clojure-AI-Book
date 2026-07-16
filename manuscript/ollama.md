@@ -22,7 +22,7 @@ Then run the tests in another console:
 **lein test**
 
 {width: "80%"}
-![Architecture for Ollama example](images/FIG_ollama.jpg)
+![Architecture for Ollama example](FIG_ollama.jpg)
 
 ## Clojure Client Library for the Ollama Service REST APIs
 

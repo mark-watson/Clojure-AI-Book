@@ -17,7 +17,7 @@ ChromaDB automates the embedding step: you supply raw text and ChromaDB calls th
 ## Architecture Overview
 
 {width: "80%"}
-![Architecture for Vector Database Semantic Search example](images/FIG_vectordb.jpg)
+![Architecture for Vector Database Semantic Search example](FIG_vectordb.jpg)
 
 The application is structured in two layers:
 

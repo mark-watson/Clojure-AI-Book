@@ -15,7 +15,7 @@ I have implemented parts of KGN in several languages: Common Lisp, Java, Racket 
 
 We will be running an example using data containing three person entities, one company entity, and one place entity. The following figure shows a very small part of the DBPedia Knowledge Graph that is centered around these entities. The data for this figure was collected by an example Knowledge Graph Creator from my Common Lisp book:
 
-![File dbpedia_sample.nt loaded into the free version of GraphDB](images/graphdb.jpg)
+![File dbpedia_sample.nt loaded into the free version of GraphDB](graphdb.jpg)
 
 I chose to use DBPedia instead of WikiData for this example because DBPedia URIs are human readable. The following URIs represent the concept of a *person*. The semantic meanings of DBPedia and FOAF (friend of a friend) URIs are self-evident to a human reader while the WikiData URI is not:
 
@@ -41,7 +41,7 @@ After looking an interactive session using the example program for this chapter 
 
 
 {width: "80%"}
-![Architecture for Knowledge Graph Navigator example](images/FIG_knowledge_graph_navigator.jpg)
+![Architecture for Knowledge Graph Navigator example](FIG_knowledge_graph_navigator.jpg)
 
 ## Entity Types Handled by KGN
 
