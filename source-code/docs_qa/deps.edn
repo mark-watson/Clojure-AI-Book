@@ -1,0 +1,7 @@
+{:paths ["src"]
+ :deps {org.clojure/clojure {:mvn/version "1.10.1"}
+        org.clojure/java.jdbc {:mvn/version "0.7.12"}
+        org.clojars.cloggo/sqlite {:mvn/version "0.1.1"}
+        openai-api/openai-api {:local/root "../openai_api"}}
+ :aliases
+ {:run {:main-opts ["-m" "docs-qa.core"]}}}

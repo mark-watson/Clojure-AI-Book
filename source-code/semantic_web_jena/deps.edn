@@ -1,0 +1,6 @@
+{:paths ["src" "src-java"]
+ :deps {org.clojure/clojure {:mvn/version "1.11.1"}
+        org.apache.derby/derby {:mvn/version "10.15.2.0"}
+        org.apache.derby/derbytools {:mvn/version "10.15.2.0"}
+        org.apache.derby/derbyclient {:mvn/version "10.15.2.0"}
+        org.apache.jena/apache-jena-libs {:mvn/version "3.17.0" :extension "pom"}}}

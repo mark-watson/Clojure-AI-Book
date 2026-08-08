@@ -1,0 +1,9 @@
+{:paths ["src"]
+ :deps {org.clojure/clojure {:mvn/version "1.11.1"}
+        clj-python/libpython-clj {:mvn/version "2.026"}}
+ :aliases
+ {:run {:main-opts ["-m" "vectordb-semantic-search-python.core"]
+        :jvm-opts ["-Djdk.attach.allowAttachSelf"
+                   "-XX:+UnlockDiagnosticVMOptions"
+                   "-XX:+DebugNonSafepoints"
+                   "-Dlibpython_clj.python_executable=.venv/bin/python"]}}}

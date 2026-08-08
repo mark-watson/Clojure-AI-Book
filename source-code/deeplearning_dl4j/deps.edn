@@ -1,0 +1,7 @@
+{:paths ["src"]
+ :deps {org.clojure/clojure {:mvn/version "1.11.1"}
+        org.deeplearning4j/deeplearning4j-datasets {:mvn/version "1.0.0-M2.1"}
+        org.deeplearning4j/deeplearning4j-core {:mvn/version "1.0.0-M2.1"}
+        org.nd4j/nd4j-native {:mvn/version "1.0.0-M2.1"}}
+ :aliases
+ {:run {:main-opts ["-m" "deeplearning-dl4j-clj.wisconsin-data"]}}}

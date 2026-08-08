@@ -1,0 +1,7 @@
+{:paths ["src" "src-java"]
+ :deps {org.clojure/clojure {:mvn/version "1.11.1"}
+        org.apache.commons/commons-io {:mvn/version "1.3.2"}
+        org.clojure/data.csv {:mvn/version "1.0.1"}
+        incanter/incanter {:mvn/version "1.9.3"}}
+ :aliases
+ {:run {:main-opts ["-m" "anomaly-detection-clj.core"]}}}
